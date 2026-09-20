@@ -1,0 +1,42 @@
+---
+import { getEntry, render } from 'astro:content';
+import ContentNote from '@/components/ContentNote.astro';
+import CrisisResources from '@/components/CrisisResources.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const page = await getEntry('pages', 'resources');
+if (!page) throw new Error('Missing content entry: pages/resources');
+const { Content } = await render(page);
+---
+
+<BaseLayout title={page.data.title} description={page.data.description}>
+  <PageHeader eyebrow="Resources" title="Resources">
+    <div class="stack">
+      <ContentNote />
+    </div>
+    <div class="stack">
+      <CrisisResources />
+    </div>
+  </PageHeader>
+
+  <div class="wrap">
+    <div class="on-paper paper wave-top wave-bottom panel">
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .stack {
+    margin-top: 2rem;
+  }
+  .panel {
+    padding-inline: clamp(1.5rem, 5vw, 4rem);
+  }
+  .panel :global(.prose) {
+    margin-inline: auto;
+  }
+</style>

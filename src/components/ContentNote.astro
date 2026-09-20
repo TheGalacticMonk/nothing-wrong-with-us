@@ -1,0 +1,45 @@
+---
+import { safety } from '@/config/site';
+import Star from './Star.astro';
+
+interface Props {
+  /** Override the default note when a page needs something more specific. */
+  text?: string;
+}
+const { text = safety.contentNote } = Astro.props;
+---
+
+<aside class="note" role="note" aria-label="Content note">
+  <span class="icon">
+    <Star />
+  </span>
+  <p>
+    <strong class="label">Content note</strong>
+    <br />
+    {text}
+  </p>
+</aside>
+
+<style>
+  .note {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    max-width: 40rem;
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--fg);
+    background: rgb(224 134 212 / 0.1);
+    border-left: 4px solid var(--accent);
+  }
+  .icon {
+    flex: none;
+    width: 1.35rem;
+    margin-top: 0.25rem;
+    color: var(--accent);
+  }
+  strong {
+    color: var(--heading);
+  }
+</style>

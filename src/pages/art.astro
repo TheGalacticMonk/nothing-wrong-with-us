@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import ArtCard from '@/components/ArtCard.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+// Blog hidden for now: restore `posts` (and `years`/`range`) and the Blog ArtCard below.
+const [collage, /* posts, */ songs, videos] = await Promise.all([
+  getCollection('collage'),
+  // getCollection('blog'),
+  getCollection('songs'),
+  getCollection('videos'),
+]);
+// const years = posts.map((p) => p.data.date.getFullYear());
+// const range = `${Math.min(...years)}–${Math.max(...years)}`;
+---
+
+<BaseLayout
+  title="Art"
+  description="Collage, writing, songs and mixed-media video art by Becca Berry, made as part of her healing and for other survivors."
+>
+  <PageHeader eyebrow="Art" title="I create art because silence was killing me." />
+  <div class="wrap grid">
+    <ArtCard href="/collage-art" title="Collage" meta={`${collage.length} pieces`} />
+    {/* <ArtCard href="/blog" title="Blog" meta={`${posts.length} posts, ${range}`} /> */}
+    <ArtCard href="/music" title="Songs" meta={`${songs.length} songs`} />
+    <ArtCard href="/videos" title="Videos" meta={`${videos.length} pieces`} />
+  </div>
+</BaseLayout>
+
+<style>
+  .grid {
+    display: grid;
+    gap: 1rem;
+    padding-bottom: 2rem;
+  }
+  @media (min-width: 48rem) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

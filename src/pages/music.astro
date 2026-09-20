@@ -1,0 +1,90 @@
+---
+import { getCollection } from 'astro:content';
+import ArtNav from '@/components/ArtNav.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const order = ['we-survived', 'the-end', 'lullaby'];
+const songs = (await getCollection('songs')).sort(
+  (a, b) => order.indexOf(a.id) - order.indexOf(b.id),
+);
+---
+
+<BaseLayout
+  title="Songs"
+  description="Songs and demos by Becca Berry, including 30/We Survived, The End, and Lullaby with Galactic Monk. Listen here."
+>
+  <PageHeader eyebrow="Art" title="Songs">
+    <div class="nav">
+      <ArtNav />
+    </div>
+  </PageHeader>
+
+  <div class="wrap body">
+    <p class="intro">
+      I’ll be adding demos that I’ve been working on, just expressing and getting these songs out of
+      me while also finding my sound.
+    </p>
+    <ul class="tracks">
+      {songs.map((song) => (
+        <li class="track reveal">
+          <div class="meta">
+            <h2>{song.data.title}</h2>
+            <p class="label">
+              {song.data.artist} · <span class="dur">{song.data.duration}</span>
+            </p>
+          </div>
+          <audio controls preload="none" src={song.data.src}>
+            <a href={song.data.src}>Download “{song.data.title}” (MP3)</a>
+          </audio>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>
+
+<style>
+  .nav {
+    margin-top: 2rem;
+  }
+  .body {
+    padding-bottom: 2rem;
+  }
+  .intro {
+    max-width: 34rem;
+    font-size: var(--text-lede);
+    font-style: italic;
+    color: var(--fg-muted);
+  }
+  .tracks {
+    display: grid;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+  .track {
+    display: grid;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: linear-gradient(165deg, var(--color-night-800), var(--color-night-950));
+    border: 2px solid var(--rule);
+  }
+  @media (min-width: 48rem) {
+    .track {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+      align-items: center;
+    }
+  }
+  h2 {
+    font-size: var(--text-h2);
+    font-weight: 700;
+    line-height: 1.05;
+  }
+  .meta .label {
+    margin-top: 0.4rem;
+    color: var(--color-star-300);
+  }
+  audio {
+    width: 100%;
+    color-scheme: dark;
+  }
+</style>

@@ -1,0 +1,31 @@
+---
+import { safety } from '@/config/site';
+---
+
+<section class="crisis" aria-labelledby="crisis-title">
+  <h2 id="crisis-title" class="label">
+    If you need support right now
+  </h2>
+  <ul>
+    {safety.crisis.map((line) => (
+      <li>
+        <a href={line.href}>{line.how}</a> · {line.name}
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .crisis {
+    max-width: 40rem;
+    padding: 1.1rem 1.4rem;
+    border: 2px solid var(--rule);
+  }
+  h2 {
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+  }
+  li {
+    padding-block: 0.15rem;
+  }
+</style>

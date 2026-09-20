@@ -1,0 +1,7 @@
+# Permanent redirects from the previous Squarespace URLs.
+/new-page              /resources  301
+/info-contact-carson   /contact    301
+/cart                  /           301
+# Blog hidden for now. Restore with the blog.
+# /blog/tag/*            /blog       301
+# /blog/category/*       /blog       301

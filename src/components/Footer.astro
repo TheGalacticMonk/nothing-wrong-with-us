@@ -1,0 +1,139 @@
+---
+import { artSections, mainNav, safety, site, social } from '@/config/site';
+import Star from './Star.astro';
+import Wordmark from './Wordmark.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer no-print">
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <p class="mark">
+          <Wordmark />
+        </p>
+        <p class="tagline">{site.tagline}.</p>
+      </div>
+
+      <nav aria-label="Explore">
+        <h2 class="label">Explore</h2>
+        <ul>
+          {mainNav.map((item) => (
+            <>
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+              {item.href === '/art' &&
+                artSections.map((sub) => (
+                  <li class="sub">
+                    <a href={sub.href}>{sub.label}</a>
+                  </li>
+                ))}
+            </>
+          ))}
+        </ul>
+      </nav>
+
+      <nav aria-label="Follow">
+        <h2 class="label">Follow</h2>
+        <ul>
+          {social.map((item) => (
+            <li>
+              <a href={item.href} target="_blank" rel="noopener noreferrer">
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <section aria-labelledby="support-heading">
+        <h2 id="support-heading" class="label">
+          If you need support now
+        </h2>
+        <ul>
+          {safety.crisis.map((line) => (
+            <li>
+              <a href={line.href}>{line.how}</a>
+              <span class="who">{line.name}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+
+    <div class="bottom">
+      <span class="dot">
+        <Star />
+      </span>
+      <p>{safety.legalNotice}</p>
+      <p>
+        &copy; {year} {site.name}
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: clamp(2.5rem, 5vw, 5rem);
+    padding-block: clamp(3rem, 6vw, 5rem) 2rem;
+    background: var(--color-night-950);
+  }
+  .top {
+    display: grid;
+    gap: 2.5rem;
+  }
+  @media (min-width: 52rem) {
+    .top {
+      grid-template-columns: 1.7fr 1fr 1fr 1.4fr;
+      gap: 3rem;
+    }
+  }
+  .mark {
+    font-size: 1.7rem;
+    line-height: 1.1;
+  }
+  .tagline {
+    margin-top: 0.5rem;
+    font-style: italic;
+    color: var(--fg-muted);
+  }
+  h2 {
+    margin-bottom: 0.9rem;
+    font-family: var(--font-label);
+    font-size: var(--text-label);
+    color: #fff;
+  }
+  ul {
+    display: grid;
+    gap: 0.15rem;
+  }
+  li a {
+    display: inline-block;
+    padding-block: 0.3rem;
+  }
+  .sub {
+    padding-left: 1rem;
+    font-size: 0.95em;
+  }
+  .who {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--fg-muted);
+  }
+  .bottom {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--fg-muted);
+    border-top: 1px solid var(--rule);
+  }
+  .dot {
+    width: 1rem;
+    color: var(--color-orchid-400);
+  }
+</style>

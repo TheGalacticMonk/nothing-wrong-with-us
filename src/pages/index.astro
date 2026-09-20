@@ -1,0 +1,522 @@
+---
+import { Image, Picture } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Star from '@/components/Star.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { site } from '@/config/site';
+import heroArt from '@/assets/hero/commission-portrait.png';
+import portrait from '@/assets/becca-portrait.webp';
+
+// Blog hidden for now: restore `posts`, the "Read" door, and remove `.door-songs` span below.
+const [collage, /* posts, */ songs, videos] = await Promise.all([
+  getCollection('collage'),
+  // getCollection('blog'),
+  getCollection('songs'),
+  getCollection('videos'),
+]);
+collage.sort((a, b) => a.id.localeCompare(b.id));
+const tiles = ['collage-11', 'collage-19', 'collage-03']
+  .map((id) => collage.find((c) => c.id === id))
+  .filter((c) => c !== undefined);
+
+const stanzas = ['You’re not alone.', 'You’re not too much.', 'You’re not crazy.', 'You survived.'];
+---
+
+<BaseLayout
+  isHome
+  title={site.name}
+  description="A spiritual and artistic storytelling platform for survivors, curated by Becca Berry, Esq. Nobody is coming to save you. You can save yourself."
+>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-art">
+      <Picture
+        src={heroArt}
+        formats={['avif']}
+        fallbackFormat="webp"
+        quality={36}
+        width={1000}
+        height={1414}
+        widths={[480, 720, 1000, 1400]}
+        sizes="(min-width: 64rem) 58vw, 100vw"
+        alt="Illustration of a woman’s face, half living and half skull, framed by long dark red hair under a painted night sky of stars."
+        loading="eager"
+        fetchpriority="high"
+        pictureAttributes={{ class: 'hero-picture' }}
+      />
+    </div>
+
+    <div class="wrap hero-copy">
+      <p class="label eyebrow">Becca Berry, Esq.</p>
+      <h1 id="hero-title">
+        <span>Nothing</span>
+        <span>Wrong</span>
+        <em>With You</em>
+      </h1>
+      <p class="tagline">{site.tagline}.</p>
+      <div class="cta">
+        <a class="btn" href="/about-me">
+          Read Becca’s story
+        </a>
+        <a class="btn btn-ghost" href="/collage-art">
+          See the collages
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="manifesto section-space" aria-label="A message to survivors">
+    <div class="wrap">
+      <p class="label lead-in reveal">Nobody is coming to save you.</p>
+      <ul class="stanzas">
+        {stanzas.map((line, i) => (
+          <li class:list={['stanza', 'reveal', { last: i === stanzas.length - 1 }]}>{line}</li>
+        ))}
+      </ul>
+      <span class="m-star m-a" aria-hidden="true">
+        <Star delay={0.3} />
+      </span>
+      <span class="m-star m-b" aria-hidden="true">
+        <Star delay={2.1} />
+      </span>
+      <p class="for-the-ones reveal">For the ones who survived what they can’t say out loud—yet</p>
+    </div>
+  </section>
+
+  <section class="story on-paper paper wave-top wave-bottom" aria-labelledby="story-title">
+    <div class="wrap story-grid">
+      <figure class="portrait reveal">
+        <Image
+          src={portrait}
+          alt="Becca Berry looking directly at the camera, with russet locs and a sheer black rose-print top."
+          widths={[360, 560, 760]}
+          sizes="(min-width: 52rem) 30rem, 80vw"
+          quality={80}
+        />
+      </figure>
+      <div class="story-copy">
+        <h2 id="story-title" class="label eyebrow-dark">
+          About Becca
+        </h2>
+        <blockquote class="pull reveal">
+          <p>I’m Becca Berry, Esq., and I’m done pretending healing is pretty.</p>
+        </blockquote>
+        <p class="body reveal">
+          I’m a survivor. A truth-teller. A California-raised attorney who realized the law could
+          sometimes protect people but couldn’t save them, so I learned about the magic that could.
+          I write, sing, collage, and conjure because my healing demanded it.
+        </p>
+        <p class="reveal">
+          <a class="btn" href="/about-me">
+            Read the whole story
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="doors section-space" aria-labelledby="doors-title">
+    <div class="wrap">
+      <h2 id="doors-title" class="label door-heading">
+        Art, in every form
+      </h2>
+      <div class="door-grid">
+        <a class="door door-collage reveal" href="/collage-art">
+          <span class="door-title">Look</span>
+          <span class="door-meta">{collage.length} collages</span>
+          <span class="stack" aria-hidden="true">
+            {tiles.map((tile, i) => (
+              <Image
+                src={tile.data.image}
+                alt=""
+                widths={[240, 360]}
+                sizes="(min-width: 52rem) 12rem, 30vw"
+                class:list={['stack-img', `stack-${i}`]}
+              />
+            ))}
+          </span>
+        </a>
+        {/*
+        <a class="door door-blog reveal" href="/blog">
+          <span class="door-title">Read</span>
+          <span class="door-meta">{posts.length} posts</span>
+        </a>
+        */}
+        <a class="door door-songs reveal" href="/music">
+          <span class="door-title">Listen</span>
+          <span class="door-meta">{songs.length} songs</span>
+        </a>
+        <a class="door door-videos reveal" href="/videos">
+          <span class="door-title">Watch</span>
+          <span class="door-meta">{videos.length} video pieces</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing section-space" aria-labelledby="closing-title">
+    <div class="wrap">
+      <h2 id="closing-title" class="reveal">
+        If you found this website, it’s not an accident.
+      </h2>
+      <p class="reveal">
+        If something in these words made your body say “yes,” trust that. You’re in the right place.
+      </p>
+      <p class="triad reveal">
+        Magic. Art. <em>Truth.</em>
+      </p>
+      <p class="reveal">
+        <a class="btn" href="/contact">
+          Get in touch
+        </a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ---------- Hero ---------- */
+  /* Phones: art on top with the full face visible, fading into the copy below. */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    padding-bottom: 3.5rem;
+    overflow: hidden;
+  }
+  .hero-art {
+    height: clamp(24rem, 66svh, 40rem);
+    mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  }
+  .hero-art :global(.hero-picture),
+  .hero-art :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .hero-art :global(img) {
+    object-fit: cover;
+    object-position: 50% 30%;
+  }
+  .hero-copy {
+    position: relative;
+    margin-top: -8rem;
+  }
+  .eyebrow {
+    margin-bottom: 1.25rem;
+    color: var(--color-star-300);
+  }
+  h1 {
+    font-size: var(--text-display);
+    line-height: var(--text-display--line-height);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--color-paper-50);
+    text-shadow:
+      0 2px 30px rgb(5 8 23 / 0.75),
+      0 0 40px rgb(224 134 212 / 0.25);
+  }
+  h1 span {
+    display: block;
+  }
+  h1 em {
+    display: block;
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: -0.02em;
+    color: var(--color-orchid-400);
+  }
+  .tagline {
+    margin-top: 1.5rem;
+    font-size: var(--text-lede);
+    font-style: italic;
+    text-shadow: 0 1px 14px rgb(5 8 23 / 0.9);
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    margin-top: 2rem;
+  }
+  @media (min-width: 64rem) {
+    .hero {
+      display: grid;
+      align-items: center;
+      min-height: min(100svh, 60rem);
+      padding-block: 4rem;
+    }
+    .hero-art {
+      position: absolute;
+      inset: 0 0 0 auto;
+      z-index: -1;
+      width: 58%;
+      height: auto;
+      mask-image:
+        linear-gradient(to right, transparent 0, #000 38%),
+        linear-gradient(to bottom, #000 80%, transparent 100%);
+      mask-composite: intersect;
+    }
+    .hero-art :global(img) {
+      object-position: 50% 46%;
+    }
+    .hero-copy {
+      margin-top: 0;
+    }
+  }
+
+  /* ---------- Manifesto ---------- */
+  .manifesto .wrap {
+    position: relative;
+  }
+  .m-star {
+    display: none;
+    position: absolute;
+  }
+  @media (min-width: 64rem) {
+    .m-star {
+      display: block;
+    }
+  }
+  .m-a {
+    top: 18%;
+    right: 12%;
+    width: clamp(3rem, 6vw, 5.5rem);
+    color: var(--color-orchid-400);
+  }
+  .m-b {
+    top: 52%;
+    right: 26%;
+    width: 1.4rem;
+    color: var(--color-star-300);
+  }
+  .lead-in {
+    color: var(--color-star-300);
+  }
+  .stanzas {
+    display: grid;
+    gap: clamp(0.5rem, 2vw, 1.5rem);
+    margin-block: 2rem 3rem;
+  }
+  .stanza {
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--heading);
+  }
+  .stanza:nth-child(even) {
+    margin-left: clamp(0rem, 12vw, 10rem);
+  }
+  .stanza.last {
+    font-weight: 700;
+    font-style: normal;
+    color: var(--color-orchid-400);
+  }
+  .for-the-ones {
+    max-width: 30rem;
+    font-size: var(--text-lede);
+    line-height: var(--text-lede--line-height);
+    color: var(--fg-muted);
+  }
+
+  /* ---------- Story ---------- */
+  .story {
+    padding-block: clamp(3rem, 6vw, 6rem);
+  }
+  .story-grid {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  @media (min-width: 52rem) {
+    .story-grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      gap: 4rem;
+    }
+  }
+  .portrait {
+    max-width: 26rem;
+    transform: rotate(-2deg);
+    border: 0.6rem solid var(--color-paper-50);
+    box-shadow: 0 10px 30px rgb(26 20 37 / 0.35);
+  }
+  .portrait :global(img) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: 50% 100%;
+  }
+  .eyebrow-dark {
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+  .pull {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.1;
+    color: var(--heading);
+  }
+  .body {
+    max-width: 34rem;
+    margin-block: 1.5rem 2rem;
+  }
+
+  /* ---------- Doors ---------- */
+  .door-heading {
+    margin-bottom: 2rem;
+    color: var(--color-star-300);
+  }
+  .door-grid {
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 52rem) {
+    .door-grid {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, minmax(11rem, auto));
+    }
+    .door-collage {
+      grid-row: span 2;
+    }
+    .door-videos {
+      grid-column: span 2;
+    }
+    /* Fills the space the hidden "Read" door leaves. Remove when the blog returns. */
+    .door-songs {
+      grid-column: span 2;
+    }
+  }
+  .door {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 11rem;
+    padding: 1.5rem;
+    overflow: hidden;
+    color: var(--fg);
+    text-decoration: none;
+    background: var(--color-night-800);
+    border: 2px solid var(--rule);
+    transition:
+      border-color 0.25s,
+      background-color 0.25s;
+  }
+  .door:hover {
+    color: var(--fg);
+    border-color: var(--color-orchid-400);
+    background: var(--color-night-700);
+  }
+  .door-title {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1;
+  }
+  .door-meta {
+    position: relative;
+    z-index: 1;
+    margin-top: 0.4rem;
+    font-family: var(--font-label);
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-star-300);
+  }
+  /* .door-blog {
+    background: linear-gradient(160deg, var(--color-night-800), var(--color-blood-900));
+  } */
+  .door-songs {
+    background: linear-gradient(160deg, var(--color-night-800), var(--color-night-600));
+  }
+  .door-videos {
+    background: linear-gradient(160deg, var(--color-night-950), var(--color-night-700));
+  }
+  .door-collage {
+    min-height: 24rem;
+  }
+  .stack {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 58%;
+  }
+  .stack-img {
+    position: absolute;
+    width: 42%;
+    height: auto;
+    border: 0.35rem solid var(--color-paper-50);
+    box-shadow: 0 8px 20px rgb(0 0 0 / 0.45);
+    transition: transform 0.35s;
+  }
+  .stack-0 {
+    top: 8%;
+    left: 8%;
+    transform: rotate(-6deg);
+  }
+  .stack-1 {
+    top: 4%;
+    left: 44%;
+    transform: rotate(5deg);
+  }
+  .stack-2 {
+    top: 30%;
+    left: 24%;
+    transform: rotate(-2deg);
+  }
+  .door-collage:hover .stack-0 {
+    transform: rotate(-9deg) translateY(-4px);
+  }
+  .door-collage:hover .stack-1 {
+    transform: rotate(8deg) translateY(-4px);
+  }
+  .door-collage:hover .stack-2 {
+    transform: rotate(0deg) translateY(-6px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stack-img,
+    .door {
+      transition: none;
+    }
+  }
+
+  /* ---------- Closing ---------- */
+  .closing {
+    text-align: center;
+  }
+  .closing h2 {
+    max-width: 18ch;
+    margin-inline: auto;
+    font-size: var(--text-h1);
+    line-height: var(--text-h1--line-height);
+    font-weight: 700;
+  }
+  .closing {
+    padding-bottom: clamp(2rem, 4vw, 4rem);
+  }
+  .closing p {
+    max-width: 34rem;
+    margin: 1.5rem auto 0;
+    font-size: var(--text-lede);
+    line-height: var(--text-lede--line-height);
+  }
+  .triad {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 700;
+    color: var(--color-star-300);
+  }
+  .triad em {
+    font-weight: 300;
+    color: var(--color-orchid-400);
+  }
+  .closing .btn {
+    font-size: 1.05rem;
+  }
+</style>

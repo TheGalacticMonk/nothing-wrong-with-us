@@ -1,0 +1,74 @@
+---
+import { getCollection } from 'astro:content';
+import ArtNav from '@/components/ArtNav.astro';
+import ContentNote from '@/components/ContentNote.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import YouTubeFacade from '@/components/YouTubeFacade.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const order = ['shadowwork', 'mkultrasurvivor', 'judgement'];
+const videos = (await getCollection('videos')).sort(
+  (a, b) => order.indexOf(a.id) - order.indexOf(b.id),
+);
+---
+
+<BaseLayout
+  title="Videos"
+  description="Mixed media video art by Becca Berry: shadowwork, mkultrasurvivor and judgement."
+>
+  <PageHeader eyebrow="Art" title="Videos" lede="Mixed Media Video Art">
+    <div class="nav">
+      <ArtNav />
+    </div>
+    <div class="nav">
+      <ContentNote />
+    </div>
+  </PageHeader>
+
+  <div class="wrap">
+    <ul class="grid">
+      {videos.map((video) => (
+        <li class="reveal">
+          <YouTubeFacade
+            id={video.data.youtubeId}
+            title={video.data.title}
+            poster={video.data.poster}
+          />
+          <h2>{video.data.title}</h2>
+          <p>{video.data.description}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>
+
+<style>
+  .nav {
+    margin-top: 2rem;
+  }
+  .grid {
+    display: grid;
+    gap: 3rem 2rem;
+    padding-bottom: 2rem;
+  }
+  @media (min-width: 52rem) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .grid li:first-child {
+      grid-column: 1 / -1;
+    }
+  }
+  h2 {
+    margin-top: 1rem;
+    font-size: var(--text-h2);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+  }
+  p {
+    max-width: 34rem;
+    margin-top: 0.4rem;
+    color: var(--fg-muted);
+  }
+</style>

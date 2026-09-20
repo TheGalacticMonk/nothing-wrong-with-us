@@ -1,0 +1,23 @@
+[
+  {
+    "id": "we-survived",
+    "title": "30/We Survived",
+    "artist": "BeccaBerry",
+    "duration": "4:11",
+    "src": "/audio/we-survived.mp3"
+  },
+  {
+    "id": "the-end",
+    "title": "The End",
+    "artist": "BeccaBerry",
+    "duration": "2:45",
+    "src": "/audio/the-end.mp3"
+  },
+  {
+    "id": "lullaby",
+    "title": "Lullaby",
+    "artist": "Becca Berry and Galactic Monk",
+    "duration": "3:58",
+    "src": "/audio/lullaby.mp3"
+  }
+]

@@ -1,0 +1,53 @@
+---
+import { safety } from '@/config/site';
+---
+
+<a
+  href={safety.quickExitUrl}
+  class="quick-exit label no-print"
+  data-quick-exit
+  rel="noopener noreferrer"
+  title="Leave this site right away (or press Esc three times)"
+>
+  Quick exit <span aria-hidden="true">✕</span>
+</a>
+
+<script>
+  // Leaves immediately and replaces this page in history so Back doesn't return to it.
+  const link = document.querySelector<HTMLAnchorElement>('[data-quick-exit]');
+  if (link) {
+    const leave = () => window.location.replace(link.href);
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      leave();
+    });
+    let presses = 0;
+    let timer: number | undefined;
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      presses += 1;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => (presses = 0), 1200);
+      if (presses >= 3) leave();
+    });
+  }
+</script>
+
+<style>
+  .quick-exit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    min-height: 2.75rem;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.95rem;
+    color: #fff;
+    text-decoration: none;
+    background: var(--color-blood-700);
+    border: 2px solid var(--color-blood-400);
+  }
+  .quick-exit:hover {
+    color: var(--color-blood-900);
+    background: var(--color-blood-400);
+  }
+</style>

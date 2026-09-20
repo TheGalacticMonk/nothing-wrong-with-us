@@ -1,0 +1,88 @@
+---
+import { getCollection } from 'astro:content';
+import ArtNav from '@/components/ArtNav.astro';
+import ContentNote from '@/components/ContentNote.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+const dateFmt = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+---
+
+<BaseLayout
+  title="Blog"
+  description="Essays and poems by Becca Berry on deconversion, narcissistic abuse, mind control and finding truth, written between 2018 and 2023."
+>
+  <PageHeader eyebrow="Art" title="Blog">
+    <div class="nav">
+      <ArtNav />
+    </div>
+    <div class="nav">
+      <ContentNote />
+    </div>
+  </PageHeader>
+
+  <div class="wrap">
+    <ol class="posts">
+      {posts.map((post) => (
+        <li class="post reveal">
+          <time class="label date" datetime={post.data.date.toISOString().slice(0, 10)}>
+            {dateFmt.format(post.data.date)}
+          </time>
+          <h2>
+            <a href={`/blog/${post.data.path}`}>{post.data.title}</a>
+          </h2>
+          {post.data.excerpt && <p class="excerpt">{post.data.excerpt}</p>}
+          {post.data.tags.length > 0 && <p class="label tags">{post.data.tags.join(' · ')}</p>}
+        </li>
+      ))}
+    </ol>
+  </div>
+</BaseLayout>
+
+<style>
+  .nav {
+    margin-top: 2rem;
+  }
+  .posts {
+    padding-bottom: 2rem;
+  }
+  .post {
+    padding-block: 2rem;
+    border-top: 1px solid var(--rule);
+  }
+  .date {
+    color: var(--color-star-300);
+  }
+  h2 {
+    max-width: 30ch;
+    margin-top: 0.5rem;
+    font-size: var(--text-h2);
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  h2 a {
+    color: var(--heading);
+    text-decoration: none;
+  }
+  h2 a:hover {
+    color: var(--color-orchid-400);
+    text-decoration: underline;
+  }
+  .excerpt {
+    max-width: 34rem;
+    margin-top: 0.75rem;
+    color: var(--fg-muted);
+  }
+  .tags {
+    margin-top: 0.75rem;
+    color: var(--accent);
+  }
+</style>

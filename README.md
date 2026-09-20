@@ -81,4 +81,5 @@ Not tested: real-device screen readers (VoiceOver/NVDA), Safari/Firefox, and a l
 - Collage alt text was written from the images; please review, and supply titles/dates if wanted.
 - **Added, not in the original, needs client approval:** the Quick Exit button (currently removed from the header; `QuickExit.astro` is kept, re-add it in `Header.astro`), content notes, crisis-line block (988, RAINN) and the "not legal advice" footer line. All are defined in `src/config/site.ts` (`safety`) and used by `ContentNote`, `CrisisResources`, `Footer`, `QuickExit`.
 - The hero artwork has no credit line yet. Add the artist's name once confirmed.
+
 # nothing-wrong-with-us

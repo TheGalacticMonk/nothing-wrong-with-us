@@ -1,0 +1,185 @@
+---
+import { formspreeId } from '@/config/site';
+
+const action = formspreeId ? `https://formspree.io/f/${formspreeId}` : undefined;
+if (!action) {
+  console.warn(
+    '[contact] PUBLIC_FORMSPREE_ID is not set. /contact shows the form, but sending is disabled until it is.',
+  );
+}
+
+const topics = ['Booking', 'Press', 'Collaboration', 'Support', 'Something else'];
+---
+
+<form
+  {action}
+  method="POST"
+  data-contact-form
+  data-unconfigured={action ? undefined : ''}
+  class="form"
+  aria-labelledby="form-title"
+>
+  <h2 id="form-title" class="label">
+    Send a message
+  </h2>
+
+  <div class="field">
+    <label for="cf-name">Your name</label>
+    <input
+      data-required="Please enter your name."
+      id="cf-name"
+      name="name"
+      type="text"
+      autocomplete="name"
+      required
+      data-field
+      aria-describedby="cf-name-error"
+    />
+    <p id="cf-name-error" class="field-error" hidden />
+  </div>
+
+  <div class="field">
+    <label for="cf-email">Your email</label>
+    <input
+      data-required="Please enter your email address."
+      id="cf-email"
+      name="email"
+      type="email"
+      autocomplete="email"
+      required
+      data-field
+      aria-describedby="cf-email-error"
+    />
+    <p id="cf-email-error" class="field-error" hidden />
+  </div>
+
+  <div class="field">
+    <label for="cf-topic">What is this about?</label>
+    <select id="cf-topic" name="topic">
+      {topics.map((t) => (
+        <option>{t}</option>
+      ))}
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="cf-message">Message</label>
+    <textarea
+      data-required="Please write a message."
+      id="cf-message"
+      name="message"
+      rows="6"
+      required
+      data-field
+      aria-describedby="cf-message-error"
+    ></textarea>
+    <p id="cf-message-error" class="field-error" hidden />
+  </div>
+
+  <!-- Honeypot: real people never see or fill this. -->
+  <div class="trap" aria-hidden="true">
+    <label>
+      Leave this field empty
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+    </label>
+  </div>
+
+  <p class="status" role="status" tabindex="-1" data-status></p>
+  <button type="submit" class="btn" disabled={!action}>
+    Send message
+  </button>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>(
+    '[data-contact-form]:not([data-unconfigured])',
+  );
+  if (form) {
+    form.noValidate = true; // Use our own accessible messages; without JS the browser's still apply.
+    const status = form.querySelector<HTMLElement>('[data-status]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const fields = [
+      ...form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[data-field]'),
+    ];
+
+    const validate = (el: HTMLInputElement | HTMLTextAreaElement) => {
+      const error = form.querySelector<HTMLElement>(`#${el.id}-error`);
+      if (!error) return el.validity.valid;
+      if (el.validity.valid) {
+        el.removeAttribute('aria-invalid');
+        error.hidden = true;
+        error.textContent = '';
+        return true;
+      }
+      el.setAttribute('aria-invalid', 'true');
+      error.textContent = el.validity.typeMismatch
+        ? 'Enter a valid email address, like name@example.com.'
+        : (el.dataset.required ?? 'This field is required.');
+      error.hidden = false;
+      return false;
+    };
+    fields.forEach((el) => el.addEventListener('blur', () => validate(el)));
+    fields.forEach((el) =>
+      el.addEventListener('input', () => el.hasAttribute('aria-invalid') && validate(el)),
+    );
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!status || !button) return;
+      const invalid = fields.filter((el) => !validate(el));
+      if (invalid.length) {
+        invalid[0].focus();
+        return;
+      }
+      button.disabled = true;
+      status.textContent = 'Sending…';
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        if (!response.ok) throw new Error(String(response.status));
+        form.reset();
+        status.textContent = 'Thank you. Your message has been sent.';
+      } catch {
+        status.textContent =
+          'Something went wrong and your message was not sent. Please try again.';
+      } finally {
+        button.disabled = false;
+        status.focus();
+      }
+    });
+  }
+</script>
+
+<style>
+  .form {
+    display: grid;
+    gap: 1.25rem;
+  }
+  h2 {
+    color: var(--accent);
+  }
+  .trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .status {
+    min-height: 1.5rem;
+    font-weight: 700;
+  }
+  .status:focus {
+    outline: none;
+  }
+  .btn {
+    justify-self: start;
+  }
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: progress;
+  }
+</style>

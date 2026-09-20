@@ -1,0 +1,76 @@
+---
+import { Font } from 'astro:assets';
+import Footer from '@/components/Footer.astro';
+import Header from '@/components/Header.astro';
+import SEO from '@/components/SEO.astro';
+import ShootingStars from '@/components/ShootingStars.astro';
+import '@/styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  publishedTime?: Date;
+  jsonLd?: Record<string, unknown>[];
+  noindex?: boolean;
+  isHome?: boolean;
+}
+const props = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0a1030" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <Font
+      cssVariable="--font-fraunces"
+      preload={[
+        { weight: 700, style: 'normal' },
+        { weight: 300, style: 'italic' },
+      ]}
+    />
+    <Font cssVariable="--font-barlow" preload={[{ weight: 600 }]} />
+    <SEO {...props} />
+  </head>
+  <body>
+    <ShootingStars />
+    <a href="#main" class="skip label">
+      Skip to content
+    </a>
+    <Header />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style is:global>
+  .skip {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 100;
+    padding: 0.75rem 1.25rem;
+    color: var(--color-night-950);
+    background: var(--color-star-300);
+    transform: translateY(-200%);
+  }
+  .skip:focus {
+    transform: none;
+  }
+  main:focus {
+    outline: none;
+  }
+  /* Keep page content above the fixed shooting-star layer. */
+  main,
+  footer {
+    position: relative;
+    z-index: 1;
+  }
+</style>

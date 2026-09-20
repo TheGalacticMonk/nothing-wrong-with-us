@@ -1,0 +1,273 @@
+---
+import { mainNav, publicPath, type NavItem } from '@/config/site';
+import Wordmark from './Wordmark.astro';
+
+const path = publicPath(Astro.url.pathname);
+const matches = (href: string) => path === href || path.startsWith(`${href}/`);
+const isCurrent = (item: NavItem) => matches(item.href) || (item.also?.some(matches) ?? false);
+---
+
+<header class="site-header no-print">
+  <div class="wrap bar">
+    <a href="/" class="home" aria-label="Nothing Wrong With You, home">
+      <Wordmark />
+    </a>
+
+    <nav class="desktop-nav" aria-label="Main">
+      <ul>
+        {mainNav.map((item) => (
+          <li>
+            <a href={item.href} class="label" aria-current={isCurrent(item) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <details class="mobile-nav" data-mobile-nav>
+      <summary class="menu-btn label">
+        <span>Menu</span>
+        <span class="bars" aria-hidden="true">
+          <span class="bar-list top"></span>
+          <span class="bar-list middle"></span>
+          <span class="bar-list bottom"></span>
+        </span>
+      </summary>
+      <nav class="menu-container" aria-label="Main">
+        <ul>
+          {mainNav.map((item) => (
+            <li class="menu-list">
+              <a href={item.href} aria-current={isCurrent(item) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<script>
+  // The menu works without JS (it is a <details>); this only adds Escape and click-away to close.
+  const nav = document.querySelector<HTMLDetailsElement>('[data-mobile-nav]');
+  if (nav) {
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && nav.open) {
+        nav.open = false;
+        nav.querySelector('summary')?.focus();
+      }
+    });
+    document.addEventListener('click', (event) => {
+      if (nav.open && event.target instanceof Node && !nav.contains(event.target)) nav.open = false;
+    });
+    window.matchMedia('(min-width: 52rem)').addEventListener('change', (event) => {
+      if (event.matches) nav.open = false;
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgb(5 8 23 / 0.86);
+    backdrop-filter: blur(10px);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3.5rem;
+  }
+  .home {
+    font-size: clamp(1.15rem, 0.95rem + 1vw, 1.6rem);
+    line-height: 1.1;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .desktop-nav {
+    display: none;
+  }
+  .desktop-nav ul {
+    display: flex;
+    gap: clamp(1rem, 2.5vw, 2.25rem);
+  }
+  .desktop-nav a {
+    display: inline-block;
+    padding-block: 0.6rem;
+    color: var(--fg);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+  }
+  .desktop-nav a:hover {
+    color: var(--color-orchid-300);
+    border-color: var(--color-orchid-300);
+  }
+  .desktop-nav a[aria-current='page'] {
+    border-color: var(--color-orchid-400);
+  }
+  /* Hamburger: bars morph to an X while open; the panel opens with a staggered reveal. */
+  .mobile-nav {
+    position: relative;
+  }
+  .menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: 2.5rem;
+    padding: 0.2rem 0.95rem;
+    color: var(--color-night-950);
+    cursor: pointer;
+    list-style: none;
+    background: var(--color-orchid-400);
+    border-radius: 10px;
+    user-select: none;
+    transition: background-color 0.2s;
+  }
+  .menu-btn::-webkit-details-marker {
+    display: none;
+  }
+  .menu-btn:hover {
+    background: var(--color-orchid-300);
+  }
+  .menu-btn:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+  .bars {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 20px;
+  }
+  .bar-list {
+    display: block;
+    width: 100%;
+    height: 3px;
+    border-radius: 50px;
+    background: var(--color-night-950);
+    transition:
+      transform 0.4s,
+      opacity 0.4s;
+  }
+  /* 6px = bar height (3px) + gap (3px), so the outer bars meet in the middle. */
+  .mobile-nav[open] .top {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .mobile-nav[open] .middle {
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+  .mobile-nav[open] .bottom {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  .menu-container {
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    right: 0;
+    z-index: 1;
+    width: min(16rem, calc(100vw - 2.5rem));
+    overflow: hidden;
+    color: var(--color-ink-900);
+    background: var(--color-paper-50);
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.45);
+    animation: menu-open 0.4s cubic-bezier(0.15, 0.83, 0.66, 1) both;
+  }
+  .menu-list {
+    position: relative;
+    animation: menu-item-in 0.4s cubic-bezier(0.15, 0.83, 0.66, 1) both;
+    animation-delay: calc(0.25s + var(--i, 0) * 0.12s);
+  }
+  .menu-list:nth-child(1) {
+    --i: 0;
+  }
+  .menu-list:nth-child(2) {
+    --i: 1;
+  }
+  .menu-list:nth-child(3) {
+    --i: 2;
+  }
+  .menu-list:nth-child(4) {
+    --i: 3;
+  }
+  .menu-list:nth-child(5) {
+    --i: 4;
+  }
+  .menu-list + .menu-list::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 95%;
+    height: 1px;
+    background: rgb(0 0 0 / 0.3);
+    transform: translateX(-50%);
+  }
+  .menu-list a {
+    display: block;
+    padding: 0.85rem 1.1rem;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-style: italic;
+    color: inherit;
+    text-decoration: none;
+    transition: background-color 0.2s;
+  }
+  .menu-list a:hover,
+  .menu-list a:focus-visible {
+    background: rgb(0 0 0 / 0.08);
+  }
+  .menu-list a[aria-current='page'] {
+    font-weight: 700;
+    color: var(--color-orchid-700);
+  }
+
+  @keyframes menu-open {
+    from {
+      clip-path: inset(10% 50% 90% 50% round 10px);
+    }
+    to {
+      clip-path: inset(0% 0% 0% 0% round 10px);
+    }
+  }
+  @keyframes menu-item-in {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .menu-container,
+    .menu-list {
+      animation: none;
+    }
+    .bar-list {
+      transition: none;
+    }
+  }
+
+  @media (min-width: 36rem) {
+    .bar {
+      min-height: 4.25rem;
+    }
+  }
+  @media (min-width: 52rem) {
+    .desktop-nav {
+      display: block;
+    }
+    .mobile-nav {
+      display: none;
+    }
+  }
+</style>

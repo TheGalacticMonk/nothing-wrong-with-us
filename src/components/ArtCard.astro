@@ -1,0 +1,54 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  meta: string;
+  blurb?: string;
+}
+const { href, title, meta, blurb } = Astro.props;
+---
+
+<a {href} class="card reveal">
+  <span class="title">{title}</span>
+  <span class="meta label">{meta}</span>
+  {blurb && <span class="blurb">{blurb}</span>}
+</a>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-height: 14rem;
+    padding: 1.75rem;
+    justify-content: flex-end;
+    color: var(--fg);
+    text-decoration: none;
+    background: linear-gradient(165deg, var(--color-night-800), var(--color-night-950));
+    border: 2px solid var(--rule);
+    transition: border-color 0.25s;
+  }
+  .card:hover {
+    color: var(--fg);
+    border-color: var(--color-orchid-400);
+  }
+  .title {
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1;
+  }
+  .meta {
+    color: var(--color-star-300);
+  }
+  .blurb {
+    max-width: 28rem;
+    color: var(--fg-muted);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,48 @@
+---
+import { artSections, publicPath } from '@/config/site';
+
+const path = publicPath(Astro.url.pathname);
+const current = (href: string) => path === href || path.startsWith(`${href}/`);
+---
+
+<nav class="art-nav" aria-label="Art sections">
+  <ul>
+    <li>
+      <a href="/art" class="label" aria-current={path === '/art' ? 'page' : undefined}>
+        All art
+      </a>
+    </li>
+    {artSections.map((item) => (
+      <li>
+        <a href={item.href} class="label" aria-current={current(item.href) ? 'page' : undefined}>
+          {item.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  a {
+    display: inline-block;
+    padding: 0.55rem 1rem;
+    color: var(--fg);
+    text-decoration: none;
+    border: 2px solid var(--rule);
+  }
+  a:hover {
+    color: var(--color-night-950);
+    background: var(--color-star-300);
+    border-color: var(--color-star-300);
+  }
+  a[aria-current='page'] {
+    color: var(--color-night-950);
+    background: var(--color-orchid-400);
+    border-color: var(--color-orchid-400);
+  }
+</style>

@@ -1,0 +1,152 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import ContentNote from '@/components/ContentNote.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { site } from '@/config/site';
+
+export const getStaticPaths = (async () => {
+  const posts = (await getCollection('blog')).sort(
+    (a, b) => a.data.date.getTime() - b.data.date.getTime(),
+  );
+  return posts.map((post, i) => ({
+    params: { path: post.data.path },
+    props: { post, older: posts[i - 1], newer: posts[i + 1] },
+  }));
+}) satisfies GetStaticPaths;
+
+const { post, older, newer } = Astro.props;
+const { Content } = await render(post);
+const { title, date, excerpt } = post.data;
+
+const description =
+  excerpt.length > 60 ? excerpt : `${title}. A post by Becca Berry on Nothing Wrong With You.`;
+const dateLong = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+}).format(date);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  type="article"
+  publishedTime={date}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: title,
+      datePublished: date.toISOString().slice(0, 10),
+      author: { '@type': 'Person', name: site.owner },
+      mainEntityOfPage: `${site.url}/blog/${post.data.path}`,
+    },
+  ]}
+>
+  <article>
+    <header class="wrap head">
+      <p class="label">
+        <a href="/blog">← Blog</a>
+      </p>
+      <h1>{title}</h1>
+      <p class="label date">
+        <time datetime={date.toISOString().slice(0, 10)}>{dateLong}</time> · Rebecca Berry
+      </p>
+      <div class="note">
+        <ContentNote />
+      </div>
+    </header>
+
+    <div class="wrap">
+      <div class="on-paper paper wave-top wave-bottom panel">
+        <div class="prose">
+          <Content />
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <nav class="wrap pager" aria-label="More posts">
+    {older ? (
+      <a href={`/blog/${older.data.path}`} rel="prev">
+        <span class="label">← Older</span>
+        <span class="t">{older.data.title}</span>
+      </a>
+    ) : (
+      <span />
+    )}
+    {newer ? (
+      <a href={`/blog/${newer.data.path}`} rel="next" class="next">
+        <span class="label">Newer →</span>
+        <span class="t">{newer.data.title}</span>
+      </a>
+    ) : (
+      <span />
+    )}
+  </nav>
+</BaseLayout>
+
+<style>
+  .head {
+    padding-block: clamp(3rem, 2rem + 4vw, 6rem) 2rem;
+  }
+  .head > .label:first-child a {
+    text-decoration: none;
+  }
+  h1 {
+    max-width: 22ch;
+    margin-top: 1rem;
+    font-size: var(--text-h1);
+    font-weight: 700;
+    line-height: var(--text-h1--line-height);
+    letter-spacing: -0.02em;
+  }
+  .date {
+    margin-top: 1.25rem;
+    color: var(--color-star-300);
+  }
+  .note {
+    margin-top: 1.75rem;
+  }
+  .panel {
+    padding-inline: clamp(1.5rem, 5vw, 4rem);
+  }
+  .panel :global(.prose) {
+    margin-inline: auto;
+  }
+  .pager {
+    display: grid;
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+  .pager a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1.1rem 1.4rem;
+    color: var(--fg);
+    text-decoration: none;
+    border: 2px solid var(--rule);
+  }
+  .pager a:hover {
+    border-color: var(--color-orchid-400);
+  }
+  .pager .label {
+    color: var(--color-star-300);
+  }
+  .pager .t {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    line-height: 1.2;
+  }
+  @media (min-width: 48rem) {
+    .pager {
+      grid-template-columns: 1fr 1fr;
+    }
+    .pager .next {
+      text-align: right;
+    }
+  }
+</style>

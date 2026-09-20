@@ -1,0 +1,27 @@
+---
+interface Props {
+  class?: string;
+  /** Seconds. Staggers the twinkle so a group of stars doesn't pulse in unison. */
+  delay?: number;
+}
+const { class: className, delay = 0 } = Astro.props;
+---
+
+<svg
+  class:list={['twinkle', className]}
+  style={`--twinkle-delay:${delay}s`}
+  viewBox="0 0 64 64"
+  aria-hidden="true"
+  focusable="false"
+  fill="currentColor"
+>
+  <path d="M32 2c1.9 16.6 7.4 22.1 30 30-22.6 7.9-28.1 13.4-30 30C30.1 45.4 24.6 39.9 2 32c22.6-7.9 28.1-13.4 30-30z"></path>
+</svg>
+
+<style>
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>
