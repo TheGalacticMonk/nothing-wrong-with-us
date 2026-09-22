@@ -12,7 +12,7 @@ export const Media: CollectionConfig = {
     hideAPIURL: true,
     group: 'Library',
     description:
-      'Photos and artwork used on the pages: portraits, the Home page artwork, video covers. (Collage pieces live under Art → Collage.)',
+      'Photos and artwork used on the pages: portraits, the Home page artwork, video covers. (Collage pieces live under Art → Collage.) Replacing the file of an image here changes it on every page that uses it; to change one page only, upload a new image from that page instead.',
     defaultColumns: ['filename', 'alt', 'updatedAt'],
     useAsTitle: 'alt',
   },
