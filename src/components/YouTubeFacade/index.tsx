@@ -8,7 +8,7 @@ import styles from './YouTubeFacade.module.css'
 interface Props {
   id: string
   title: string
-  poster: { src: string; width: number; height: number }
+  poster: { src: string; width: number; height: number; unoptimized?: boolean }
 }
 
 /**
@@ -50,6 +50,7 @@ export const YouTubeFacade = ({ id, title, poster }: Props) => {
             src={poster.src}
             width={poster.width}
             height={poster.height}
+            unoptimized={poster.unoptimized}
             alt=""
             sizes="(min-width: 64rem) 40vw, 92vw"
             quality={70}

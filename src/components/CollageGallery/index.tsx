@@ -11,6 +11,7 @@ export interface CollageItem {
   src: string
   width: number
   height: number
+  unoptimized?: boolean
 }
 
 /** Gallery grid plus a <dialog> viewer (arrow keys, Previous/Next, backdrop click closes). */
@@ -48,6 +49,7 @@ export const CollageGallery = ({ items }: { items: CollageItem[] }) => {
                     alt={item.alt}
                     width={item.width}
                     height={item.height}
+                    unoptimized={item.unoptimized}
                     sizes={
                       wide
                         ? '(min-width: 64rem) 50vw, (min-width: 40rem) 66vw, 100vw'
