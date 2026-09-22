@@ -1,123 +1,86 @@
-# Payload Cloudflare Template
+# Nothing Wrong With You
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/payloadcms/payload/tree/3.x/templates/with-cloudflare-d1)
+Website and CMS for [nothingwrongwithyou.org](https://www.nothingwrongwithyou.org).
 
-**This can only be deployed on Paid Workers right now due to size limits.** This template comes configured with the bare minimum to get started on anything you need.
+- **Stack:** Next.js 16 (App Router) with Payload CMS 3, on Cloudflare Workers via OpenNext.
+- **Storage:** D1 for content, R2 for uploads.
+- **Origin:** migrated from the Astro site that is preserved in `legacy/astro/`.
 
-## Quick start
+| Doc | For |
+| --- | --- |
+| [docs/CLIENT-GUIDE.md](docs/CLIENT-GUIDE.md) | The client: editing, images, preview, publishing |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | Deploy, environment, backups, rollback, security |
+| [docs/migration/](docs/migration/) | Audit, architecture decisions, content migration inventory |
+| [docs/QA-REPORT.md](docs/QA-REPORT.md) | Latest release verification |
 
-This template can be deployed directly to Cloudflare Workers by clicking the button to take you to the setup screen.
+## Local development
 
-From there you can connect your code to a git provider such Github or Gitlab, name your Workers, D1 Database and R2 Bucket as well as attach any additional environment variables or services you need.
+Requires Node ≥ 22.12 and pnpm.
 
-## Quick Start - local setup
-
-To spin up this template locally, follow these steps:
-
-### Clone
-
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. Cloudflare will connect your app to a git provider such as Github and you can access your code from there.
-
-### Local Development
-
-## How it works
-
-Out of the box, using [`Wrangler`](https://developers.cloudflare.com/workers/wrangler/) will automatically create local bindings for you to connect to the remote services and it can even create a local mock of the services you're using with Cloudflare.
-
-We've pre-configured Payload for you with the following:
-
-### Collections
-
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
-
-- #### Users (Authentication)
-
-  Users are auth-enabled collections that have access to the admin panel.
-
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/3.x/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
-
-- #### Media
-
-  This is the uploads enabled collection.
-
-### Image Storage (R2)
-
-Images will be served from an R2 bucket which you can then further configure to use a CDN to serve for your frontend directly.
-
-### D1 Database
-
-The Worker will have direct access to a D1 SQLite database which Wrangler can connect locally to, just note that you won't have a connection string as you would typically with other providers.
-
-You can enable read replicas by adding `readReplicas: 'first-primary'` in the DB adapter and then enabling it on your D1 Cloudflare dashboard. Read more about this feature on [our docs](https://payloadcms.com/docs/database/sqlite#d1-read-replicas).
-
-## Working with Cloudflare
-
-Firstly, after installing dependencies locally you need to authenticate with Wrangler by running:
-
-```bash
-pnpm wrangler login
+```sh
+pnpm install
+cp .env.example .env          # set PAYLOAD_SECRET (openssl rand -hex 32) and the SEED_* accounts
+pnpm payload migrate          # create the local D1 schema (wrangler emulation in .wrangler/)
+pnpm seed                     # import the site's content + create local admin/editor accounts
+pnpm verify:content           # check the import against legacy/astro
+node_modules/.bin/next dev    # http://localhost:3000, admin at /admin
 ```
 
-This will take you to Cloudflare to login and then you can use the Wrangler CLI locally for anything, use `pnpm wrangler help` to see all available options.
+- **Start the dev server with the binary directly, not `pnpm dev`.** Under pnpm 12, `pnpm dev` has emptied `node_modules`.
+- **Test on the real Workers runtime** with `pnpm preview:local`. It runs the OpenNext build, then `wrangler dev --local` on port 8787.
 
-Wrangler is pretty smart so it will automatically bind your services for local development just by running `pnpm dev`.
+**Nothing local touches Cloudflare.** Remote D1/R2 is used only when `PAYLOAD_REMOTE_BINDINGS=1` is set. That happens in `pnpm run deploy:database`, and in a remote seed, which also requires `--allow-remote` and `SEED_CONFIRM=I_UNDERSTAND`.
 
-## Deployments
+## How it fits together
 
-When you're ready to deploy, first make sure you have created your migrations:
-
-```bash
-pnpm payload migrate:create
+```
+src/
+  payload.config.ts      D1 adapter, R2 storage, admin config, collections/globals
+  collections/           Collage, Songs, Videos (orderable, drafts), Media, Users (admin/editor)
+  globals/               Home, About, Art, Resources, Contact (drafts + Live Preview), SiteSettings
+  fields/                Shared fields: restricted Lexical editor, SEO group, alt text, page buttons
+  access/                Role and draft-visibility rules
+  hooks/revalidate.ts    Publish → revalidateTag(…, { expire: 0 }) so the site updates immediately
+  admin/                 Branded logo/icon, task dashboard, plain-language translations
+  lib/content.ts         The only way the frontend reads CMS data (cached + tagged; drafts in preview)
+  lib/paths.ts           Which URL each page global renders (preview, revalidation, sitemap)
+  app/(frontend)/        Public pages (server components) + CSS Modules
+  app/(payload)/         Payload admin and REST API
+  app/next/preview       Draft-mode entry (requires a logged-in user)
+  components/            Ported Astro components
+scripts/                 seed.ts, verify-content.ts (idempotent, guarded)
+legacy/astro/            The original Astro site, untouched
 ```
 
-Then run the following command:
+**Content model.** Each page has a fixed layout, so each page is a global with dedicated fields; there is no page builder. The art lists are orderable collections. Site-wide text lives in Site Settings. This includes the support messages, each with an on/off switch, and the Formspree ID.
 
-```bash
-pnpm run deploy
+**Caching.** Frontend routes render on demand. Their data comes through `unstable_cache`, tagged `global:<slug>` / `collection:<slug>` and always `collection:media`. On Workers the cache is OpenNext's R2 incremental cache plus the D1 tag cache (`open-next.config.ts`). Publishing expires the tags.
+
+**Images.**
+- Workers has no sharp, so Payload stores originals only: no crop, focal point or generated sizes.
+- In production, uploads are linked from the R2 public hostname (`MEDIA_PUBLIC_URL`) and resized on delivery through the Cloudflare Images binding.
+- Files served by Payload itself (`/api/*/file/*`) are shown unoptimised. This covers local development and any setup without `MEDIA_PUBLIC_URL`.
+
+## Common changes
+
+- **Add a field:**
+  1. Edit the collection/global.
+  2. Run `pnpm payload generate:types`.
+  3. Run `pnpm payload migrate:create <name>`.
+  4. Commit the migration.
+  5. Use the field in the page.
+- **Add a page:**
+  1. Create a global via `pageGlobal()` in `src/globals/`.
+  2. Add its path to `src/lib/paths.ts` and register it in `payload.config.ts`.
+  3. Add the route under `app/(frontend)/`, the sitemap entry and a dashboard card in `src/admin/Welcome.tsx`.
+- **Admin wording:** use field `label`/`admin.description`, or `src/admin/translations.ts` for Payload's own UI text.
+
+## Checks
+
+```sh
+pnpm exec tsc --noEmit
+pnpm lint
+NODE_ENV=production pnpm build
+pnpm verify:content
+pnpm test            # integration + Playwright (see tests/)
 ```
-
-This will spin up Wrangler in `production` mode, run any created migrations, build the app and then deploy the bundle up to Cloudflare.
-
-That's it! You can if you wish move these steps into your CI pipeline as well.
-
-## Enabling logs
-
-By default logs are not enabled for your API, we've made this decision because it does run against your quota so we've left it opt-in. But you can easily enable logs in one click in the Cloudflare panel, [see docs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/#enable-workers-logs).
-
-### Logger Configuration
-
-This template includes a custom console-based logger compatible with Cloudflare Workers. Payload's default logger uses `pino-pretty`, which relies on Node.js APIs not available in Workers and would cause `fs.write is not implemented` errors.
-
-The custom logger in `payload.config.ts`:
-
-- Routes logs through `console.*` methods which Workers handles correctly
-- Outputs JSON-formatted logs for Cloudflare observability
-- Only active in production (development uses the default `pino-pretty` for better DX)
-
-You can control the log level via the `PAYLOAD_LOG_LEVEL` environment variable (e.g., `debug`, `info`, `warn`, `error`).
-
-### Diagnostic Channel Errors
-
-If you see "Failed to publish diagnostic channel message" errors in your observability logs, these typically come from the `undici` HTTP client library. The template includes `skipSafeFetch: true` in the Media collection to use native fetch instead of undici for file uploads, which helps reduce these errors.
-
-Cloudflare Workers runs in an [isolated environment that cannot access private IP ranges](https://developers.cloudflare.com/workers-vpc/examples/route-across-private-services/) by default, providing built-in SSRF protection. This makes `skipSafeFetch` safe to use.
-
-## Known issues
-
-### Image resizing
-
-Workers do not support `sharp`, so image resizing features are not available. The Media collection has `crop` and `focalPoint` disabled for this reason, and options like `imageSizes` will not work.
-
-### GraphQL
-
-We are currently waiting on some issues with GraphQL to be [fixed upstream in Workers](https://github.com/cloudflare/workerd/issues/5175) so full support for GraphQL is not currently guaranteed when deployed.
-
-### Worker size limits
-
-We currently recommend deploying this template to the Paid Workers plan due to bundle [size limits](https://developers.cloudflare.com/workers/platform/limits/#worker-size) of 3mb. We're actively trying to reduce our bundle footprint over time to better meet this metric.
-
-This also applies to your own code, in the case of importing a lot of libraries you may find yourself limited by the bundle.
-
-## Questions
-
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
