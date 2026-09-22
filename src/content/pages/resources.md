@@ -57,3 +57,6 @@ If you’re on my website, you can always [reach out to me](/contact) for suppor
 - <https://www.systemspeak.org/about/>
 - <https://deprogramwiki.com>
 - <https://sacredgeometryinternational.com/tracy-twyman-mysterium-baphometis-revelatum-documentary-part-1/>
+- <https://ovadosepeace.wordpress.com/>
+- <https://quantumconsciousnessawakening.com/>
+- <https://sovereign-alliance.org>

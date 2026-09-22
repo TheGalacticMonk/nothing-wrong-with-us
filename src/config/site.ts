@@ -46,6 +46,8 @@ export const social = [
   { label: 'Instagram (art)', href: 'https://www.instagram.com/nothingwrongwithus' },
   { label: 'Facebook', href: 'https://www.facebook.com/nothingwrongwithyouorg/' },
   { label: 'Twitter', href: 'https://twitter.com/mksurvivor' },
+  { label: 'Threads', href: 'https://www.threads.com/@beccaberry' },
+  { label: 'YouTube', href: 'https://www.youtube.com/@nothingwrongwithus' },
 ] as const;
 
 export const featuredMedia = {

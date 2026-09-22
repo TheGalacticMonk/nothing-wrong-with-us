@@ -1,5 +1,5 @@
 ---
-import { mainNav, publicPath, type NavItem } from '@/config/site';
+import { mainNav, social, publicPath, type NavItem } from '@/config/site';
 import Wordmark from './Wordmark.astro';
 
 const path = publicPath(Astro.url.pathname);
@@ -22,6 +22,20 @@ const isCurrent = (item: NavItem) => matches(item.href) || (item.also?.some(matc
             </a>
           </li>
         ))}
+        <li>
+          <details class="social-dropdown" data-social-dropdown>
+            <summary class="label">Social</summary>
+            <ul class="social-panel">
+              {social.map((item) => (
+                <li>
+                  <a href={item.href} target="_blank" rel="noopener noreferrer">
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        </li>
       </ul>
     </nav>
 
@@ -43,6 +57,20 @@ const isCurrent = (item: NavItem) => matches(item.href) || (item.also?.some(matc
               </a>
             </li>
           ))}
+          <li class="menu-list menu-list-social">
+            <details class="social-dropdown social-dropdown-mobile">
+              <summary>Social</summary>
+              <ul class="social-panel social-panel-mobile">
+                {social.map((item) => (
+                  <li>
+                    <a href={item.href} target="_blank" rel="noopener noreferrer">
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          </li>
         </ul>
       </nav>
     </details>
@@ -65,6 +93,31 @@ const isCurrent = (item: NavItem) => matches(item.href) || (item.also?.some(matc
     window.matchMedia('(min-width: 52rem)').addEventListener('change', (event) => {
       if (event.matches) nav.open = false;
     });
+  }
+
+  // Same close-on-Escape/click-away for the Social dropdown(s); also collapse the mobile one
+  // whenever the hamburger menu itself closes, so it doesn't reopen pre-expanded next time.
+  const socialDropdowns = document.querySelectorAll<HTMLDetailsElement>('[data-social-dropdown]');
+  socialDropdowns.forEach((dropdown) => {
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && dropdown.open) {
+        dropdown.open = false;
+        dropdown.querySelector('summary')?.focus();
+      }
+    });
+    document.addEventListener('click', (event) => {
+      if (dropdown.open && event.target instanceof Node && !dropdown.contains(event.target)) {
+        dropdown.open = false;
+      }
+    });
+  });
+  if (nav) {
+    const mobileSocial = nav.querySelector<HTMLDetailsElement>('.social-dropdown-mobile');
+    if (mobileSocial) {
+      nav.addEventListener('toggle', () => {
+        if (!nav.open) mobileSocial.open = false;
+      });
+    }
   }
 </script>
 
@@ -109,6 +162,82 @@ const isCurrent = (item: NavItem) => matches(item.href) || (item.also?.some(matc
   }
   .desktop-nav a[aria-current='page'] {
     border-color: var(--color-orchid-400);
+  }
+  /* Social dropdown, desktop: a <details> styled to match the plain nav links, with a small
+     flyout panel of external profile links. */
+  .social-dropdown {
+    position: relative;
+  }
+  .social-dropdown > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    list-style: none;
+    cursor: pointer;
+  }
+  /* Color/underline only for the desktop summary — it shares the .social-dropdown base class
+     with the mobile one, which sits on a light panel and must keep inheriting that panel's
+     ink color instead of the site's --fg (light-on-dark) token. */
+  .desktop-nav .social-dropdown > summary {
+    padding-block: 0.6rem;
+    color: var(--fg);
+    border-bottom: 2px solid transparent;
+  }
+  .desktop-nav .social-dropdown > summary:hover {
+    color: var(--color-orchid-300);
+  }
+  .desktop-nav .social-dropdown[open] > summary {
+    border-color: var(--color-orchid-300);
+  }
+  .social-dropdown > summary::-webkit-details-marker {
+    display: none;
+  }
+  .social-dropdown > summary::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-inline: 4px solid transparent;
+    border-top: 5px solid currentColor;
+    transition: transform 0.2s;
+  }
+  .social-dropdown[open] > summary::after {
+    transform: rotate(180deg);
+  }
+  .desktop-nav .social-panel {
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    right: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 13rem;
+    padding: 0.4rem;
+    margin: 0;
+    list-style: none;
+    color: var(--color-ink-900);
+    background: var(--color-paper-50);
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.45);
+    /* Same treatment as the mobile menu panel: cap to the viewport and scroll internally on
+       short screens (e.g. landscape phones, small laptop windows) instead of running off it. */
+    max-height: calc(100vh - 6rem);
+    max-height: calc(100dvh - 6rem);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .desktop-nav .social-panel a {
+    display: block;
+    padding: 0.55rem 0.75rem;
+    border-radius: 6px;
+    border: none;
+    color: inherit;
+  }
+  .desktop-nav .social-panel a:hover,
+  .desktop-nav .social-panel a:focus-visible {
+    color: var(--color-orchid-700);
+    background: rgb(0 0 0 / 0.08);
   }
   /* Hamburger: bars morph to an X while open; the panel opens with a staggered reveal. */
   .mobile-nav {
@@ -173,7 +302,14 @@ const isCurrent = (item: NavItem) => matches(item.href) || (item.also?.some(matc
     right: 0;
     z-index: 1;
     width: min(16rem, calc(100vw - 2.5rem));
-    overflow: hidden;
+    /* Cap the panel to the viewport so it never runs off the bottom of the screen, even with
+       the Social dropdown expanded inside it — it scrolls internally instead. The dvh line
+       overrides the vh fallback in browsers that support it (handles mobile address bars). */
+    max-height: calc(100vh - 6rem);
+    max-height: calc(100dvh - 6rem);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     color: var(--color-ink-900);
     background: var(--color-paper-50);
     border-radius: 10px;
@@ -199,6 +335,9 @@ const isCurrent = (item: NavItem) => matches(item.href) || (item.also?.some(matc
   }
   .menu-list:nth-child(5) {
     --i: 4;
+  }
+  .menu-list:nth-child(6) {
+    --i: 5;
   }
   .menu-list + .menu-list::before {
     content: '';
@@ -227,6 +366,54 @@ const isCurrent = (item: NavItem) => matches(item.href) || (item.also?.some(matc
   .menu-list a[aria-current='page'] {
     font-weight: 700;
     color: var(--color-orchid-700);
+  }
+  /* Social dropdown, mobile: nested <details> inside the last menu item; expands in place. */
+  .social-dropdown-mobile > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.85rem 1.1rem;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-style: italic;
+    list-style: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  .social-dropdown-mobile > summary::-webkit-details-marker {
+    display: none;
+  }
+  .social-dropdown-mobile > summary:hover,
+  .social-dropdown-mobile > summary:focus-visible {
+    background: rgb(0 0 0 / 0.08);
+  }
+  .social-dropdown-mobile > summary::after {
+    content: '';
+    flex: none;
+    width: 0;
+    height: 0;
+    border-inline: 4px solid transparent;
+    border-top: 5px solid currentColor;
+    transition: transform 0.2s;
+  }
+  .social-dropdown-mobile[open] > summary::after {
+    transform: rotate(180deg);
+  }
+  .menu-list .social-panel-mobile {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: rgb(0 0 0 / 0.04);
+  }
+  .menu-list .social-panel-mobile li + li {
+    border-top: 1px solid rgb(0 0 0 / 0.12);
+  }
+  .menu-list .social-panel-mobile a {
+    padding: 0.65rem 1.1rem 0.65rem 1.75rem;
+    font-family: var(--font-body, inherit);
+    font-size: 1rem;
+    font-style: normal;
   }
 
   @keyframes menu-open {
