@@ -19,6 +19,7 @@ export const pageGlobal = (
   label,
   admin: {
     group: 'Pages',
+    hideAPIURL: true,
     description,
     livePreview: pageLivePreview(slug),
   },

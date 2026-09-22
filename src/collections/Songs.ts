@@ -8,9 +8,11 @@ export const Songs: CollectionConfig = {
   slug: 'songs',
   labels: { singular: 'Song', plural: 'Songs' },
   orderable: true,
+  disableDuplicate: true,
   admin: {
+    hideAPIURL: true,
     group: 'Art',
-    description: 'Songs on the Songs page. Upload an MP3, give it a title, and publish. Drag to reorder.',
+    description: 'Songs on the Songs page, in the order they appear. Upload an MP3, give it a title, and publish. Drag a song up or down in this list to change the order.',
     useAsTitle: 'title',
     defaultColumns: ['title', 'artist', 'duration', '_status'],
     livePreview: livePreviewFor('/music'),

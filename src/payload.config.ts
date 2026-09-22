@@ -7,6 +7,8 @@ import { CloudflareContext, getCloudflareContext } from '@opennextjs/cloudflare'
 import { GetPlatformProxyOptions } from 'wrangler'
 import { r2Storage } from '@payloadcms/storage-r2'
 
+import { adminFavicon } from './admin/favicon'
+import { adminTranslations } from './admin/translations'
 import { Collage } from './collections/Collage'
 import { Media } from './collections/Media'
 import { Songs } from './collections/Songs'
@@ -75,14 +77,30 @@ export default buildConfig({
     meta: {
       titleSuffix: ' · Nothing Wrong With You',
       robots: 'noindex, nofollow',
+      // The site's star, so the browser tab isn't Payload's logo.
+      icons: [{ rel: 'icon', type: 'image/svg+xml', url: adminFavicon }],
     },
+    // Light only, like Ghost: calm for long form-filling, and the one palette checked for contrast.
+    theme: 'light',
+    // Plain avatar: no Gravatar request, no surprise stranger's face.
+    avatar: 'default',
     components: {
       graphics: {
         Logo: '/admin/Logo',
         Icon: '/admin/Icon',
       },
-      beforeDashboard: ['/admin/Welcome'],
+      // Loads the site's display font for the wordmark and headings.
+      providers: ['/admin/BrandFonts'],
+      afterNavLinks: ['/admin/ViewSiteLink'],
+      views: {
+        // Task cards for everyone; Payload's full section grid is added for admins only.
+        dashboard: { Component: '/admin/Dashboard' },
+      },
     },
+  },
+  i18n: {
+    // Plainer button and message wording (see src/admin/translations.ts).
+    translations: adminTranslations,
   },
   // Order here is the order in the admin menu (within each group).
   collections: [Collage, Songs, Videos, Media, Users],

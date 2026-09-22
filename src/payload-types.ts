@@ -138,7 +138,7 @@ export interface UserAuthOperations {
   };
 }
 /**
- * Every piece in the Collage gallery. Drag the handle on the left to change the order they appear in.
+ * The pieces in your Collage gallery, in the order they appear. To change the order, drag a piece up or down in this list.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "collage".
@@ -147,7 +147,7 @@ export interface Collage {
   id: number;
   _order?: string | null;
   /**
-   * Read aloud to people using screen readers, and shown if the image can’t load. Describe what is in the picture in one sentence, e.g. “Becca smiling in a black rose-print top.”
+   * One sentence saying what is in the picture, e.g. “Becca smiling in a black rose-print top.” It is read aloud to people who can’t see the image, and shown if it doesn’t load.
    */
   alt: string;
   /**
@@ -168,7 +168,7 @@ export interface Collage {
   height?: number | null;
 }
 /**
- * Songs on the Songs page. Upload an MP3, give it a title, and publish. Drag to reorder.
+ * Songs on the Songs page, in the order they appear. Upload an MP3, give it a title, and publish. Drag a song up or down in this list to change the order.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "songs".
@@ -200,7 +200,7 @@ export interface Song {
   focalY?: number | null;
 }
 /**
- * Videos on the Videos page. Paste a YouTube link, add a title and a line about it, and publish. Drag to reorder; the first one is shown large.
+ * Videos on the Videos page, in the order they appear; the first one is shown large. Paste a YouTube link, add a title and a line about it, and publish. Drag a video up or down in this list to change the order.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "videos".
@@ -223,7 +223,7 @@ export interface Video {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Photos and artwork used on the pages (portraits, the home page art, video covers). Collage pieces are added under Art → Collage.
+ * Photos and artwork used on the pages: portraits, the Home page artwork, video covers. (Collage pieces live under Art → Collage.)
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
@@ -231,7 +231,7 @@ export interface Video {
 export interface Media {
   id: number;
   /**
-   * Read aloud to people using screen readers, and shown if the image can’t load. Describe what is in the picture in one sentence, e.g. “Becca smiling in a black rose-print top.”
+   * One sentence saying what is in the picture, e.g. “Becca smiling in a black rose-print top.” It is read aloud to people who can’t see the image, and shown if it doesn’t load.
    */
   alt: string;
   _objectKey?: string | null;
@@ -251,6 +251,9 @@ export interface Media {
  */
 export interface User {
   id: number;
+  /**
+   * Used to greet you on the dashboard.
+   */
   name: string;
   role: 'editor' | 'admin';
   updatedAt: string;
@@ -565,7 +568,7 @@ export interface HomePage {
      */
     description: string;
     /**
-     * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site Settings.
+     * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site settings.
      */
     shareImage?: (number | null) | Media;
   };
@@ -629,7 +632,7 @@ export interface AboutPage {
      */
     description: string;
     /**
-     * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site Settings.
+     * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site settings.
      */
     shareImage?: (number | null) | Media;
   };
@@ -660,7 +663,7 @@ export interface ArtPage {
        */
       description: string;
       /**
-       * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site Settings.
+       * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site settings.
        */
       shareImage?: (number | null) | Media;
     };
@@ -680,7 +683,7 @@ export interface ArtPage {
        */
       description: string;
       /**
-       * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site Settings.
+       * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site settings.
        */
       shareImage?: (number | null) | Media;
     };
@@ -701,7 +704,7 @@ export interface ArtPage {
        */
       description: string;
       /**
-       * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site Settings.
+       * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site settings.
        */
       shareImage?: (number | null) | Media;
     };
@@ -722,7 +725,7 @@ export interface ArtPage {
        */
       description: string;
       /**
-       * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site Settings.
+       * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site settings.
        */
       shareImage?: (number | null) | Media;
     };
@@ -768,7 +771,7 @@ export interface ResourcesPage {
      */
     description: string;
     /**
-     * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site Settings.
+     * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site settings.
      */
     shareImage?: (number | null) | Media;
   };
@@ -826,7 +829,7 @@ export interface ContactPage {
      */
     description: string;
     /**
-     * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site Settings.
+     * Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site settings.
      */
     shareImage?: (number | null) | Media;
   };

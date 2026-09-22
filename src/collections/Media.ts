@@ -7,10 +7,12 @@ import { altField } from '@/fields/alt'
 export const Media: CollectionConfig = {
   slug: 'media',
   labels: { singular: 'Image', plural: 'Images' },
+  disableDuplicate: true,
   admin: {
+    hideAPIURL: true,
     group: 'Library',
     description:
-      'Photos and artwork used on the pages (portraits, the home page art, video covers). Collage pieces are added under Art → Collage.',
+      'Photos and artwork used on the pages: portraits, the Home page artwork, video covers. (Collage pieces live under Art → Collage.)',
     defaultColumns: ['filename', 'alt', 'updatedAt'],
     useAsTitle: 'alt',
   },

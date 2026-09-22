@@ -12,8 +12,9 @@ const onOff = (defaultValue: boolean, label: string) =>
  */
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
-  label: 'Site Settings',
+  label: 'Site settings',
   admin: {
+    hideAPIURL: true,
     group: 'Settings',
     description: 'Things that appear on every page. Changes go live as soon as you press Save.',
   },
