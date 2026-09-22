@@ -76,5 +76,9 @@ export const safety = {
     'This site is for education and creative expression. Nothing here is legal advice, and visiting it does not create an attorney-client relationship.',
 } as const;
 
-/** Formspree form ID, set via PUBLIC_FORMSPREE_ID. Public identifier, not a secret. */
-export const formspreeId: string | undefined = import.meta.env.PUBLIC_FORMSPREE_ID || undefined;
+/**
+ * Formspree form ID. The public fallback keeps the form connected in local and hosted builds;
+ * PUBLIC_FORMSPREE_ID can still override it for another Formspree form.
+ */
+export const formspreeId: string | undefined =
+  import.meta.env.PUBLIC_FORMSPREE_ID || 'mppwdgky';
