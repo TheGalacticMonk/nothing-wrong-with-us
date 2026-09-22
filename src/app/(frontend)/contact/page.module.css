@@ -1,0 +1,46 @@
+.layout {
+  display: grid;
+  gap: 3rem;
+  padding-bottom: 2rem;
+}
+@media (min-width: 60rem) {
+  .layout {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 4rem;
+    align-items: start;
+  }
+  .form-panel {
+    position: sticky;
+    top: 6rem;
+  }
+}
+.info {
+  display: grid;
+  gap: 2.5rem;
+}
+.heading {
+  margin-bottom: 0.9rem;
+  color: var(--color-star-300);
+}
+.address {
+  font-size: 1.15rem;
+  font-style: normal;
+}
+.hint {
+  margin-top: 0.4rem;
+  color: var(--fg-muted);
+}
+.social {
+  display: grid;
+  gap: 0.25rem;
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-style: italic;
+}
+.social a {
+  display: inline-block;
+  padding-block: 0.2rem;
+}
+.form-panel {
+  padding-inline: clamp(1.5rem, 4vw, 3rem);
+}

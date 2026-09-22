@@ -1,0 +1,4 @@
+/* Shared by the Collage, Songs and Videos pages (each had this same scoped rule in Astro). */
+.nav {
+  margin-top: 2rem;
+}

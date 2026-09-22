@@ -37,5 +37,7 @@
   "images": { "binding": "IMAGES" },
   "vars": {
     "NEXT_PUBLIC_SERVER_URL": "https://nwwy-cms.REPLACE_WITH_WORKERS_SUBDOMAIN.workers.dev",
+    // Public hostname of the nwwy-media R2 bucket (custom domain, or the r2.dev URL for previews).
+    "MEDIA_PUBLIC_URL": "https://media.nothingwrongwithyou.org",
   },
 }

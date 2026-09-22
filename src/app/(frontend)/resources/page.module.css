@@ -1,0 +1,9 @@
+.stack {
+  margin-top: 2rem;
+}
+.panel {
+  padding-inline: clamp(1.5rem, 5vw, 4rem);
+}
+.panel :global(.prose) {
+  margin-inline: auto;
+}

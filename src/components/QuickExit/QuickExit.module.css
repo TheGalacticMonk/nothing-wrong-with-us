@@ -1,0 +1,16 @@
+.quick-exit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.95rem;
+  color: #fff;
+  text-decoration: none;
+  background: var(--color-blood-700);
+  border: 2px solid var(--color-blood-400);
+}
+.quick-exit:hover {
+  color: var(--color-blood-900);
+  background: var(--color-blood-400);
+}

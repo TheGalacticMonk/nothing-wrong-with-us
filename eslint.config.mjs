@@ -26,6 +26,7 @@ const eslintConfig = [
   {
     ignores: [
       '.next/',
+      '.claude/',
       '.open-next/',
       '.wrangler/',
       'legacy/',

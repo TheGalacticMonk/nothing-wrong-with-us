@@ -105,12 +105,12 @@ The R2 bucket holds 31 objects before and after, with no `-1` duplicates.
 
 ## Running against production (later, with care)
 
-The seed refuses to run when `NODE_ENV=production` (remote D1/R2 bindings) or `CLOUDFLARE_ENV` is set, unless **both** `--allow-remote` is passed **and** `SEED_CONFIRM=I_UNDERSTAND` is set. It prints the target before doing anything.
+The seed refuses to run when `PAYLOAD_REMOTE_BINDINGS=1` (real D1/R2), `NODE_ENV=production` or `CLOUDFLARE_ENV` is set, unless **both** `--allow-remote` is passed **and** `SEED_CONFIRM=I_UNDERSTAND` is set. It prints the target before doing anything.
 
 ```bash
 # After `pnpm run deploy:database` has applied the migrations remotely:
-CLOUDFLARE_ENV=<env> NODE_ENV=production SEED_CONFIRM=I_UNDERSTAND pnpm seed --dry-run --allow-remote
-CLOUDFLARE_ENV=<env> NODE_ENV=production SEED_CONFIRM=I_UNDERSTAND pnpm seed --allow-remote
+PAYLOAD_REMOTE_BINDINGS=1 NODE_ENV=production SEED_CONFIRM=I_UNDERSTAND pnpm seed --dry-run --allow-remote
+PAYLOAD_REMOTE_BINDINGS=1 NODE_ENV=production SEED_CONFIRM=I_UNDERSTAND pnpm seed --allow-remote
 CLOUDFLARE_ENV=<env> NODE_ENV=production pnpm verify:content
 ```
 

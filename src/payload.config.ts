@@ -21,6 +21,7 @@ import { ContactPage } from './globals/ContactPage'
 import { HomePage } from './globals/HomePage'
 import { ResourcesPage } from './globals/ResourcesPage'
 import { SiteSettings } from './globals/SiteSettings'
+import { mediaPublicURL } from './lib/mediaHost'
 import { migrations } from './migrations'
 
 const filename = fileURLToPath(import.meta.url)
@@ -63,8 +64,19 @@ const cloudflareLogger = {
   silent: () => {},
 } as any // Use PayloadLogger type when it's exported
 
+// Link uploads from the public R2 hostname when configured (see src/lib/mediaHost.ts).
+const publicFiles = mediaPublicURL
+  ? {
+      generateFileURL: ({ filename, prefix }: { filename: string; prefix?: string }) =>
+        `${mediaPublicURL}/${prefix ? `${prefix}/` : ''}${encodeURIComponent(filename)}`,
+    }
+  : true
+
+// `next build` workers don't look like the CLI but must not reach Cloudflare either.
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build'
+
 const cloudflare =
-  isCLI || !isProduction
+  isCLI || isBuild || !isProduction
     ? await getCloudflareContextFromWrangler()
     : await getCloudflareContext({ async: true })
 
@@ -124,7 +136,7 @@ export default buildConfig({
   plugins: [
     r2Storage({
       bucket: cloudflare.env.R2,
-      collections: { media: true, collage: true, songs: true },
+      collections: { media: publicFiles, collage: publicFiles, songs: publicFiles },
     }),
   ],
 })
@@ -135,7 +147,9 @@ function getCloudflareContextFromWrangler(): Promise<CloudflareContext> {
     ({ getPlatformProxy }) =>
       getPlatformProxy({
         environment: process.env.CLOUDFLARE_ENV,
-        remoteBindings: isProduction,
+        // Only touch the real Cloudflare D1/R2 when explicitly asked (`deploy:database`, remote
+        // seeding). Builds, dev and scripts otherwise use wrangler's local emulation.
+        remoteBindings: process.env.PAYLOAD_REMOTE_BINDINGS === '1',
       } satisfies GetPlatformProxyOptions),
   )
 }

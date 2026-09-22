@@ -1,0 +1,40 @@
+.body {
+  padding-bottom: 2rem;
+}
+.intro {
+  max-width: 34rem;
+  font-size: var(--text-lede);
+  font-style: italic;
+  color: var(--fg-muted);
+}
+.tracks {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+.track {
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(165deg, var(--color-night-800), var(--color-night-950));
+  border: 2px solid var(--rule);
+}
+@media (min-width: 48rem) {
+  .track {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    align-items: center;
+  }
+}
+.title {
+  font-size: var(--text-h2);
+  font-weight: 700;
+  line-height: 1.05;
+}
+.meta :global(.label) {
+  margin-top: 0.4rem;
+  color: var(--color-star-300);
+}
+.audio {
+  width: 100%;
+  color-scheme: dark;
+}

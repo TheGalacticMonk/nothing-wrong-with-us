@@ -223,7 +223,7 @@ export interface Video {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Photos and artwork used on the pages: portraits, the Home page artwork, video covers. (Collage pieces live under Art → Collage.)
+ * Photos and artwork used on the pages: portraits, the Home page artwork, video covers. (Collage pieces live under Art → Collage.) Replacing the file of an image here changes it on every page that uses it; to change one page only, upload a new image from that page instead.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".

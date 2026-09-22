@@ -39,7 +39,7 @@ pnpm exec wrangler r2 bucket create nwwy-next-cache
 pnpm exec wrangler secret put PAYLOAD_SECRET          # paste `openssl rand -hex 32`
 # set NEXT_PUBLIC_SERVER_URL (and NEXT_PUBLIC_NOINDEX="1") in wrangler.jsonc vars
 pnpm run deploy                                       # runs migrations on remote D1, then builds + deploys the Worker
-SEED_CONFIRM=I_UNDERSTAND pnpm seed --allow-remote    # one-time content import into the empty remote DB
+PAYLOAD_REMOTE_BINDINGS=1 SEED_CONFIRM=I_UNDERSTAND pnpm seed --allow-remote    # one-time content import into the empty remote DB
 ```
 
 Then create the client's editor account in `/admin` (Team → Add), and run QA against the `workers.dev` URL.

@@ -1,0 +1,26 @@
+.bar {
+  position: fixed;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.35rem 0.5rem 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  color: var(--color-night-950);
+  background: var(--color-star-300);
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.4);
+}
+.bar a {
+  padding: 0.2rem 0.7rem;
+  color: var(--color-paper-50);
+  text-decoration: none;
+  background: var(--color-night-900);
+  border-radius: 999px;
+}
+.bar a:hover {
+  color: var(--color-paper-50);
+  background: var(--color-night-700);
+}

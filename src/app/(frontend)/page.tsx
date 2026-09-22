@@ -1,59 +1,225 @@
-import { headers as getHeaders } from 'next/headers.js'
+import type { Metadata } from 'next'
 import Image from 'next/image'
-import { getPayload } from 'payload'
-import React from 'react'
-import { fileURLToPath } from 'url'
+import Link from 'next/link'
 
-import config from '@/payload.config'
-import './styles.css'
+import { asUpload, imageSource } from '@/components/media'
+import { Star } from '@/components/Star'
+import { getCollection, getGlobal, getSiteSettings } from '@/lib/content'
+import { homeJsonLd, pageMetadata, siteName } from '@/lib/seo'
+import type { Collage, HomePage as HomePageData } from '@/payload-types'
+import styles from './page.module.css'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const [home, settings] = await Promise.all([getGlobal('home-page'), getSiteSettings()])
+  return pageMetadata({ path: '/', seo: home?.seo, settings, isHome: true })
+}
+
+/** The three pieces shown on the "Look" door (as on the Astro site), else the first three. */
+const DOOR_TILES = ['collage-11', 'collage-19', 'collage-03']
+const doorTiles = (collage: Collage[]) => {
+  const withImage = collage.filter((c) => asUpload(c))
+  const picked = DOOR_TILES.map((name) =>
+    withImage.find((c) => c.filename?.replace(/\.[^.]+$/, '') === name),
+  ).filter((c): c is Collage => Boolean(c))
+  for (const c of withImage) {
+    if (picked.length >= 3) break
+    if (!picked.includes(c)) picked.push(c)
+  }
+  return picked.slice(0, 3)
+}
+
+type Button = HomePageData['primaryButton'] | null | undefined
+const hasButton = (button: Button): button is NonNullable<Button> =>
+  Boolean(button?.text && button.page)
+
+/** "Magic. Art. Truth." → the last word is set in italic pink. */
+const splitLastWord = (text: string) => {
+  const at = text.trimEnd().lastIndexOf(' ')
+  return at === -1 ? ['', text] : [text.slice(0, at + 1), text.slice(at + 1)]
+}
 
 export default async function HomePage() {
-  const headers = await getHeaders()
-  const payloadConfig = await config
-  const payload = await getPayload({ config: payloadConfig })
-  const { user } = await payload.auth({ headers })
-
-  const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
+  const [home, settings, collage, songs, videos] = await Promise.all([
+    getGlobal('home-page'),
+    getSiteSettings(),
+    getCollection('collage'),
+    getCollection('songs'),
+    getCollection('videos'),
+  ])
+  const hero = asUpload(home?.heroImage)
+  const portrait = asUpload(home?.storyPortrait)
+  const stanzas = (home?.stanzas ?? []).filter((s) => s.line)
+  const tiles = doorTiles(collage)
+  // "Nothing Wrong With You": one word per line, the last two words in italic pink.
+  const words = siteName(settings).split(/\s+/)
+  const titleWords = words.slice(0, -2)
+  const titleEmphasis = words.slice(-2).join(' ')
+  const [wordsStart, wordsLast] = home?.closingWords ? splitLastWord(home.closingWords) : ['', '']
 
   return (
-    <div className="home">
-      <div className="content">
-        <picture>
-          <source srcSet="https://raw.githubusercontent.com/payloadcms/payload/3.x/packages/ui/src/assets/payload-favicon.svg" />
-          <Image
-            alt="Payload Logo"
-            height={65}
-            src="https://raw.githubusercontent.com/payloadcms/payload/3.x/packages/ui/src/assets/payload-favicon.svg"
-            width={65}
-          />
-        </picture>
-        {!user && <h1>Welcome to your new project.</h1>}
-        {user && <h1>Welcome back, {user.email}</h1>}
-        <div className="links">
-          <a
-            className="admin"
-            href={payloadConfig.routes.admin}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Go to admin panel
-          </a>
-          <a
-            className="docs"
-            href="https://payloadcms.com/docs"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Documentation
-          </a>
+    <>
+      {homeJsonLd(settings).map((node) => (
+        <script
+          key={String(node['@type'])}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(node).replace(/</g, '\\u003c') }}
+        />
+      ))}
+
+      <section className={styles.hero} aria-labelledby="hero-title">
+        <div className={styles['hero-art']}>
+          {hero && (
+            <Image
+              {...imageSource(hero)}
+              alt={hero.alt ?? ''}
+              sizes="(min-width: 64rem) 58vw, 100vw"
+              quality={45}
+              loading="eager"
+              fetchPriority="high"
+            />
+          )}
         </div>
-      </div>
-      <div className="footer">
-        <p>Update this page by editing</p>
-        <a className="codeLink" href={fileURL}>
-          <code>app/(frontend)/page.tsx</code>
-        </a>
-      </div>
-    </div>
+
+        <div className={`wrap ${styles['hero-copy']}`}>
+          {home?.eyebrow && <p className={`label ${styles.eyebrow}`}>{home.eyebrow}</p>}
+          <h1 id="hero-title">
+            {titleWords.map((word, i) => (
+              <span key={i}>{word}</span>
+            ))}
+            <em>{titleEmphasis}</em>
+          </h1>
+          {settings?.tagline && <p className={styles.tagline}>{settings.tagline}.</p>}
+          <div className={styles.cta}>
+            {hasButton(home?.primaryButton) && (
+              <Link className="btn" href={home.primaryButton.page}>
+                {home.primaryButton.text}
+              </Link>
+            )}
+            {hasButton(home?.secondaryButton) && (
+              <Link className="btn btn-ghost" href={home.secondaryButton.page}>
+                {home.secondaryButton.text}
+              </Link>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className={`${styles.manifesto} section-space`} aria-label="A message to survivors">
+        <div className="wrap">
+          {home?.leadIn && <p className={`label ${styles['lead-in']} reveal`}>{home.leadIn}</p>}
+          <ul className={styles.stanzas}>
+            {stanzas.map((stanza, i) => (
+              <li
+                key={stanza.id ?? i}
+                className={`${styles.stanza} reveal${i === stanzas.length - 1 ? ` ${styles.last}` : ''}`}
+              >
+                {stanza.line}
+              </li>
+            ))}
+          </ul>
+          <span className={`${styles['m-star']} ${styles['m-a']}`} aria-hidden="true">
+            <Star delay={0.3} />
+          </span>
+          <span className={`${styles['m-star']} ${styles['m-b']}`} aria-hidden="true">
+            <Star delay={2.1} />
+          </span>
+          {home?.closingLine && (
+            <p className={`${styles['for-the-ones']} reveal`}>{home.closingLine}</p>
+          )}
+        </div>
+      </section>
+
+      <section
+        className={`${styles.story} on-paper paper wave-top wave-bottom`}
+        aria-labelledby="story-title"
+      >
+        <div className={`wrap ${styles['story-grid']}`}>
+          <figure className={`${styles.portrait} reveal`}>
+            {portrait && (
+              <Image
+                {...imageSource(portrait)}
+                alt={portrait.alt ?? ''}
+                sizes="(min-width: 52rem) 30rem, 80vw"
+                quality={80}
+              />
+            )}
+          </figure>
+          <div className={styles['story-copy']}>
+            <h2 id="story-title" className={`label ${styles['eyebrow-dark']}`}>
+              About Becca
+            </h2>
+            {home?.storyQuote && (
+              <blockquote className={`${styles.pull} reveal`}>
+                <p>{home.storyQuote}</p>
+              </blockquote>
+            )}
+            {home?.storyText && <p className={`${styles.body} reveal`}>{home.storyText}</p>}
+            {hasButton(home?.storyButton) && (
+              <p className="reveal">
+                <Link className="btn" href={home.storyButton.page}>
+                  {home.storyButton.text}
+                </Link>
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className={`${styles.doors} section-space`} aria-labelledby="doors-title">
+        <div className="wrap">
+          <h2 id="doors-title" className={`label ${styles['door-heading']}`}>
+            {home?.doorsHeading}
+          </h2>
+          <div className={styles['door-grid']}>
+            <Link className={`${styles.door} ${styles['door-collage']} reveal`} href="/collage-art">
+              <span className={styles['door-title']}>{home?.collageDoor}</span>
+              <span className={styles['door-meta']}>{collage.length} collages</span>
+              <span className={styles.stack} aria-hidden="true">
+                {tiles.map((tile, i) => (
+                  <Image
+                    key={tile.id}
+                    {...imageSource(tile)}
+                    alt=""
+                    sizes="(min-width: 52rem) 12rem, 30vw"
+                    className={`${styles['stack-img']} ${styles[`stack-${i}`]}`}
+                  />
+                ))}
+              </span>
+            </Link>
+            <Link className={`${styles.door} ${styles['door-songs']} reveal`} href="/music">
+              <span className={styles['door-title']}>{home?.songsDoor}</span>
+              <span className={styles['door-meta']}>{songs.length} songs</span>
+            </Link>
+            <Link className={`${styles.door} ${styles['door-videos']} reveal`} href="/videos">
+              <span className={styles['door-title']}>{home?.videosDoor}</span>
+              <span className={styles['door-meta']}>{videos.length} video pieces</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className={`${styles.closing} section-space`} aria-labelledby="closing-title">
+        <div className="wrap">
+          <h2 id="closing-title" className="reveal">
+            {home?.closingHeading}
+          </h2>
+          {home?.closingText && <p className="reveal">{home.closingText}</p>}
+          {home?.closingWords && (
+            <p className={`${styles.triad} reveal`}>
+              {wordsStart}
+              <em>{wordsLast}</em>
+            </p>
+          )}
+          {hasButton(home?.closingButton) && (
+            <p className="reveal">
+              <Link className="btn" href={home.closingButton.page}>
+                {home.closingButton.text}
+              </Link>
+            </p>
+          )}
+        </div>
+      </section>
+    </>
   )
 }
+

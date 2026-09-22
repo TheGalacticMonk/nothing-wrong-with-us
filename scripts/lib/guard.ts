@@ -31,7 +31,7 @@ export const describeTarget = () => {
   const wrangler = readWranglerConfig()
   const d1 = wrangler.d1_databases?.find((d) => d.binding === 'D1')?.database_name ?? '(unknown)'
   const r2 = wrangler.r2_buckets?.find((b) => b.binding === 'R2')?.bucket_name ?? '(unknown)'
-  const remote = process.env.NODE_ENV === 'production'
+  const remote = process.env.PAYLOAD_REMOTE_BINDINGS === '1'
   const env = process.env.CLOUDFLARE_ENV ? ` (wrangler env "${process.env.CLOUDFLARE_ENV}")` : ''
   return remote
     ? `REMOTE Cloudflare D1 "${d1}" + R2 "${r2}"${env}`
@@ -39,12 +39,15 @@ export const describeTarget = () => {
 }
 
 /**
- * NODE_ENV=production makes payload.config.ts use remote bindings; CLOUDFLARE_ENV selects a
- * deploy environment. Either one means "this might be the real site": require two explicit
- * opt-ins before continuing.
+ * PAYLOAD_REMOTE_BINDINGS=1 makes payload.config.ts use the real Cloudflare D1/R2; NODE_ENV=production
+ * or CLOUDFLARE_ENV also suggest a deploy context. Any of them means "this might be the real site":
+ * require two explicit opt-ins before continuing.
  */
 export const guardTarget = (scriptName: string, { writes }: { writes: boolean }) => {
-  const risky = process.env.NODE_ENV === 'production' || Boolean(process.env.CLOUDFLARE_ENV)
+  const risky =
+    process.env.PAYLOAD_REMOTE_BINDINGS === '1' ||
+    process.env.NODE_ENV === 'production' ||
+    Boolean(process.env.CLOUDFLARE_ENV)
   const target = describeTarget()
   if (risky && writes) {
     const allowed = hasFlag('--allow-remote') && process.env.SEED_CONFIRM === 'I_UNDERSTAND'
@@ -53,7 +56,7 @@ export const guardTarget = (scriptName: string, { writes }: { writes: boolean })
         [
           `✋ ${scriptName} refused to run.`,
           `   Target: ${target}`,
-          `   NODE_ENV=${process.env.NODE_ENV ?? ''} CLOUDFLARE_ENV=${process.env.CLOUDFLARE_ENV ?? ''}`,
+          `   PAYLOAD_REMOTE_BINDINGS=${process.env.PAYLOAD_REMOTE_BINDINGS ?? ''} NODE_ENV=${process.env.NODE_ENV ?? ''} CLOUDFLARE_ENV=${process.env.CLOUDFLARE_ENV ?? ''}`,
           '   This could write to the production database and bucket.',
           '   If that is really what you want, pass --allow-remote AND set SEED_CONFIRM=I_UNDERSTAND.',
         ].join('\n'),

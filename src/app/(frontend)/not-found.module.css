@@ -1,0 +1,7 @@
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-top: 2rem;
+  font-size: 1.2rem;
+}
