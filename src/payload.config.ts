@@ -99,6 +99,8 @@ export default buildConfig({
   },
   db: sqliteD1Adapter({
     binding: cloudflare.env.D1,
+    // Committed migrations own the schema (src/migrations). Dev-mode push conflicts with them.
+    push: false,
   }),
   logger: isProduction ? cloudflareLogger : undefined,
   plugins: [

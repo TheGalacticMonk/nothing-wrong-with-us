@@ -19,14 +19,17 @@
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview --env=$CLOUDFLARE_ENV",
+    "seed": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/seed.ts --",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
-    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
+    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
+    "verify:content": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/verify-content.ts --"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "1.20.1",
     "@payloadcms/db-d1-sqlite": "3.90.1",
+    "@payloadcms/live-preview-react": "3.90.1",
     "@payloadcms/next": "3.90.1",
     "@payloadcms/richtext-lexical": "3.90.1",
     "@payloadcms/storage-r2": "3.90.1",
@@ -41,8 +44,8 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.2.0",
     "@playwright/test": "1.58.2",
+    "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/react": "16.3.0",
     "@types/node": "22.19.9",
     "@types/react": "19.2.14",
@@ -52,6 +55,7 @@
     "eslint-config-next": "16.3.3",
     "jsdom": "28.0.0",
     "prettier": "^3.4.2",
+    "tailwindcss": "^4.3.3",
     "tsx": "4.22.4",
     "typescript": "5.7.3",
     "vite-tsconfig-paths": "6.0.5",
