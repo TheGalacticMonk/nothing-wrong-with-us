@@ -3,10 +3,10 @@ import type { TextField } from 'payload'
 export const altField: TextField = {
   name: 'alt',
   type: 'text',
-  label: 'Describe this image',
+  label: 'Image description',
   required: true,
   admin: {
     description:
-      'Read aloud to people using screen readers, and shown if the image can’t load. Describe what is in the picture in one sentence, e.g. “Becca smiling in a black rose-print top.”',
+      'One sentence saying what is in the picture, e.g. “Becca smiling in a black rose-print top.” It is read aloud to people who can’t see the image, and shown if it doesn’t load.',
   },
 }

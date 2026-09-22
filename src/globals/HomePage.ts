@@ -8,7 +8,7 @@ export const HomePage = pageGlobal('home-page', 'Home', 'The first page visitors
     tabs: [
       {
         label: 'Top of page',
-        description: 'The large artwork and title at the very top. The site title itself comes from Site Settings.',
+        description: 'The large artwork and title at the very top. The site title itself comes from Site settings.',
         fields: [
           {
             name: 'heroImage',

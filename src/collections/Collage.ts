@@ -9,10 +9,13 @@ export const Collage: CollectionConfig = {
   slug: 'collage',
   labels: { singular: 'Collage piece', plural: 'Collage' },
   orderable: true,
+  // Copying an uploaded picture makes a confusing near-duplicate; upload it again instead.
+  disableDuplicate: true,
   admin: {
+    hideAPIURL: true,
     group: 'Art',
     description:
-      'Every piece in the Collage gallery. Drag the handle on the left to change the order they appear in.',
+      'The pieces in your Collage gallery, in the order they appear. To change the order, drag a piece up or down in this list.',
     useAsTitle: 'alt',
     defaultColumns: ['filename', 'alt', 'title', '_status'],
     livePreview: livePreviewFor('/collage-art'),

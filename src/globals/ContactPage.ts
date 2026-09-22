@@ -25,7 +25,7 @@ export const ContactPage = pageGlobal('contact-page', 'Contact', 'Contact detail
       },
       {
         label: 'Message form',
-        description: 'Messages are delivered by Formspree. The form connection itself is set in Site Settings.',
+        description: 'The choices people pick from when they send you a message. Where the messages are sent is set in Site settings → Contact form.',
         fields: [
           {
             name: 'topics',

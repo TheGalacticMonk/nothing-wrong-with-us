@@ -6,6 +6,7 @@ export const Users: CollectionConfig = {
   slug: 'users',
   labels: { singular: 'Team member', plural: 'Team' },
   admin: {
+    hideAPIURL: true,
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'role'],
     group: 'Settings',
@@ -27,7 +28,7 @@ export const Users: CollectionConfig = {
     admin: ({ req }) => Boolean(req.user),
   },
   fields: [
-    { name: 'name', type: 'text', required: true },
+    { name: 'name', type: 'text', required: true, label: 'Name', admin: { description: 'Used to greet you on the dashboard.' } },
     {
       name: 'role',
       type: 'select',

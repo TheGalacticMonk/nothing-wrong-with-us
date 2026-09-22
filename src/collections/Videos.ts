@@ -9,12 +9,14 @@ export const Videos: CollectionConfig = {
   slug: 'videos',
   labels: { singular: 'Video', plural: 'Videos' },
   orderable: true,
+  disableDuplicate: true,
   admin: {
+    hideAPIURL: true,
     group: 'Art',
     description:
-      'Videos on the Videos page. Paste a YouTube link, add a title and a line about it, and publish. Drag to reorder; the first one is shown large.',
+      'Videos on the Videos page, in the order they appear; the first one is shown large. Paste a YouTube link, add a title and a line about it, and publish. Drag a video up or down in this list to change the order.',
     useAsTitle: 'title',
-    defaultColumns: ['title', 'youtubeUrl', '_status'],
+    defaultColumns: ['title', 'description', '_status'],
     livePreview: livePreviewFor('/videos'),
   },
   access: {

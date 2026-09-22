@@ -40,7 +40,7 @@ export const seoFields = (defaults: { title: string; description: string }): Fie
       label: 'Sharing image (optional)',
       admin: {
         description:
-          'Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site Settings.',
+          'Shown when the link is shared on social media. Leave empty to use the site-wide sharing image from Site settings.',
       },
     },
   ],
