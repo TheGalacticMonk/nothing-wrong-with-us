@@ -24,7 +24,8 @@
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
-    "verify:content": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/verify-content.ts --"
+    "verify:content": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/verify-content.ts --",
+    "preview:local": "opennextjs-cloudflare build && opennextjs-cloudflare preview -- --local --port 8787"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "1.20.1",
