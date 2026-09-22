@@ -1,10 +1,41 @@
 {
-  // Cloudflare Workers static assets deploy. Cloudflare Pages needs no config file:
-  // build command `npm run build`, output directory `dist`.
-  "name": "nothing-wrong-with-you",
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // IMPORTANT: the live Astro site is the Worker "nothing-wrong-with-you". This app uses a
+  // different name so deploying it can never replace production until DNS is cut over on purpose.
+  "name": "nwwy-cms",
+  "main": ".open-next/worker.js",
   "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
-    "directory": "./dist",
-    "not_found_handling": "404-page",
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+  },
+  "observability": { "enabled": true },
+  "d1_databases": [
+    {
+      "binding": "D1",
+      // Created with `wrangler d1 create nwwy-cms`; see docs/DEPLOYMENT.md.
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "database_name": "nwwy-cms",
+      "remote": true,
+    },
+    {
+      // OpenNext tag cache: lets "Publish" expire cached pages immediately.
+      "binding": "NEXT_TAG_CACHE_D1",
+      "database_id": "REPLACE_WITH_TAG_CACHE_DATABASE_ID",
+      "database_name": "nwwy-next-tag-cache",
+    },
+  ],
+  "r2_buckets": [
+    // Uploaded images, collage pieces and songs.
+    { "binding": "R2", "bucket_name": "nwwy-media" },
+    // OpenNext incremental cache (rendered pages and cached data).
+    { "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "nwwy-next-cache" },
+  ],
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "nwwy-cms" }],
+  // Cloudflare Images: resizes images on delivery (Workers has no sharp).
+  "images": { "binding": "IMAGES" },
+  "vars": {
+    "NEXT_PUBLIC_SERVER_URL": "https://nwwy-cms.REPLACE_WITH_WORKERS_SUBDOMAIN.workers.dev",
   },
 }

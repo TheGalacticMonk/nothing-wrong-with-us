@@ -1,85 +1,123 @@
-# Nothing Wrong With You
+# Payload Cloudflare Template
 
-Static Astro site for [nothingwrongwithyou.org](https://www.nothingwrongwithyou.org/), rebuilt from Squarespace.
-Astro 7 · TypeScript (strict) · Tailwind CSS 4 · no client framework. No external JS files; each page inlines 0.3–1.5 KB of script (gallery viewer, video facade, form validation).
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/payloadcms/payload/tree/3.x/templates/with-cloudflare-d1)
 
-## Commands
+**This can only be deployed on Paid Workers right now due to size limits.** This template comes configured with the bare minimum to get started on anything you need.
 
-| Command            | What it does                                             |
-| ------------------ | -------------------------------------------------------- |
-| `npm install`      | Install dependencies (Node ≥ 22.12; `.nvmrc` pins 22.19) |
-| `npm run dev`      | Dev server on `localhost:4321`                           |
-| `npm run build`    | Production build to `dist/`                              |
-| `npm run preview`  | Serve `dist/` locally                                    |
-| `npm run validate` | `astro check` + ESLint + Prettier check + build          |
+## Quick start
 
-## Project layout
+This template can be deployed directly to Cloudflare Workers by clicking the button to take you to the setup screen.
 
+From there you can connect your code to a git provider such Github or Gitlab, name your Workers, D1 Database and R2 Bucket as well as attach any additional environment variables or services you need.
+
+## Quick Start - local setup
+
+To spin up this template locally, follow these steps:
+
+### Clone
+
+After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. Cloudflare will connect your app to a git provider such as Github and you can access your code from there.
+
+### Local Development
+
+## How it works
+
+Out of the box, using [`Wrangler`](https://developers.cloudflare.com/workers/wrangler/) will automatically create local bindings for you to connect to the remote services and it can even create a local mock of the services you're using with Cloudflare.
+
+We've pre-configured Payload for you with the following:
+
+### Collections
+
+See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+
+- #### Users (Authentication)
+
+  Users are auth-enabled collections that have access to the admin panel.
+
+  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/3.x/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
+
+- #### Media
+
+  This is the uploads enabled collection.
+
+### Image Storage (R2)
+
+Images will be served from an R2 bucket which you can then further configure to use a CDN to serve for your frontend directly.
+
+### D1 Database
+
+The Worker will have direct access to a D1 SQLite database which Wrangler can connect locally to, just note that you won't have a connection string as you would typically with other providers.
+
+You can enable read replicas by adding `readReplicas: 'first-primary'` in the DB adapter and then enabling it on your D1 Cloudflare dashboard. Read more about this feature on [our docs](https://payloadcms.com/docs/database/sqlite#d1-read-replicas).
+
+## Working with Cloudflare
+
+Firstly, after installing dependencies locally you need to authenticate with Wrangler by running:
+
+```bash
+pnpm wrangler login
 ```
-src/
-  config/site.ts        Site name, nav, social links, safety copy, contact fallback. Edit facts here.
-  content/blog/*.md     Blog posts (frontmatter `path` keeps the old Squarespace URL)
-  content/pages/*.md    About and Resources page text
-  data/*.json           Collage images (+ alt text), songs, videos
-  assets/               Images processed by Astro (hero, portrait, collage, video posters)
-  components/           Header, Footer, ContactForm, YouTubeFacade, ...
-  layouts/BaseLayout    Head, fonts, skip link, header/footer
-  pages/                Routes (file-based)
-  styles/global.css     Design tokens (@theme), prose, paper + wave edges, motion
-public/
-  audio/*.mp3           The three songs (served as-is)
-  _redirects, _headers  Cloudflare redirects and security headers
-scripts/migrate-blog.py One-off Squarespace -> Markdown converter (kept for reference)
+
+This will take you to Cloudflare to login and then you can use the Wrangler CLI locally for anything, use `pnpm wrangler help` to see all available options.
+
+Wrangler is pretty smart so it will automatically bind your services for local development just by running `pnpm dev`.
+
+## Deployments
+
+When you're ready to deploy, first make sure you have created your migrations:
+
+```bash
+pnpm payload migrate:create
 ```
 
-### Common edits
+Then run the following command:
 
-- **Blog is hidden for now.** Routes live in `src/pages/_blog` (the underscore stops Astro building them); nav, Art page, home "Read" door and `_redirects` lines are commented out (search for "Blog hidden"). To restore: rename `_blog` to `blog` and uncomment those.
-- **Add a blog post:** create `src/content/blog/<date>-<slug>.md` with `title`, `date`, `path` (the URL after `/blog/`), optional `excerpt`, `tags`.
-- **Add a collage piece:** drop the image in `src/assets/collage/`, add an entry with descriptive `alt` text to `src/data/collage.json`.
-- **Add a song:** put the MP3 in `public/audio/`, add an entry to `src/data/songs.json`.
-- **Add a video:** save its poster to `src/assets/video/`, add an entry to `src/data/videos.json`.
-
-## Contact form (Formspree)
-
-The form posts to Formspree. Create a form at formspree.io (its notification address is where messages go), then set:
-
-```
-PUBLIC_FORMSPREE_ID=<the id after /f/ in the endpoint URL>
+```bash
+pnpm run deploy
 ```
 
-This is a public identifier, not a secret. Set it in Cloudflare (Settings → Variables and Secrets, as a **build** variable) or in a local `.env`. It is inlined at build time, so **rebuild after changing it**.
-Until it is set, `/contact` still shows the form but the Send button is disabled with a note (the build logs a warning). No email address is published on the site. Spam protection: honeypot field plus Formspree's own filtering. The form works without JavaScript (plain POST) and is enhanced with inline validation when JS is available.
+This will spin up Wrangler in `production` mode, run any created migrations, build the app and then deploy the bundle up to Cloudflare.
 
-## Deploying to Cloudflare
+That's it! You can if you wish move these steps into your CI pipeline as well.
 
-The output is fully static, so no server runtime is needed.
+## Enabling logs
 
-**Cloudflare Pages:** connect the repo, build command `npm run build`, output directory `dist`, environment variables `NODE_VERSION=22.19.0` and `PUBLIC_FORMSPREE_ID`.
+By default logs are not enabled for your API, we've made this decision because it does run against your quota so we've left it opt-in. But you can easily enable logs in one click in the Cloudflare panel, [see docs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/#enable-workers-logs).
 
-**Cloudflare Workers (static assets):** `npm run build && npx wrangler deploy` (config in `wrangler.jsonc`).
+### Logger Configuration
 
-Both honour `public/_redirects` and `public/_headers`. Nothing here touches DNS. **Cut over the domain only after the client approves**, and keep the canonical host in sync in two places if it ever changes: `astro.config.mjs` (`SITE_URL`) and `src/config/site.ts` (`site.url`).
+This template includes a custom console-based logger compatible with Cloudflare Workers. Payload's default logger uses `pino-pretty`, which relies on Node.js APIs not available in Workers and would cause `fs.write is not implemented` errors.
 
-### URLs and redirects
+The custom logger in `payload.config.ts`:
 
-Existing URLs are kept (`/about-me`, `/art`, `/collage-art`, `/blog/...`, `/music`, `/videos`). Three change and are permanently redirected:
-`/new-page` → `/resources` · `/info-contact-carson` → `/contact` · `/cart` → `/` (the shop was empty). Blog tag pages redirect to `/blog`.
+- Routes logs through `console.*` methods which Workers handles correctly
+- Outputs JSON-formatted logs for Cloudflare observability
+- Only active in production (development uses the default `pino-pretty` for better DX)
 
-`_headers` ships a `Content-Security-Policy-Report-Only` header. Watch the browser console after launch, then switch it to an enforcing `Content-Security-Policy` once nothing is reported.
+You can control the log level via the `PAYLOAD_LOG_LEVEL` environment variable (e.g., `debug`, `info`, `warn`, `error`).
 
-## Accessibility, performance, SEO (as measured)
+### Diagnostic Channel Errors
 
-Lighthouse (mobile, simulated slow 4G) against the production build: Accessibility, Best Practices and SEO were 100 on every page template. Performance 96–100; LCP 1.5–2.3 s on most pages, **2.8 s on `/collage-art`** (target 2.5 s). Desktop home: 100, LCP 0.5 s. Re-run after any content or image change.
+If you see "Failed to publish diagnostic channel message" errors in your observability logs, these typically come from the `undici` HTTP client library. The template includes `skipSafeFetch: true` in the Media collection to use native fetch instead of undici for file uploads, which helps reduce these errors.
 
-Not tested: real-device screen readers (VoiceOver/NVDA), Safari/Firefox, and a live Formspree submission.
+Cloudflare Workers runs in an [isolated environment that cannot access private IP ranges](https://developers.cloudflare.com/workers-vpc/examples/route-across-private-services/) by default, providing built-in SSRF protection. This makes `skipSafeFetch` safe to use.
 
-## Content notes for the client
+## Known issues
 
-- Text was migrated verbatim. Only edits: "the the magic" → "the magic" (About); "send me an email below" → "send me a message" (Contact); Resources headings tidied to sentence case; video titles written as words (`shadowwork`) instead of letter-spaced (`s h a d o w w o r k`) so screen readers can read them (the letter-spacing is preserved visually).
-- Not migrated: blog header/body images (third-party celebrity and search-result images, rights unclear), blog comments, the Instagram embeds on About (replaced by a link), the old logo image.
-- Collage alt text was written from the images; please review, and supply titles/dates if wanted.
-- **Added, not in the original, needs client approval:** the Quick Exit button (currently removed from the header; `QuickExit.astro` is kept, re-add it in `Header.astro`), content notes, crisis-line block (988, RAINN) and the "not legal advice" footer line. All are defined in `src/config/site.ts` (`safety`) and used by `ContentNote`, `CrisisResources`, `Footer`, `QuickExit`.
-- The hero artwork has no credit line yet. Add the artist's name once confirmed.
+### Image resizing
 
-# nothing-wrong-with-us
+Workers do not support `sharp`, so image resizing features are not available. The Media collection has `crop` and `focalPoint` disabled for this reason, and options like `imageSizes` will not work.
+
+### GraphQL
+
+We are currently waiting on some issues with GraphQL to be [fixed upstream in Workers](https://github.com/cloudflare/workerd/issues/5175) so full support for GraphQL is not currently guaranteed when deployed.
+
+### Worker size limits
+
+We currently recommend deploying this template to the Paid Workers plan due to bundle [size limits](https://developers.cloudflare.com/workers/platform/limits/#worker-size) of 3mb. We're actively trying to reduce our bundle footprint over time to better meet this metric.
+
+This also applies to your own code, in the case of importing a lot of libraries you may find yourself limited by the bundle.
+
+## Questions
+
+If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
