@@ -3,3 +3,5 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
   workerd: true
+patchedDependencies:
+  payload@3.90.1: patches/payload@3.90.1.patch

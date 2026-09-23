@@ -495,3 +495,18 @@ Lighthouse mobile on the preview (second pass, edge cache warm; first pass in br
 - **Remaining option (not built):** at cutover, request transformations from the page's own origin (`www…/cdn-cgi/image/…`) to avoid the extra connection. This can't be tested on workers.dev.
 
 **Read-only suite against the preview** (`EXPECT_NOINDEX=1`): parity and interactions pass 31/34. The 3 failures are the home canonical slash (×2) and the `Accept-Ranges` header above. The 2 admin-login tests need accounts that exist only locally.
+
+## D1-7 Critical (found on the preview deploy, 2026-09-23): logins impossible on Workers
+
+- **Symptom:** every login on the deployed Worker failed with "The email or password provided is incorrect", and creating users would fail the same way.
+- **Cause:**
+  - Payload 3.90 hashes with PBKDF2-SHA256 at 600,000 iterations.
+  - Production workerd rejects more than 100,000 ("iteration counts above 100000 are not supported"; see cloudflare/workerd#1346).
+  - Payload swallows the error as a failed password.
+  - The cap does not exist in local workerd or Node, which is why every local test passed.
+- **Fix (owner-approved trade-off):** `patches/payload@3.90.1.patch`. New hashes use 100,000 iterations under their own prefix, and 600k hashes remain verifiable and are upgraded on login. Unit tests are in `tests/int/password-hash.int.spec.ts`.
+- **Verified on the deployed Worker:**
+  - The admin logs in.
+  - An editor account can be created, can log in, and has been deleted again.
+  - The bundle contains the patched constants (a stale webpack cache had first shipped the unpatched code; clean builds are now documented).
+- **Contact form:** the Formspree ID `mppwdgky` is set on the preview. `/contact` posts to `https://formspree.io/f/mppwdgky`, and the Send button is enabled.

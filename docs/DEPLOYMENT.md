@@ -102,6 +102,13 @@ Never edit an applied migration. Always keep the D1 adapter version pinned, beca
 - **Admin login:** no public sign-up, and only admins create users. After 5 failed attempts the account locks for 15 minutes. Session cookies are `Secure` and `SameSite=Lax` in production. The admin is `noindex`, and `/admin` and `/api` are disallowed in `robots.txt`.
 - **Drafts:** unpublished pages and items are readable only by signed-in users. Preview mode requires a signed-in user.
 - **Headers:** security headers are the same as the current site. The CSP ships as Report-Only; switch it to enforcing after a week with no reports.
+- **Password hashing (patched):**
+  - **Why:** Cloudflare Workers refuses PBKDF2 above 100,000 iterations in production, and Payload 3.90 hashes with 600,000. Logins and account creation fail on the deployed Worker, with the error hidden as "incorrect password". The cap does **not** exist in `next dev` or `wrangler dev`, so local tests cannot catch it.
+  - **The patch:** `patches/payload@3.90.1.patch` (applied by pnpm) hashes new passwords with 100,000 iterations under the `pbkdf2-sha256-100k-v1:` prefix. Older 600k hashes still verify in Node and are upgraded on login.
+  - **Trade-off:** this is below OWASP's 600k recommendation. It is mitigated by lockout after 5 attempts and strong passwords.
+  - **Upgrading Payload:** re-check this before upgrading. The patch is pinned to 3.90.1, and `pnpm install` fails loudly if it no longer applies. Test a login on a deployed preview after any upgrade.
+  - **Test:** `tests/int/password-hash.int.spec.ts`.
+- **After changing a dependency patch,** delete `.next/` and `.open-next/` before building. The webpack cache kept the unpatched code once.
 - **Local never touches Cloudflare:** the top-level bindings in `wrangler.jsonc` are all local. Real D1/R2 are declared only in `env.remote`, which Payload uses only when `PAYLOAD_REMOTE_BINDINGS=1`. Never add `"remote": true` to the top-level bindings.
 - **Framing:** `/admin` and `/api` send `X-Frame-Options: SAMEORIGIN` and `frame-ancestors 'self'`.
 - **Uploads are public:** files are served from a public bucket, so an unpublished collage image is reachable if someone knows its exact URL. Its page entry stays hidden.
