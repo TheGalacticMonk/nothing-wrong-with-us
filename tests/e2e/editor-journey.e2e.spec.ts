@@ -154,13 +154,13 @@ test('add a collage piece, reorder it to the top, verify /collage-art', async ({
   await page.waitForURL(/collections\/collage/)
   const rows = page.locator('tbody tr')
   await expect(rows.first()).toBeVisible()
-  // USABILITY: the list shows 10 per page and new pieces are added last (#23 → page 3). Drag only
-  // works within a page, so the editor must first raise "Per Page" (not mentioned anywhere).
+  // Art lists default to 100 per page (U1 fix) so a new piece is on the first page. An account
+  // with an older saved "Per Page" preference may still need to pick 100 once.
   report.newPieceOnFirstPage = (await rows.filter({ hasText: `${MARK} collage` }).count()) > 0
   if (!report.newPieceOnFirstPage) {
     await click(page.getByText(/Per Page:/).first())
-    await click(page.getByRole('button', { name: '50', exact: true }).first())
-    await page.waitForURL(/limit=50/)
+    await click(page.getByRole('button', { name: '100', exact: true }).first())
+    await page.waitForURL(/limit=100/)
     await expect(rows).toHaveCount(23)
   }
   const count = await rows.count()

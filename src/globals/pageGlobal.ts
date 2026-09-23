@@ -22,6 +22,8 @@ export const pageGlobal = (
     hideAPIURL: true,
     description,
     livePreview: pageLivePreview(slug),
+    // A page always exists on the site; "Unpublish" would blank it. Drafts + History cover undo.
+    components: { elements: { UnpublishButton: '/admin/NoUnpublish' } },
   },
   access: { read: publishedOrSignedIn, update: signedIn, readVersions: signedIn },
   versions: { drafts: { autosave: { interval: 800 } }, max: 50 },

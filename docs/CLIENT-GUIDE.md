@@ -72,7 +72,9 @@ You can also select some words to get a small floating toolbar with the same opt
 
 **Changing the order:** click **See all pieces or reorder**, then drag a piece by the handle on its left. The gallery shows them in the same order.
 
-**Removing a piece:** open it, then choose **Delete** from the **⋯** menu at the top right.
+**Hiding a piece for now:** open it and choose **Unpublish** from the **⋯** menu. It disappears from the website but stays here, and you can publish it again later.
+
+**Removing a piece for good:** open it, then choose **Delete** from the **⋯** menu at the top right.
 
 ---
 
@@ -104,7 +106,7 @@ The first video in the list is shown large. Drag to change the order.
 - Pages show the preview beside the editor automatically.
 - To see the page at phone size, use the size menu above the preview.
 - To hide the preview and get more room to type, click the **eye** icon at the top.
-- The preview shows a thin **Preview mode** bar at the top. Real visitors never see it.
+- The preview shows a small **Preview mode** label in the bottom-right corner. Real visitors never see it.
 
 ---
 
@@ -132,7 +134,7 @@ Settings go live as soon as you press **Save**. They don't need publishing.
 
 ## Your account
 
-Click your picture (bottom left) to change your name, email or password. If you forget your password, ask your developer to reset it.
+Click your picture (top right) to change your name, email or password. If you forget your password, ask your developer to reset it.
 
 For safety, after 5 wrong password attempts your account is locked for 15 minutes.
 

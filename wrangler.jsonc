@@ -4,7 +4,7 @@
   // different name so deploying it can never replace production until DNS is cut over on purpose.
   "name": "nwwy-cms",
   "main": ".open-next/worker.js",
-  "compatibility_date": "2026-09-01",
+  "compatibility_date": "2026-08-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
     "directory": ".open-next/assets",
@@ -17,7 +17,6 @@
       // Created with `wrangler d1 create nwwy-cms`; see docs/DEPLOYMENT.md.
       "database_id": "REPLACE_WITH_D1_DATABASE_ID",
       "database_name": "nwwy-cms",
-      "remote": true,
     },
     {
       // OpenNext tag cache: lets "Publish" expire cached pages immediately.
@@ -37,7 +36,25 @@
   "images": { "binding": "IMAGES" },
   "vars": {
     "NEXT_PUBLIC_SERVER_URL": "https://nwwy-cms.REPLACE_WITH_WORKERS_SUBDOMAIN.workers.dev",
-    // Public hostname of the nwwy-media R2 bucket (custom domain, or the r2.dev URL for previews).
-    "MEDIA_PUBLIC_URL": "https://media.nothingwrongwithyou.org",
+    // Public hostname of the nwwy-media R2 bucket: its custom domain, or its r2.dev URL on a preview
+    // deploy (docs/DEPLOYMENT.md). Empty = files served by the Worker, shown unoptimised.
+    "MEDIA_PUBLIC_URL": "",
+  },
+  // ---------------------------------------------------------------------------------------------
+  // SAFETY: nothing above uses remote bindings, so dev, builds and `preview:local` can never touch
+  // Cloudflare. Only payload.config.ts selects this environment, and only when
+  // PAYLOAD_REMOTE_BINDINGS=1 (deploy:database, guarded remote seeding). Keep the IDs in sync.
+  "env": {
+    "remote": {
+      "d1_databases": [
+        {
+          "binding": "D1",
+          "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+          "database_name": "nwwy-cms",
+          "remote": true,
+        },
+      ],
+      "r2_buckets": [{ "binding": "R2", "bucket_name": "nwwy-media", "remote": true }],
+    },
   },
 }

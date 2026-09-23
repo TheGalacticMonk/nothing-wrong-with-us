@@ -11,6 +11,8 @@ export const Videos: CollectionConfig = {
   orderable: true,
   disableDuplicate: true,
   admin: {
+    // Show every item on one page so any item can be dragged to any position.
+    pagination: { defaultLimit: 100, limits: [100] },
     hideAPIURL: true,
     group: 'Art',
     description:

@@ -47,6 +47,8 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // Don't let `next dev` write AGENTS.md/CLAUDE.md into the repo.
   agentRules: false,
+  // Don't advertise the stack (withPayload would add "X-Powered-By: Next.js, Payload").
+  poweredByHeader: false,
   // Keep the dev-only Next.js badge out of visual comparisons with the Astro site.
   devIndicators: false,
   images: {
@@ -68,6 +70,8 @@ const nextConfig: NextConfig = {
       { source: '/new-page', destination: '/resources', statusCode: 301 },
       { source: '/info-contact-carson', destination: '/contact', statusCode: 301 },
       { source: '/cart', destination: '/', statusCode: 301 },
+      // The Astro site served songs from /audio/<file>.mp3; they now live in the Songs collection.
+      { source: '/audio/:file', destination: '/api/songs/file/:file', statusCode: 301 },
     ]
   },
   async headers() {
@@ -76,6 +80,24 @@ const nextConfig: NextConfig = {
         // Every public route; the Payload admin and API keep their own headers.
         source: '/:path((?!admin(?:/|$)|api(?:/|$)).*)',
         headers: securityHeaders,
+      },
+      {
+        // The admin and API may only be framed by this site (Live Preview frames the public
+        // pages, never the admin), so another site can't trick an editor into clicking Publish.
+        source: '/:area(admin|api)/:path*',
+        headers: [
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'Content-Security-Policy', value: "frame-ancestors 'self'" },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        ],
+      },
+      {
+        source: '/:area(admin|api)',
+        headers: [
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'Content-Security-Policy', value: "frame-ancestors 'self'" },
+        ],
       },
       {
         source: '/_next/static/:path*',

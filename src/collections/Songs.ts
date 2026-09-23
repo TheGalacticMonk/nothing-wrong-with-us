@@ -10,6 +10,8 @@ export const Songs: CollectionConfig = {
   orderable: true,
   disableDuplicate: true,
   admin: {
+    // Show every item on one page so any item can be dragged to any position.
+    pagination: { defaultLimit: 100, limits: [100] },
     hideAPIURL: true,
     group: 'Art',
     description: 'Songs on the Songs page, in the order they appear. Upload an MP3, give it a title, and publish. Drag a song up or down in this list to change the order.',

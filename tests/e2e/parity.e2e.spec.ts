@@ -21,7 +21,11 @@ const comparable = (f: PageFacts) => ({
     Object.entries(f.meta).map(([k, v]) => [k, /:image$/.test(k) || k === 'twitter:image' ? Boolean(v) : v]),
   ),
   // Astro emits /_astro/* hrefs for nothing linkable; strip hashes of internal assets.
-  links: f.links.map((l) => ({ ...l, href: l.href.replace(/\.html$/, '') })),
+  // Songs moved from /audio/<file> to the Songs collection (the old URLs 301 there).
+  links: f.links.map((l) => ({
+    ...l,
+    href: l.href.replace(/\.html$/, '').replace(/^\/audio\//, '/api/songs/file/'),
+  })),
 })
 
 test.describe.configure({ mode: 'parallel' })

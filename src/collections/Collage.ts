@@ -12,6 +12,8 @@ export const Collage: CollectionConfig = {
   // Copying an uploaded picture makes a confusing near-duplicate; upload it again instead.
   disableDuplicate: true,
   admin: {
+    // Show every item on one page so any item can be dragged to any position.
+    pagination: { defaultLimit: 100, limits: [100] },
     hideAPIURL: true,
     group: 'Art',
     description:

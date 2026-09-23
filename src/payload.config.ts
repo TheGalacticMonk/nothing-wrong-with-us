@@ -146,7 +146,8 @@ function getCloudflareContextFromWrangler(): Promise<CloudflareContext> {
   return import(/* webpackIgnore: true */ `${'__wrangler'.replaceAll('_', '')}`).then(
     ({ getPlatformProxy }) =>
       getPlatformProxy({
-        environment: process.env.CLOUDFLARE_ENV,
+        // The "remote" wrangler environment is the only place real D1/R2 bindings are declared.
+        environment: process.env.PAYLOAD_REMOTE_BINDINGS === '1' ? 'remote' : process.env.CLOUDFLARE_ENV,
         // Only touch the real Cloudflare D1/R2 when explicitly asked (`deploy:database`, remote
         // seeding). Builds, dev and scripts otherwise use wrangler's local emulation.
         remoteBindings: process.env.PAYLOAD_REMOTE_BINDINGS === '1',

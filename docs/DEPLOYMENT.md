@@ -24,6 +24,8 @@ Estimated cost: Workers Paid $5/month. D1, R2 and the Images free tiers should c
 | `PAYLOAD_SECRET` | `wrangler secret put PAYLOAD_SECRET` | **Yes.** 32+ random bytes. Rotating it signs everyone out. |
 | `NEXT_PUBLIC_SERVER_URL` | `vars` in `wrangler.jsonc` | No. The Worker's public URL, no trailing slash |
 | `NEXT_PUBLIC_NOINDEX` | `vars`, set to `"1"` on preview deploys | No. Adds `noindex` to every page |
+| `MEDIA_PUBLIC_URL` | `vars` **and** the build environment | No. Public origin of the `nwwy-media` bucket. When empty, images are served full-size by the Worker (slow). |
+| `PAYLOAD_REMOTE_BINDINGS` | shell only, never in `vars` | No. `1` makes Payload scripts use the real D1/R2 via the `remote` wrangler env |
 
 - Nothing secret is ever prefixed `NEXT_PUBLIC_`.
 - Database and bucket access uses bindings, not credentials, so there are no DB passwords anywhere.
@@ -37,19 +39,24 @@ pnpm exec wrangler d1 create nwwy-next-tag-cache      # copy database_id (NEXT_T
 pnpm exec wrangler r2 bucket create nwwy-media
 pnpm exec wrangler r2 bucket create nwwy-next-cache
 pnpm exec wrangler secret put PAYLOAD_SECRET          # paste `openssl rand -hex 32`
+pnpm exec wrangler r2 bucket dev-url enable nwwy-media   # preview only: public r2.dev URL for uploads
+# set MEDIA_PUBLIC_URL to that https://pub-….r2.dev URL (wrangler.jsonc vars + build env)
+# copy both database_ids into BOTH the top-level bindings and env.remote in wrangler.jsonc
 # set NEXT_PUBLIC_SERVER_URL (and NEXT_PUBLIC_NOINDEX="1") in wrangler.jsonc vars
 pnpm run deploy                                       # runs migrations on remote D1, then builds + deploys the Worker
 PAYLOAD_REMOTE_BINDINGS=1 SEED_CONFIRM=I_UNDERSTAND pnpm seed --allow-remote    # one-time content import into the empty remote DB
 ```
 
-Then create the client's editor account in `/admin` (Team → Add), and run QA against the `workers.dev` URL.
+Then create the client's editor account in `/admin` (Team → Add), and run QA against the `workers.dev` URL:
+`BASE_URL=https://nwwy-cms.<subdomain>.workers.dev pnpm test:e2e:readonly`, plus Lighthouse (mobile) on `/`, `/collage-art` and `/about-me`. **Release gate:** Performance ≥ 90 and LCP ≤ 2.5 s. This can only be measured here, because local runs serve full-size originals.
 
 ## Going live (cutover) **(approval)**
 
 1. Freeze edits on the old site (it has no CMS, so nothing to freeze).
-2. In `wrangler.jsonc`, add a route or custom domain for `www.nothingwrongwithyou.org` (and the apex redirect), remove `NEXT_PUBLIC_NOINDEX`, and set `NEXT_PUBLIC_SERVER_URL=https://www.nothingwrongwithyou.org`.
-3. Remove the custom domain from the old `nothing-wrong-with-you` Worker. Deploy. Check every URL in `docs/migration/03-content-migration.md`, then the redirects, `/sitemap.xml` and `/robots.txt`.
-4. Leave the old Worker deployed but unrouted for 30 days.
+2. Give the media bucket its real domain: `wrangler r2 bucket domain add nwwy-media --domain media.nothingwrongwithyou.org --zone-id <zone>`, then set `MEDIA_PUBLIC_URL=https://media.nothingwrongwithyou.org`. Enable **Images → Transformations** for the zone.
+3. In `wrangler.jsonc`, add a route or custom domain for `www.nothingwrongwithyou.org` (and the apex redirect), remove `NEXT_PUBLIC_NOINDEX`, and set `NEXT_PUBLIC_SERVER_URL=https://www.nothingwrongwithyou.org`.
+4. Remove the custom domain from the old `nothing-wrong-with-you` Worker. Deploy. Check every URL in `docs/migration/03-content-migration.md`, then the redirects, `/sitemap.xml` and `/robots.txt`.
+5. Leave the old Worker deployed but unrouted for 30 days.
 
 ## Rollback
 
@@ -84,4 +91,7 @@ Never edit an applied migration. Always keep the D1 adapter version pinned, beca
 - **Admin login:** no public sign-up, and only admins create users. After 5 failed attempts the account locks for 15 minutes. Session cookies are `Secure` and `SameSite=Lax` in production. The admin is `noindex`, and `/admin` and `/api` are disallowed in `robots.txt`.
 - **Drafts:** unpublished pages and items are readable only by signed-in users. Preview mode requires a signed-in user.
 - **Headers:** security headers are the same as the current site. The CSP ships as Report-Only; switch it to enforcing after a week with no reports.
+- **Local never touches Cloudflare:** the top-level bindings in `wrangler.jsonc` are all local. Real D1/R2 are declared only in `env.remote`, which Payload uses only when `PAYLOAD_REMOTE_BINDINGS=1`. Never add `"remote": true` to the top-level bindings.
+- **Framing:** `/admin` and `/api` send `X-Frame-Options: SAMEORIGIN` and `frame-ancestors 'self'`.
+- **Uploads are public:** files are served from a public bucket, so an unpublished collage image is reachable if someone knows its exact URL. Its page entry stays hidden.
 - **Access:** give the client her own editor account, and give the developer a separate admin account. Don't share accounts.

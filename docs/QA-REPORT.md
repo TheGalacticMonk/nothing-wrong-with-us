@@ -413,3 +413,34 @@ All files are uncommitted, as instructed.
 - Counts are 22 collage, 3 songs, 3 videos, 6 images, 2 users; 31 R2 objects.
 - No QA users, media or drafts remain.
 - No servers were left running by QA. The TD's legacy preview on :4321 is untouched.
+
+---
+
+## Addendum: Technical Director fixes and re-test (2026-09-22)
+
+Re-tested on the local Workers runtime (`opennextjs-cloudflare preview -- --local`) with a deliberately invalid `CLOUDFLARE_API_TOKEN`. Logs are in `test-results/td-*.log`.
+
+| Defect | Fix | Re-test |
+| --- | --- | --- |
+| **D1-1 Critical**: local preview opened a remote session | Removed `"remote": true` from all top-level bindings. Real D1/R2 now exist only in `env.remote`, selected solely by `PAYLOAD_REMOTE_BINDINGS=1`. `preview:local` passes `--local`. | Build and preview logs: 0 remote/edge-preview lines (searched as text with `grep -a`) |
+| D1-2 Major: compatibility date | `2026-08-01` | Workers runtime starts |
+| D1-3 Major: media domain doesn't exist | `MEDIA_PUBLIC_URL` is empty by default. Pictures are served by the Worker, unoptimised, so they display. The r2.dev URL (preview) and custom domain (cutover) steps are in DEPLOYMENT.md | All pages 200, images load |
+| D1-4 Major: performance unverified | Made a release gate on the preview deploy (DEPLOYMENT.md). Needs production image path | **Open**: measure on preview deploy |
+| D1-5 Major: admin/API framing | `X-Frame-Options: SAMEORIGIN` + `frame-ancestors 'self'` on `/admin` and `/api` | Headers present |
+| D1-6 Major: Unpublish on pages | The Unpublish button is removed from pages (official `UnpublishButton` override). The revalidation hook also expires the cache when a published global becomes a draft | Button gone |
+| Open redirect via `/next/exit-preview` | `safePath` now parses with WHATWG URL and requires same origin | `/%09/example.com`, `//example.com`, `/\example.com` → `/` |
+| Anonymous `GET /api/users` returns 500 | Access returns `false` without a user | 403 |
+| Old `/audio/*.mp3` returns 404 | 301 to `/api/songs/file/*` | 301, Range → 206 |
+| `X-Powered-By: Next.js, Payload` | `poweredByHeader: false` | Header gone |
+| U1: reorder needs "Per Page" | Art lists default to 100 per page | Editor journey passes |
+| Guide mismatches | Avatar position, Preview-mode label, Unpublish vs Delete for art items | — |
+
+**Suite on the Workers runtime:** 94 passed, 5 failed. All 5 are accepted minors:
+
+- **Home canonical has no trailing slash (×2):** Next.js normalises it; search engines treat both forms as the same URL.
+- **`HEAD` on uploaded files returns 404:** Payload's R2 handler serves GET only; browsers use GET/Range for audio.
+- **`/collage-art` visual diff (1.1% and 2.6%, ×2):** image re-encoding, not layout, as diagnosed above. Re-check after the production image path is live.
+
+`verify:content` 202/202 · `tsc` clean · `lint` 0 errors.
+
+**Revised verdict:** Ready for a **preview deploy**. Production cutover is gated on D1-4, the performance measurement on the preview deploy.

@@ -23,8 +23,8 @@ export const Users: CollectionConfig = {
     // No public sign-up. Admins manage accounts; everyone can see and edit themselves.
     create: isAdmin,
     delete: isAdmin,
-    read: ({ req }) => (isAdmin({ req }) ? true : { id: { equals: req.user?.id } }),
-    update: ({ req }) => (isAdmin({ req }) ? true : { id: { equals: req.user?.id } }),
+    read: ({ req }) => (isAdmin({ req }) ? true : req.user ? { id: { equals: req.user.id } } : false),
+    update: ({ req }) => (isAdmin({ req }) ? true : req.user ? { id: { equals: req.user.id } } : false),
     admin: ({ req }) => Boolean(req.user),
   },
   fields: [

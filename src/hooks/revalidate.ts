@@ -18,8 +18,12 @@ const expire = (tag: string, logger: { warn: (msg: string) => void }) => {
 
 const isDraftSave = (doc: { _status?: string | null }) => doc?._status === 'draft'
 
-export const revalidateGlobal: GlobalAfterChangeHook = ({ doc, global, req, context }) => {
-  if (!context.skipRevalidate && !isDraftSave(doc)) expire(globalTag(global.slug), req.payload.logger)
+export const revalidateGlobal: GlobalAfterChangeHook = ({ doc, previousDoc, global, req, context }) => {
+  // Unpublishing (published -> draft) must also update the site.
+  const wasPublished = previousDoc?._status === 'published'
+  if (!context.skipRevalidate && (!isDraftSave(doc) || wasPublished)) {
+    expire(globalTag(global.slug), req.payload.logger)
+  }
   return doc
 }
 
