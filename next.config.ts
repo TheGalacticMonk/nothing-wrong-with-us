@@ -51,7 +51,15 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Keep the dev-only Next.js badge out of visual comparisons with the Astro site.
   devIndicators: false,
+  env: {
+    // Read by the client-side image loader (src/lib/imageLoader.ts).
+    NEXT_PUBLIC_MEDIA_URL: mediaPublicURL,
+  },
   images: {
+    // Production on the zone: resize at Cloudflare's edge instead of through the Worker.
+    ...(process.env.NEXT_PUBLIC_IMAGE_TRANSFORMS === '1'
+      ? { loader: 'custom' as const, loaderFile: './src/lib/imageLoader.ts' }
+      : {}),
     formats: ['image/avif', 'image/webp'],
     // Next 16 only allows listed qualities. Per-image choices match the Astro build.
     qualities: [45, 60, 70, 75, 80],
@@ -108,6 +116,9 @@ const nextConfig: NextConfig = {
   experimental: {
     // Build workers share one local D1/R2 emulator; in parallel they crash it (SQLITE_READONLY).
     cpus: 1,
+    // Inline CSS into the HTML like the Astro site did (inlineStylesheets: 'always'): no
+    // render-blocking stylesheet requests before first paint.
+    inlineCss: true,
   },
   // Packages with Cloudflare Workers (workerd) specific code
   // Read more: https://opennext.js.org/cloudflare/howtos/workerd

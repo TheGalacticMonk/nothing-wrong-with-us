@@ -444,3 +444,27 @@ Re-tested on the local Workers runtime (`opennextjs-cloudflare preview -- --loca
 `verify:content` 202/202 · `tsc` clean · `lint` 0 errors.
 
 **Revised verdict:** Ready for a **preview deploy**. Production cutover is gated on D1-4, the performance measurement on the preview deploy.
+
+## Preview deploy measurements (2026-09-23, https://nwwy-cms.thegalacticmonks.workers.dev)
+
+- **Remote database:** migrations applied (36 tables). Seeded with the guarded script. `verify:content` against remote D1/R2: 202/202.
+- **Smoke test:** all routes 200 and 404 as expected. `noindex` is set, canonical URLs point at production, and anonymous draft requests return only published content. Images are optimised through the IMAGES binding (e.g. collage-01: 547 KB webp → 17 KB AVIF).
+- **Warm responses:** 0.25–0.35 s from the test machine (static baseline 0.2 s). Cold starts: 1–2.4 s.
+- **Fixed during measurement:**
+  - The lightbox downloaded the full-size original of the first piece on load; it now loads only when the viewer opens.
+  - CSS was render-blocking; it is now inlined (`experimental.inlineCss`), as the Astro build did.
+
+Lighthouse mobile, performance (after fixes):
+
+| Page | Perf | LCP |
+| --- | --- | --- |
+| /music | 98 | 1.9 s |
+| /resources | 97 | 1.5 s |
+| /about-me | 95 | 3.0 s |
+| / | 83 | 4.0 s |
+| /collage-art | 65 | 9.9 s |
+
+- **Accessibility and best practices:** 100 on every page.
+- **SEO:** reduced only by the intentional `noindex`.
+- **D1-4 status: partly met.** The image-led pages miss the gate because every thumbnail is resized by the Worker on each request. `workers.dev` has no edge cache and the Cache API is unavailable there, so nothing can cache it on the preview.
+- **Planned fix (built, behind `NEXT_PUBLIC_IMAGE_TRANSFORMS=1`):** Cloudflare Image Transformations on `media.nothingwrongwithyou.org`, which are cached at the edge and never reach the Worker. It needs the media custom domain and Transformations enabled on the zone. Re-measure after that.

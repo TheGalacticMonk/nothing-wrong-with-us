@@ -15,13 +15,13 @@
     {
       "binding": "D1",
       // Created with `wrangler d1 create nwwy-cms`; see docs/DEPLOYMENT.md.
-      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "database_id": "95011fee-cecd-4475-a2f8-424aefdf7ede",
       "database_name": "nwwy-cms",
     },
     {
       // OpenNext tag cache: lets "Publish" expire cached pages immediately.
       "binding": "NEXT_TAG_CACHE_D1",
-      "database_id": "REPLACE_WITH_TAG_CACHE_DATABASE_ID",
+      "database_id": "f23fa13f-a697-4e67-b0b8-d0c3f5a196c6",
       "database_name": "nwwy-next-tag-cache",
     },
   ],
@@ -35,10 +35,12 @@
   // Cloudflare Images: resizes images on delivery (Workers has no sharp).
   "images": { "binding": "IMAGES" },
   "vars": {
-    "NEXT_PUBLIC_SERVER_URL": "https://nwwy-cms.REPLACE_WITH_WORKERS_SUBDOMAIN.workers.dev",
+    "NEXT_PUBLIC_SERVER_URL": "https://nwwy-cms.thegalacticmonks.workers.dev",
     // Public hostname of the nwwy-media R2 bucket: its custom domain, or its r2.dev URL on a preview
     // deploy (docs/DEPLOYMENT.md). Empty = files served by the Worker, shown unoptimised.
-    "MEDIA_PUBLIC_URL": "",
+    "MEDIA_PUBLIC_URL": "https://pub-2bed0fd7f8084d189daecb32ee0fd946.r2.dev",
+    // Preview deploy: keep search engines out. Remove at cutover.
+    "NEXT_PUBLIC_NOINDEX": "1",
   },
   // ---------------------------------------------------------------------------------------------
   // SAFETY: nothing above uses remote bindings, so dev, builds and `preview:local` can never touch
@@ -49,7 +51,7 @@
       "d1_databases": [
         {
           "binding": "D1",
-          "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+          "database_id": "95011fee-cecd-4475-a2f8-424aefdf7ede",
           "database_name": "nwwy-cms",
           "remote": true,
         },

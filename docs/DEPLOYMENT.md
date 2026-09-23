@@ -1,5 +1,14 @@
 # Deployment, backups and rollback
 
+## Current preview (deployed 2026-09-22/23)
+
+- **URL:** https://nwwy-cms.thegalacticmonks.workers.dev (`noindex`; canonical URLs point at production)
+- **Admin:** `/admin`. There is one admin account (the site owner's email). Its generated password was handed over privately and is not in this repo. Add the client's editor account from Team → Add.
+- **Resources:**
+  - D1 `nwwy-cms` (`95011fee-…`) and `nwwy-next-tag-cache` (`f23fa13f-…`)
+  - R2 `nwwy-media` (public at `https://pub-2bed0fd7f8084d189daecb32ee0fd946.r2.dev`) and `nwwy-next-cache`
+- **Build for this preview:** `MEDIA_PUBLIC_URL=<r2.dev url> NEXT_PUBLIC_NOINDEX=1 NEXT_PUBLIC_SERVER_URL=<workers.dev url> pnpm exec opennextjs-cloudflare build`, then `opennextjs-cloudflare deploy -- --secrets-file <file with PAYLOAD_SECRET>`.
+
 Target: **Cloudflare Workers (Paid) + D1 + R2**, built with OpenNext from Payload's `with-cloudflare-d1` template.
 
 > Nothing here has been run against the Cloudflare account yet. Each step marked **(approval)** changes live infrastructure and needs the site owner's explicit go-ahead.
@@ -25,6 +34,7 @@ Estimated cost: Workers Paid $5/month. D1, R2 and the Images free tiers should c
 | `NEXT_PUBLIC_SERVER_URL` | `vars` in `wrangler.jsonc` | No. The Worker's public URL, no trailing slash |
 | `NEXT_PUBLIC_NOINDEX` | `vars`, set to `"1"` on preview deploys | No. Adds `noindex` to every page |
 | `MEDIA_PUBLIC_URL` | `vars` **and** the build environment | No. Public origin of the `nwwy-media` bucket. When empty, images are served full-size by the Worker (slow). |
+| `NEXT_PUBLIC_IMAGE_TRANSFORMS` | build environment | No. `1` resizes images with Cloudflare Image Transformations on the media domain (`src/lib/imageLoader.ts`). Needs the media custom domain and Transformations enabled on the zone; r2.dev does not support it |
 | `PAYLOAD_REMOTE_BINDINGS` | shell only, never in `vars` | No. `1` makes Payload scripts use the real D1/R2 via the `remote` wrangler env |
 
 - Nothing secret is ever prefixed `NEXT_PUBLIC_`.

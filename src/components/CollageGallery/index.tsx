@@ -18,9 +18,11 @@ export interface CollageItem {
 export const CollageGallery = ({ items }: { items: CollageItem[] }) => {
   const dialog = useRef<HTMLDialogElement>(null)
   const [index, setIndex] = useState(0)
+  // The viewer's full-size image is only requested once someone opens it (it's a large file).
+  const [opened, setOpened] = useState(false)
   const count = items.length
   const show = (next: number) => setIndex((next + count) % count)
-  const current = items[index]
+  const current = opened ? items[index] : undefined
 
   return (
     <>
@@ -41,6 +43,7 @@ export const CollageGallery = ({ items }: { items: CollageItem[] }) => {
                   aria-haspopup="dialog"
                   onClick={() => {
                     show(i)
+                    setOpened(true)
                     dialog.current?.showModal()
                   }}
                 >
