@@ -172,3 +172,15 @@ After launch, the site measures 88–98 (Lighthouse mobile) across all pages —
 **A more promising, lower-risk direction for a future pass, not investigated further:** reduce what's actually loaded into the cold-start bundle. The public frontend and the Payload admin (rich text editor, admin UI, etc.) currently deploy as one combined Worker; a leaner bundle for public pages specifically (e.g. via OpenNext's documented multi-worker support, or trimming what's pulled into the frontend route bundle) would attack the cold-start cost directly, without touching the draft/publish/security logic at all. This was not implemented or verified — it's a starting point for investigation, not a confirmed fix.
 
 **Decision: performance work stops here.** The site is already well above its accessibility/best-practices bar and materially faster than before the image-transforms work; the remaining gap is not worth the security-adjacent risk of the rejected approach.
+
+## Bug fix: Live Preview stuck on a blank/loading panel (2026-09-23)
+
+**Report:** the client tried the admin and found the Live Preview panel inside the page editor never loaded (looked like it was perpetually loading), though opening the same preview in its own browser tab/window worked fine.
+
+**Diagnosis:** reproduced directly in the browser (with a temporary, since-deleted debug account) rather than guessed at from the code. No error appeared anywhere — not in the browser console, not in the Worker's server logs (checked both). Direct DOM inspection found the cause: the Live Preview `<iframe>`'s `src` was `http://www.nothingwrongwithyou.org/next/preview?...` — plain HTTP — while the admin page itself is `https://`. Browsers silently refuse to load an insecure iframe inside a secure page ("mixed content"), which is exactly a stuck/blank/"trying to load" panel with no console error. Opening the same URL directly in a new tab works because a top-level navigation to `http://` still gets redirected/upgraded normally; it's specifically the iframe-embedding case that's blocked.
+
+**Root cause:** `src/lib/livePreview.ts` built the preview URL from Payload's `req.origin`, which on this Cloudflare Workers deployment reports the scheme as `http` even though the request arrived over `https` (Cloudflare terminates TLS at the edge; something between the Worker and Payload's request reconstruction isn't preserving it). `req.host` (hostname only, no scheme) was reliable.
+
+**Fix:** derive the origin from `req.host` and set the scheme explicitly — `https` always, except for local dev (`localhost`/`127.0.0.1`). No longer trusts `req.origin`'s scheme at all. See `src/lib/livePreview.ts`.
+
+**Verified directly in the browser after deploying the fix:** the preview iframe's `src` is now `https://...`, the page renders inside the panel, and typing in a field updates the preview live (tested end-to-end, then reverted the test edit and confirmed the live public site was unaffected throughout).
