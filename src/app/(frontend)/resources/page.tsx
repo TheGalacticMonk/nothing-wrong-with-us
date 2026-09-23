@@ -1,13 +1,10 @@
 import type { Metadata } from 'next'
+import { draftMode } from 'next/headers'
 
-import { ContentNote } from '@/components/ContentNote'
-import { CrisisResources } from '@/components/CrisisResources'
-import { PageHeader } from '@/components/PageHeader'
-import { contentNoteText, crisisLines } from '@/components/safety'
 import { getGlobal, getSiteSettings } from '@/lib/content'
-import { RichText } from '@/lib/richText'
 import { pageMetadata } from '@/lib/seo'
-import styles from './page.module.css'
+import { ResourcesLive } from './ResourcesLive'
+import { ResourcesView } from './ResourcesView'
 
 export async function generateMetadata(): Promise<Metadata> {
   const [page, settings] = await Promise.all([getGlobal('resources-page'), getSiteSettings()])
@@ -15,32 +12,15 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ResourcesPage() {
-  const [page, settings] = await Promise.all([getGlobal('resources-page'), getSiteSettings()])
-  const note = contentNoteText(settings)
-  const crisis = crisisLines(settings)
+  const [page, settings, draft] = await Promise.all([
+    getGlobal('resources-page'),
+    getSiteSettings(),
+    draftMode(),
+  ])
 
-  return (
-    <>
-      <PageHeader eyebrow="Resources" title={page?.heading}>
-        {note && (
-          <div className={styles.stack}>
-            <ContentNote text={note} />
-          </div>
-        )}
-        {crisis && (
-          <div className={styles.stack}>
-            <CrisisResources lines={crisis} />
-          </div>
-        )}
-      </PageHeader>
+  if (draft.isEnabled) {
+    return <ResourcesLive initialPage={page} settings={settings} />
+  }
 
-      <div className="wrap">
-        <div className={`on-paper paper wave-top wave-bottom ${styles.panel}`}>
-          <div className="prose">
-            <RichText data={page?.body} />
-          </div>
-        </div>
-      </div>
-    </>
-  )
+  return <ResourcesView page={page} settings={settings} />
 }

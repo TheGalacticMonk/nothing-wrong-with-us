@@ -5,7 +5,6 @@ import type { ReactNode } from 'react'
 
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
-import { LivePreviewListener } from '@/components/Preview/LivePreviewListener'
 import { PreviewBar } from '@/components/Preview/PreviewBar'
 import { quickExitURL, socialLinks } from '@/components/safety'
 import { ShootingStars } from '@/components/ShootingStars'
@@ -58,12 +57,7 @@ export default async function FrontendLayout({ children }: { children: ReactNode
           {children}
         </main>
         <Footer settings={settings} />
-        {draft.isEnabled && (
-          <>
-            <LivePreviewListener />
-            <PreviewBar />
-          </>
-        )}
+        {draft.isEnabled && <PreviewBar />}
       </body>
     </html>
   )

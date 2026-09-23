@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
+import { draftMode } from 'next/headers'
 
-import { ArtCard } from '@/components/ArtCard'
-import { PageHeader } from '@/components/PageHeader'
 import { getCollection, getGlobal, getSiteSettings } from '@/lib/content'
 import { pageMetadata } from '@/lib/seo'
-import styles from './page.module.css'
+import { ArtLive } from './ArtLive'
+import { ArtView } from './ArtView'
 
 export async function generateMetadata(): Promise<Metadata> {
   const [page, settings] = await Promise.all([getGlobal('art-page'), getSiteSettings()])
@@ -12,21 +12,19 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ArtPage() {
-  const [page, collage, songs, videos] = await Promise.all([
+  const [page, collage, songs, videos, draft] = await Promise.all([
     getGlobal('art-page'),
     getCollection('collage'),
     getCollection('songs'),
     getCollection('videos'),
+    draftMode(),
   ])
 
-  return (
-    <>
-      <PageHeader eyebrow="Art" title={page?.art?.heading} />
-      <div className={`wrap ${styles.grid}`}>
-        <ArtCard href="/collage-art" title="Collage" meta={`${collage.length} pieces`} />
-        <ArtCard href="/music" title="Songs" meta={`${songs.length} songs`} />
-        <ArtCard href="/videos" title="Videos" meta={`${videos.length} pieces`} />
-      </div>
-    </>
-  )
+  const shared = { collageCount: collage.length, songsCount: songs.length, videosCount: videos.length }
+
+  if (draft.isEnabled) {
+    return <ArtLive initialPage={page} {...shared} />
+  }
+
+  return <ArtView page={page} {...shared} />
 }

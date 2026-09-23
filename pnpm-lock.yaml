@@ -17,6 +17,9 @@ importers:
       '@payloadcms/db-d1-sqlite':
         specifier: 3.90.1
         version: 3.90.1(payload@3.90.1(patch_hash=77206579e6bad04c57eb3835bfcba0df9c967a2b24fe0e5ac0fdf8f04d032738)(graphql@16.14.2)(supports-color@10.2.2)(typescript@5.7.3))(supports-color@10.2.2)
+      '@payloadcms/live-preview':
+        specifier: 3.90.1
+        version: 3.90.1
       '@payloadcms/live-preview-react':
         specifier: 3.90.1
         version: 3.90.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
