@@ -468,3 +468,30 @@ Lighthouse mobile, performance (after fixes):
 - **SEO:** reduced only by the intentional `noindex`.
 - **D1-4 status: partly met.** The image-led pages miss the gate because every thumbnail is resized by the Worker on each request. `workers.dev` has no edge cache and the Cache API is unavailable there, so nothing can cache it on the preview.
 - **Planned fix (built, behind `NEXT_PUBLIC_IMAGE_TRANSFORMS=1`):** Cloudflare Image Transformations on `media.nothingwrongwithyou.org`, which are cached at the edge and never reach the Worker. It needs the media custom domain and Transformations enabled on the zone. Re-measure after that.
+
+## Edge image transformations enabled (2026-09-23)
+
+- **Setup:** `media.nothingwrongwithyou.org` is now the R2 custom domain, Transformations are on for the zone, and the preview is built with `NEXT_PUBLIC_IMAGE_TRANSFORMS=1`.
+- **Image delivery:** images are resized at Cloudflare's edge (`/cdn-cgi/image/…`) and cached (`cf-cache-status: HIT`, about 0.12 s). They no longer go through the Worker. Example: collage-01 is 547 KB webp as an original and 17 KB AVIF at 384 px.
+- **Audio:** served from the media domain. HEAD returns 200 `audio/mpeg`, and Range returns 206 with a correct `Content-Range`. This fixes the earlier HEAD minor. R2's custom domain omits `Accept-Ranges`, which is harmless because browsers seek using 206 responses.
+
+Lighthouse mobile on the preview (second pass, edge cache warm; first pass in brackets):
+
+| Page | Perf | LCP | A11y | BP |
+| --- | --- | --- | --- | --- |
+| / | 90 (88) | 3.6 s | 100 | 100 |
+| /collage-art | 90 (84) | 3.6 s | 100 | 100 |
+| /about-me | 95 (94) | 2.9 s | 100 | 100 |
+| /music | 99 (98) | 1.5 s | 100 | 100 |
+| /videos | 89 (87) | 3.7 s | 100 | 100 |
+| /resources | 99 (94) | 1.4 s | 100 | 100 |
+| /contact | 95 (94) | 2.9 s | 100 | 100 |
+| /art | 95 (100) | 3.0 s | 100 | 100 |
+
+**D1-4 status:**
+- The performance score is ≥ 90 on every page except `/videos` (89).
+- **LCP ≤ 2.5 s is not met on the image-led pages (2.9–3.7 s, simulated slow 4G).** In the trace, real downloads finish within about 1 s. The simulated gap is mostly the second connection to `media.` and web-font loading.
+- For comparison, legacy on the same tool scored 1.95–2.78 s (QA's local measurement).
+- **Remaining option (not built):** at cutover, request transformations from the page's own origin (`www…/cdn-cgi/image/…`) to avoid the extra connection. This can't be tested on workers.dev.
+
+**Read-only suite against the preview** (`EXPECT_NOINDEX=1`): parity and interactions pass 31/34. The 3 failures are the home canonical slash (×2) and the `Accept-Ranges` header above. The 2 admin-login tests need accounts that exist only locally.

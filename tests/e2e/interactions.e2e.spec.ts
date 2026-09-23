@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 import net from 'node:net'
+import tls from 'node:tls'
 
 import { BASE_URL, VIEWPORTS } from './support/site'
 
@@ -8,9 +9,12 @@ import { BASE_URL, VIEWPORTS } from './support/site'
 const rawGet = (url: string, headers: Record<string, string>) =>
   new Promise<{ status: number; headers: Record<string, string>; bodyLength: number }>((resolve, reject) => {
     const u = new URL(url)
-    const socket = net.connect(Number(u.port || 80), u.hostname)
+    const secure = u.protocol === 'https:'
+    const socket = secure
+      ? tls.connect({ port: Number(u.port || 443), host: u.hostname, servername: u.hostname, ALPNProtocols: ['http/1.1'] })
+      : net.connect(Number(u.port || 80), u.hostname)
     const chunks: Buffer[] = []
-    socket.on('connect', () => {
+    socket.on(secure ? 'secureConnect' : 'connect', () => {
       const extra = Object.entries(headers).map(([k, v]) => `${k}: ${v}\r\n`).join('')
       socket.write(`GET ${u.pathname}${u.search} HTTP/1.1\r\nHost: ${u.host}\r\n${extra}Connection: close\r\n\r\n`)
     })

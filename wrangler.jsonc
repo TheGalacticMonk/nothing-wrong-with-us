@@ -38,7 +38,7 @@
     "NEXT_PUBLIC_SERVER_URL": "https://nwwy-cms.thegalacticmonks.workers.dev",
     // Public hostname of the nwwy-media R2 bucket: its custom domain, or its r2.dev URL on a preview
     // deploy (docs/DEPLOYMENT.md). Empty = files served by the Worker, shown unoptimised.
-    "MEDIA_PUBLIC_URL": "https://pub-2bed0fd7f8084d189daecb32ee0fd946.r2.dev",
+    "MEDIA_PUBLIC_URL": "https://media.nothingwrongwithyou.org",
     // Preview deploy: keep search engines out. Remove at cutover.
     "NEXT_PUBLIC_NOINDEX": "1",
   },

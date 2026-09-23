@@ -18,13 +18,20 @@ const comparable = (f: PageFacts) => ({
   images: f.images.map((i) => i.alt),
   // og:image/twitter:image URLs point at a different file path; compare presence only.
   meta: Object.fromEntries(
-    Object.entries(f.meta).map(([k, v]) => [k, /:image$/.test(k) || k === 'twitter:image' ? Boolean(v) : v]),
+    Object.entries(f.meta)
+      // Preview deploys are deliberately noindex (EXPECT_NOINDEX=1); production must not be.
+      .filter(([k, v]) => !(process.env.EXPECT_NOINDEX === '1' && k === 'robots' && v === 'noindex'))
+      .map(([k, v]) => [k, /:image$/.test(k) || k === 'twitter:image' ? Boolean(v) : v]),
   ),
   // Astro emits /_astro/* hrefs for nothing linkable; strip hashes of internal assets.
   // Songs moved from /audio/<file> to the Songs collection (the old URLs 301 there).
   links: f.links.map((l) => ({
     ...l,
-    href: l.href.replace(/\.html$/, '').replace(/^\/audio\//, '/api/songs/file/'),
+    // In production they are served from the public media host instead: compare the file name.
+    href: l.href
+      .replace(/\.html$/, '')
+      .replace(/^\/audio\//, '/api/songs/file/')
+      .replace(/^https:\/\/[^/]+\/(?=[^/]+\.mp3$)/, '/api/songs/file/'),
   })),
 })
 

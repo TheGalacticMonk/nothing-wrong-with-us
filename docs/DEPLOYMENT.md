@@ -6,8 +6,9 @@
 - **Admin:** `/admin`. There is one admin account (the site owner's email). Its generated password was handed over privately and is not in this repo. Add the client's editor account from Team → Add.
 - **Resources:**
   - D1 `nwwy-cms` (`95011fee-…`) and `nwwy-next-tag-cache` (`f23fa13f-…`)
-  - R2 `nwwy-media` (public at `https://pub-2bed0fd7f8084d189daecb32ee0fd946.r2.dev`) and `nwwy-next-cache`
-- **Build for this preview:** `MEDIA_PUBLIC_URL=<r2.dev url> NEXT_PUBLIC_NOINDEX=1 NEXT_PUBLIC_SERVER_URL=<workers.dev url> pnpm exec opennextjs-cloudflare build`, then `opennextjs-cloudflare deploy -- --secrets-file <file with PAYLOAD_SECRET>`.
+  - R2 `nwwy-media` (custom domain `https://media.nothingwrongwithyou.org`; the r2.dev URL is also still enabled and can be switched off) and `nwwy-next-cache`
+  - Zone: Images → Transformations enabled for nothingwrongwithyou.org ("resize from any origin" off)
+- **Build for this preview:** `MEDIA_PUBLIC_URL=https://media.nothingwrongwithyou.org NEXT_PUBLIC_IMAGE_TRANSFORMS=1 NEXT_PUBLIC_NOINDEX=1 NEXT_PUBLIC_SERVER_URL=<workers.dev url> pnpm exec opennextjs-cloudflare build`, then `opennextjs-cloudflare deploy -- --secrets-file <file with PAYLOAD_SECRET>`.
 
 Target: **Cloudflare Workers (Paid) + D1 + R2**, built with OpenNext from Payload's `with-cloudflare-d1` template.
 
@@ -63,7 +64,7 @@ Then create the client's editor account in `/admin` (Team → Add), and run QA a
 ## Going live (cutover) **(approval)**
 
 1. Freeze edits on the old site (it has no CMS, so nothing to freeze).
-2. Give the media bucket its real domain: `wrangler r2 bucket domain add nwwy-media --domain media.nothingwrongwithyou.org --zone-id <zone>`, then set `MEDIA_PUBLIC_URL=https://media.nothingwrongwithyou.org`. Enable **Images → Transformations** for the zone.
+2. (Done 2026-09-23) The media bucket's domain and zone Transformations are already set up. Keep `MEDIA_PUBLIC_URL=https://media.nothingwrongwithyou.org` and `NEXT_PUBLIC_IMAGE_TRANSFORMS=1`. Optional: turn off the bucket's r2.dev URL.
 3. In `wrangler.jsonc`, add a route or custom domain for `www.nothingwrongwithyou.org` (and the apex redirect), remove `NEXT_PUBLIC_NOINDEX`, and set `NEXT_PUBLIC_SERVER_URL=https://www.nothingwrongwithyou.org`.
 4. Remove the custom domain from the old `nothing-wrong-with-you` Worker. Deploy. Check every URL in `docs/migration/03-content-migration.md`, then the redirects, `/sitemap.xml` and `/robots.txt`.
 5. Leave the old Worker deployed but unrouted for 30 days.
