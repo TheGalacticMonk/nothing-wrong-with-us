@@ -1,0 +1,25 @@
+.grid {
+  display: grid;
+  gap: 3rem 2rem;
+  padding-bottom: 2rem;
+}
+@media (min-width: 52rem) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid > li:first-child {
+    grid-column: 1 / -1;
+  }
+}
+.title {
+  margin-top: 1rem;
+  font-size: var(--text-h2);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+.description {
+  max-width: 34rem;
+  margin-top: 0.4rem;
+  color: var(--fg-muted);
+}

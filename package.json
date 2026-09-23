@@ -1,38 +1,92 @@
 {
   "name": "nothing-wrong-with-you",
-  "type": "module",
   "version": "1.0.0",
+  "description": "Nothing Wrong With You: Next.js + Payload CMS on Cloudflare",
   "private": true,
-  "engines": {
-    "node": ">=22.12.0"
-  },
+  "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro",
-    "check": "astro check",
-    "lint": "eslint .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "validate": "npm run check && npm run lint && npm run format:check && npm run build"
+    "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build --webpack",
+    "deploy": "pnpm run deploy:database && pnpm run deploy:app",
+    "deploy:app": "opennextjs-cloudflare build --env=$CLOUDFLARE_ENV && opennextjs-cloudflare deploy --env=$CLOUDFLARE_ENV",
+    "deploy:database": "cross-env NODE_ENV=production PAYLOAD_SECRET=ignore PAYLOAD_REMOTE_BINDINGS=1 payload migrate && wrangler d1 execute D1 --command 'PRAGMA optimize' --env=$CLOUDFLARE_ENV --remote",
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+    "devsafe": "rm -rf .next && rm -rf .open-next && cross-env NODE_OPTIONS=--no-deprecation next dev",
+    "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
+    "generate:types": "pnpm run generate:types:cloudflare && pnpm run generate:types:payload",
+    "generate:types:cloudflare": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "generate:types:payload": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
+    "ii": "pnpm install --ignore-workspace",
+    "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
+    "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview --env=$CLOUDFLARE_ENV",
+    "seed": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/seed.ts --",
+    "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
+    "test": "pnpm run test:int && pnpm run test:e2e",
+    "test:e2e": "pnpm run test:e2e:readonly; s=$?; pnpm run test:e2e:mutating && exit $s",
+    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
+    "verify:content": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/verify-content.ts --",
+    "preview:local": "opennextjs-cloudflare build && opennextjs-cloudflare preview -- --local --port 8787",
+    "test:e2e:dev": "cross-env BASE_URL=http://localhost:3000 pnpm run test:e2e",
+    "test:e2e:workers": "cross-env BASE_URL=http://localhost:8787 pnpm run test:e2e",
+    "test:e2e:readonly": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts --project=readonly",
+    "test:e2e:mutating": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts --project=mutating"
   },
   "dependencies": {
-    "@astrojs/markdown-satteri": "^0.4.1",
-    "@astrojs/sitemap": "^3.7.4",
-    "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.3.3",
-    "sharp": "^0.35.4",
-    "tailwindcss": "^4.3.3"
+    "@opennextjs/cloudflare": "1.20.1",
+    "@payloadcms/db-d1-sqlite": "3.90.1",
+    "@payloadcms/live-preview-react": "3.90.1",
+    "@payloadcms/next": "3.90.1",
+    "@payloadcms/richtext-lexical": "3.90.1",
+    "@payloadcms/storage-r2": "3.90.1",
+    "@payloadcms/ui": "3.90.1",
+    "cross-env": "^7.0.3",
+    "dotenv": "16.4.7",
+    "graphql": "^16.8.1",
+    "next": "16.3.3",
+    "payload": "3.90.1",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.10",
-    "@eslint/js": "^10.0.1",
-    "eslint": "^10.11.0",
-    "eslint-plugin-astro": "^1.7.0",
-    "prettier": "^3.9.8",
-    "prettier-plugin-astro": "^1.0.1",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.70.0"
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "1.58.2",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@testing-library/react": "16.3.0",
+    "@types/node": "22.19.9",
+    "@types/pngjs": "^6.0.5",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "4.5.2",
+    "eslint": "^9.16.0",
+    "eslint-config-next": "16.3.3",
+    "jsdom": "28.0.0",
+    "pixelmatch": "^7.2.0",
+    "pngjs": "^7.0.0",
+    "prettier": "^3.4.2",
+    "tailwindcss": "^4.3.3",
+    "tsx": "4.22.4",
+    "typescript": "5.7.3",
+    "vite-tsconfig-paths": "6.0.5",
+    "vitest": "4.0.18",
+    "wrangler": "~4.116.0"
+  },
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=9"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp",
+      "esbuild",
+      "unrs-resolver"
+    ]
+  },
+  "cloudflare": {
+    "bindings": {
+      "PAYLOAD_SECRET": {
+        "description": "Generate a random string using `openssl rand -hex 32`"
+      }
+    }
   }
 }

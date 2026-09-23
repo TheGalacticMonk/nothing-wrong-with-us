@@ -1,0 +1,10 @@
+{
+  // Cloudflare Workers static assets deploy. Cloudflare Pages needs no config file:
+  // build command `npm run build`, output directory `dist`.
+  "name": "nothing-wrong-with-you",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+  },
+}

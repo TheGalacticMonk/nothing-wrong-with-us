@@ -1,0 +1,5032 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "tables": {
+    "collage": {
+      "name": "collage",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "_order": {
+          "name": "_order",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "alt": {
+          "name": "alt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "year": {
+          "name": "year",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "_objectkey": {
+          "name": "_objectkey",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "_status": {
+          "name": "_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "thumbnail_u_r_l": {
+          "name": "thumbnail_u_r_l",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "filename": {
+          "name": "filename",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "mime_type": {
+          "name": "mime_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "filesize": {
+          "name": "filesize",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "width": {
+          "name": "width",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "height": {
+          "name": "height",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "collage__order_idx": {
+          "name": "collage__order_idx",
+          "columns": [
+            "_order"
+          ],
+          "isUnique": false
+        },
+        "collage_updated_at_idx": {
+          "name": "collage_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "collage_created_at_idx": {
+          "name": "collage_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "collage__status_idx": {
+          "name": "collage__status_idx",
+          "columns": [
+            "_status"
+          ],
+          "isUnique": false
+        },
+        "collage_filename_idx": {
+          "name": "collage_filename_idx",
+          "columns": [
+            "filename"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "_collage_v": {
+      "name": "_collage_v",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version__order": {
+          "name": "version__order",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_alt": {
+          "name": "version_alt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_title": {
+          "name": "version_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_year": {
+          "name": "version_year",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version__objectkey": {
+          "name": "version__objectkey",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_updated_at": {
+          "name": "version_updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_created_at": {
+          "name": "version_created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version__status": {
+          "name": "version__status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "version_url": {
+          "name": "version_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_thumbnail_u_r_l": {
+          "name": "version_thumbnail_u_r_l",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_filename": {
+          "name": "version_filename",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_mime_type": {
+          "name": "version_mime_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_filesize": {
+          "name": "version_filesize",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_width": {
+          "name": "version_width",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_height": {
+          "name": "version_height",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "latest": {
+          "name": "latest",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "_collage_v_parent_idx": {
+          "name": "_collage_v_parent_idx",
+          "columns": [
+            "parent_id"
+          ],
+          "isUnique": false
+        },
+        "_collage_v_version_version__order_idx": {
+          "name": "_collage_v_version_version__order_idx",
+          "columns": [
+            "version__order"
+          ],
+          "isUnique": false
+        },
+        "_collage_v_version_version_updated_at_idx": {
+          "name": "_collage_v_version_version_updated_at_idx",
+          "columns": [
+            "version_updated_at"
+          ],
+          "isUnique": false
+        },
+        "_collage_v_version_version_created_at_idx": {
+          "name": "_collage_v_version_version_created_at_idx",
+          "columns": [
+            "version_created_at"
+          ],
+          "isUnique": false
+        },
+        "_collage_v_version_version__status_idx": {
+          "name": "_collage_v_version_version__status_idx",
+          "columns": [
+            "version__status"
+          ],
+          "isUnique": false
+        },
+        "_collage_v_version_version_filename_idx": {
+          "name": "_collage_v_version_version_filename_idx",
+          "columns": [
+            "version_filename"
+          ],
+          "isUnique": false
+        },
+        "_collage_v_created_at_idx": {
+          "name": "_collage_v_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "_collage_v_updated_at_idx": {
+          "name": "_collage_v_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "_collage_v_latest_idx": {
+          "name": "_collage_v_latest_idx",
+          "columns": [
+            "latest"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "_collage_v_parent_id_collage_id_fk": {
+          "name": "_collage_v_parent_id_collage_id_fk",
+          "tableFrom": "_collage_v",
+          "tableTo": "collage",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "songs": {
+      "name": "songs",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "_order": {
+          "name": "_order",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "artist": {
+          "name": "artist",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'BeccaBerry'"
+        },
+        "duration": {
+          "name": "duration",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "_objectkey": {
+          "name": "_objectkey",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "_status": {
+          "name": "_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "thumbnail_u_r_l": {
+          "name": "thumbnail_u_r_l",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "filename": {
+          "name": "filename",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "mime_type": {
+          "name": "mime_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "filesize": {
+          "name": "filesize",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "width": {
+          "name": "width",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "height": {
+          "name": "height",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "focal_x": {
+          "name": "focal_x",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "focal_y": {
+          "name": "focal_y",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "songs__order_idx": {
+          "name": "songs__order_idx",
+          "columns": [
+            "_order"
+          ],
+          "isUnique": false
+        },
+        "songs_updated_at_idx": {
+          "name": "songs_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "songs_created_at_idx": {
+          "name": "songs_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "songs__status_idx": {
+          "name": "songs__status_idx",
+          "columns": [
+            "_status"
+          ],
+          "isUnique": false
+        },
+        "songs_filename_idx": {
+          "name": "songs_filename_idx",
+          "columns": [
+            "filename"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "_songs_v": {
+      "name": "_songs_v",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version__order": {
+          "name": "version__order",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_title": {
+          "name": "version_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_artist": {
+          "name": "version_artist",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'BeccaBerry'"
+        },
+        "version_duration": {
+          "name": "version_duration",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version__objectkey": {
+          "name": "version__objectkey",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_updated_at": {
+          "name": "version_updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_created_at": {
+          "name": "version_created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version__status": {
+          "name": "version__status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "version_url": {
+          "name": "version_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_thumbnail_u_r_l": {
+          "name": "version_thumbnail_u_r_l",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_filename": {
+          "name": "version_filename",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_mime_type": {
+          "name": "version_mime_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_filesize": {
+          "name": "version_filesize",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_width": {
+          "name": "version_width",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_height": {
+          "name": "version_height",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_focal_x": {
+          "name": "version_focal_x",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_focal_y": {
+          "name": "version_focal_y",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "latest": {
+          "name": "latest",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "_songs_v_parent_idx": {
+          "name": "_songs_v_parent_idx",
+          "columns": [
+            "parent_id"
+          ],
+          "isUnique": false
+        },
+        "_songs_v_version_version__order_idx": {
+          "name": "_songs_v_version_version__order_idx",
+          "columns": [
+            "version__order"
+          ],
+          "isUnique": false
+        },
+        "_songs_v_version_version_updated_at_idx": {
+          "name": "_songs_v_version_version_updated_at_idx",
+          "columns": [
+            "version_updated_at"
+          ],
+          "isUnique": false
+        },
+        "_songs_v_version_version_created_at_idx": {
+          "name": "_songs_v_version_version_created_at_idx",
+          "columns": [
+            "version_created_at"
+          ],
+          "isUnique": false
+        },
+        "_songs_v_version_version__status_idx": {
+          "name": "_songs_v_version_version__status_idx",
+          "columns": [
+            "version__status"
+          ],
+          "isUnique": false
+        },
+        "_songs_v_version_version_filename_idx": {
+          "name": "_songs_v_version_version_filename_idx",
+          "columns": [
+            "version_filename"
+          ],
+          "isUnique": false
+        },
+        "_songs_v_created_at_idx": {
+          "name": "_songs_v_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "_songs_v_updated_at_idx": {
+          "name": "_songs_v_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "_songs_v_latest_idx": {
+          "name": "_songs_v_latest_idx",
+          "columns": [
+            "latest"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "_songs_v_parent_id_songs_id_fk": {
+          "name": "_songs_v_parent_id_songs_id_fk",
+          "tableFrom": "_songs_v",
+          "tableTo": "songs",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "videos": {
+      "name": "videos",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "_order": {
+          "name": "_order",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "youtube_url": {
+          "name": "youtube_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "poster_id": {
+          "name": "poster_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "_status": {
+          "name": "_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        }
+      },
+      "indexes": {
+        "videos__order_idx": {
+          "name": "videos__order_idx",
+          "columns": [
+            "_order"
+          ],
+          "isUnique": false
+        },
+        "videos_poster_idx": {
+          "name": "videos_poster_idx",
+          "columns": [
+            "poster_id"
+          ],
+          "isUnique": false
+        },
+        "videos_updated_at_idx": {
+          "name": "videos_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "videos_created_at_idx": {
+          "name": "videos_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "videos__status_idx": {
+          "name": "videos__status_idx",
+          "columns": [
+            "_status"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "videos_poster_id_media_id_fk": {
+          "name": "videos_poster_id_media_id_fk",
+          "tableFrom": "videos",
+          "tableTo": "media",
+          "columnsFrom": [
+            "poster_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "_videos_v": {
+      "name": "_videos_v",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version__order": {
+          "name": "version__order",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_youtube_url": {
+          "name": "version_youtube_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_title": {
+          "name": "version_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_description": {
+          "name": "version_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_poster_id": {
+          "name": "version_poster_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_updated_at": {
+          "name": "version_updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_created_at": {
+          "name": "version_created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version__status": {
+          "name": "version__status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "latest": {
+          "name": "latest",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "_videos_v_parent_idx": {
+          "name": "_videos_v_parent_idx",
+          "columns": [
+            "parent_id"
+          ],
+          "isUnique": false
+        },
+        "_videos_v_version_version__order_idx": {
+          "name": "_videos_v_version_version__order_idx",
+          "columns": [
+            "version__order"
+          ],
+          "isUnique": false
+        },
+        "_videos_v_version_version_poster_idx": {
+          "name": "_videos_v_version_version_poster_idx",
+          "columns": [
+            "version_poster_id"
+          ],
+          "isUnique": false
+        },
+        "_videos_v_version_version_updated_at_idx": {
+          "name": "_videos_v_version_version_updated_at_idx",
+          "columns": [
+            "version_updated_at"
+          ],
+          "isUnique": false
+        },
+        "_videos_v_version_version_created_at_idx": {
+          "name": "_videos_v_version_version_created_at_idx",
+          "columns": [
+            "version_created_at"
+          ],
+          "isUnique": false
+        },
+        "_videos_v_version_version__status_idx": {
+          "name": "_videos_v_version_version__status_idx",
+          "columns": [
+            "version__status"
+          ],
+          "isUnique": false
+        },
+        "_videos_v_created_at_idx": {
+          "name": "_videos_v_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "_videos_v_updated_at_idx": {
+          "name": "_videos_v_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "_videos_v_latest_idx": {
+          "name": "_videos_v_latest_idx",
+          "columns": [
+            "latest"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "_videos_v_parent_id_videos_id_fk": {
+          "name": "_videos_v_parent_id_videos_id_fk",
+          "tableFrom": "_videos_v",
+          "tableTo": "videos",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_videos_v_version_poster_id_media_id_fk": {
+          "name": "_videos_v_version_poster_id_media_id_fk",
+          "tableFrom": "_videos_v",
+          "tableTo": "media",
+          "columnsFrom": [
+            "version_poster_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "media": {
+      "name": "media",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "alt": {
+          "name": "alt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "_objectkey": {
+          "name": "_objectkey",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "thumbnail_u_r_l": {
+          "name": "thumbnail_u_r_l",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "filename": {
+          "name": "filename",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "mime_type": {
+          "name": "mime_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "filesize": {
+          "name": "filesize",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "width": {
+          "name": "width",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "height": {
+          "name": "height",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "media_updated_at_idx": {
+          "name": "media_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "media_created_at_idx": {
+          "name": "media_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "media_filename_idx": {
+          "name": "media_filename_idx",
+          "columns": [
+            "filename"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "users_sessions": {
+      "name": "users_sessions",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "users_sessions_order_idx": {
+          "name": "users_sessions_order_idx",
+          "columns": [
+            "_order"
+          ],
+          "isUnique": false
+        },
+        "users_sessions_parent_id_idx": {
+          "name": "users_sessions_parent_id_idx",
+          "columns": [
+            "_parent_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "users_sessions_parent_id_fk": {
+          "name": "users_sessions_parent_id_fk",
+          "tableFrom": "users_sessions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "users": {
+      "name": "users",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'editor'"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "reset_password_token": {
+          "name": "reset_password_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "reset_password_expiration": {
+          "name": "reset_password_expiration",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "salt": {
+          "name": "salt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "hash": {
+          "name": "hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "reset_password_requested_at": {
+          "name": "reset_password_requested_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "login_attempts": {
+          "name": "login_attempts",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 0
+        },
+        "lock_until": {
+          "name": "lock_until",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "users_updated_at_idx": {
+          "name": "users_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "users_created_at_idx": {
+          "name": "users_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "users_email_idx": {
+          "name": "users_email_idx",
+          "columns": [
+            "email"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "payload_kv": {
+      "name": "payload_kv",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "data": {
+          "name": "data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "payload_kv_key_idx": {
+          "name": "payload_kv_key_idx",
+          "columns": [
+            "key"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "payload_locked_documents": {
+      "name": "payload_locked_documents",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "global_slug": {
+          "name": "global_slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        }
+      },
+      "indexes": {
+        "payload_locked_documents_global_slug_idx": {
+          "name": "payload_locked_documents_global_slug_idx",
+          "columns": [
+            "global_slug"
+          ],
+          "isUnique": false
+        },
+        "payload_locked_documents_updated_at_idx": {
+          "name": "payload_locked_documents_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "payload_locked_documents_created_at_idx": {
+          "name": "payload_locked_documents_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "payload_locked_documents_rels": {
+      "name": "payload_locked_documents_rels",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "path": {
+          "name": "path",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "collage_id": {
+          "name": "collage_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "songs_id": {
+          "name": "songs_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "videos_id": {
+          "name": "videos_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "media_id": {
+          "name": "media_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "users_id": {
+          "name": "users_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "payload_locked_documents_rels_order_idx": {
+          "name": "payload_locked_documents_rels_order_idx",
+          "columns": [
+            "order"
+          ],
+          "isUnique": false
+        },
+        "payload_locked_documents_rels_parent_idx": {
+          "name": "payload_locked_documents_rels_parent_idx",
+          "columns": [
+            "parent_id"
+          ],
+          "isUnique": false
+        },
+        "payload_locked_documents_rels_path_idx": {
+          "name": "payload_locked_documents_rels_path_idx",
+          "columns": [
+            "path"
+          ],
+          "isUnique": false
+        },
+        "payload_locked_documents_rels_collage_id_idx": {
+          "name": "payload_locked_documents_rels_collage_id_idx",
+          "columns": [
+            "collage_id"
+          ],
+          "isUnique": false
+        },
+        "payload_locked_documents_rels_songs_id_idx": {
+          "name": "payload_locked_documents_rels_songs_id_idx",
+          "columns": [
+            "songs_id"
+          ],
+          "isUnique": false
+        },
+        "payload_locked_documents_rels_videos_id_idx": {
+          "name": "payload_locked_documents_rels_videos_id_idx",
+          "columns": [
+            "videos_id"
+          ],
+          "isUnique": false
+        },
+        "payload_locked_documents_rels_media_id_idx": {
+          "name": "payload_locked_documents_rels_media_id_idx",
+          "columns": [
+            "media_id"
+          ],
+          "isUnique": false
+        },
+        "payload_locked_documents_rels_users_id_idx": {
+          "name": "payload_locked_documents_rels_users_id_idx",
+          "columns": [
+            "users_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "payload_locked_documents_rels_parent_fk": {
+          "name": "payload_locked_documents_rels_parent_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "payload_locked_documents",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_collage_fk": {
+          "name": "payload_locked_documents_rels_collage_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "collage",
+          "columnsFrom": [
+            "collage_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_songs_fk": {
+          "name": "payload_locked_documents_rels_songs_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "songs",
+          "columnsFrom": [
+            "songs_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_videos_fk": {
+          "name": "payload_locked_documents_rels_videos_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "videos",
+          "columnsFrom": [
+            "videos_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_media_fk": {
+          "name": "payload_locked_documents_rels_media_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "media",
+          "columnsFrom": [
+            "media_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_users_fk": {
+          "name": "payload_locked_documents_rels_users_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "users",
+          "columnsFrom": [
+            "users_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "payload_preferences": {
+      "name": "payload_preferences",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        }
+      },
+      "indexes": {
+        "payload_preferences_key_idx": {
+          "name": "payload_preferences_key_idx",
+          "columns": [
+            "key"
+          ],
+          "isUnique": false
+        },
+        "payload_preferences_updated_at_idx": {
+          "name": "payload_preferences_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "payload_preferences_created_at_idx": {
+          "name": "payload_preferences_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "payload_preferences_rels": {
+      "name": "payload_preferences_rels",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "path": {
+          "name": "path",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "users_id": {
+          "name": "users_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "payload_preferences_rels_order_idx": {
+          "name": "payload_preferences_rels_order_idx",
+          "columns": [
+            "order"
+          ],
+          "isUnique": false
+        },
+        "payload_preferences_rels_parent_idx": {
+          "name": "payload_preferences_rels_parent_idx",
+          "columns": [
+            "parent_id"
+          ],
+          "isUnique": false
+        },
+        "payload_preferences_rels_path_idx": {
+          "name": "payload_preferences_rels_path_idx",
+          "columns": [
+            "path"
+          ],
+          "isUnique": false
+        },
+        "payload_preferences_rels_users_id_idx": {
+          "name": "payload_preferences_rels_users_id_idx",
+          "columns": [
+            "users_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "payload_preferences_rels_parent_fk": {
+          "name": "payload_preferences_rels_parent_fk",
+          "tableFrom": "payload_preferences_rels",
+          "tableTo": "payload_preferences",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_preferences_rels_users_fk": {
+          "name": "payload_preferences_rels_users_fk",
+          "tableFrom": "payload_preferences_rels",
+          "tableTo": "users",
+          "columnsFrom": [
+            "users_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "payload_migrations": {
+      "name": "payload_migrations",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "batch": {
+          "name": "batch",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        }
+      },
+      "indexes": {
+        "payload_migrations_updated_at_idx": {
+          "name": "payload_migrations_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "payload_migrations_created_at_idx": {
+          "name": "payload_migrations_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "home_page_stanzas": {
+      "name": "home_page_stanzas",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "line": {
+          "name": "line",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "home_page_stanzas_order_idx": {
+          "name": "home_page_stanzas_order_idx",
+          "columns": [
+            "_order"
+          ],
+          "isUnique": false
+        },
+        "home_page_stanzas_parent_id_idx": {
+          "name": "home_page_stanzas_parent_id_idx",
+          "columns": [
+            "_parent_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "home_page_stanzas_parent_id_fk": {
+          "name": "home_page_stanzas_parent_id_fk",
+          "tableFrom": "home_page_stanzas",
+          "tableTo": "home_page",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "home_page": {
+      "name": "home_page",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "hero_image_id": {
+          "name": "hero_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "eyebrow": {
+          "name": "eyebrow",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Becca Berry, Esq.'"
+        },
+        "primary_button_text": {
+          "name": "primary_button_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Read Becca’s story'"
+        },
+        "primary_button_page": {
+          "name": "primary_button_page",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'/about-me'"
+        },
+        "secondary_button_text": {
+          "name": "secondary_button_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'See the collages'"
+        },
+        "secondary_button_page": {
+          "name": "secondary_button_page",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'/collage-art'"
+        },
+        "lead_in": {
+          "name": "lead_in",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Nobody is coming to save you.'"
+        },
+        "closing_line": {
+          "name": "closing_line",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'For the ones who survived what they can’t say out loud—yet'"
+        },
+        "story_portrait_id": {
+          "name": "story_portrait_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "story_quote": {
+          "name": "story_quote",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'I’m Becca Berry, Esq., and I’m done pretending healing is pretty.'"
+        },
+        "story_text": {
+          "name": "story_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'I’m a survivor. A truth-teller. A California-raised attorney who realized the law could sometimes protect people but couldn’t save them, so I learned about the magic that could. I write, sing, collage, and conjure because my healing demanded it.'"
+        },
+        "story_button_text": {
+          "name": "story_button_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Read the whole story'"
+        },
+        "story_button_page": {
+          "name": "story_button_page",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'/about-me'"
+        },
+        "doors_heading": {
+          "name": "doors_heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Art, in every form'"
+        },
+        "collage_door": {
+          "name": "collage_door",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Look'"
+        },
+        "songs_door": {
+          "name": "songs_door",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Listen'"
+        },
+        "videos_door": {
+          "name": "videos_door",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Watch'"
+        },
+        "closing_heading": {
+          "name": "closing_heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'If you found this website, it’s not an accident.'"
+        },
+        "closing_text": {
+          "name": "closing_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'If something in these words made your body say “yes,” trust that. You’re in the right place.'"
+        },
+        "closing_words": {
+          "name": "closing_words",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Magic. Art. Truth.'"
+        },
+        "closing_button_text": {
+          "name": "closing_button_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Get in touch'"
+        },
+        "closing_button_page": {
+          "name": "closing_button_page",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'/contact'"
+        },
+        "seo_title": {
+          "name": "seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Nothing Wrong With You'"
+        },
+        "seo_description": {
+          "name": "seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'A spiritual and artistic storytelling platform for survivors, curated by Becca Berry, Esq. Nobody is coming to save you. You can save yourself.'"
+        },
+        "seo_share_image_id": {
+          "name": "seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "_status": {
+          "name": "_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "home_page_hero_image_idx": {
+          "name": "home_page_hero_image_idx",
+          "columns": [
+            "hero_image_id"
+          ],
+          "isUnique": false
+        },
+        "home_page_story_portrait_idx": {
+          "name": "home_page_story_portrait_idx",
+          "columns": [
+            "story_portrait_id"
+          ],
+          "isUnique": false
+        },
+        "home_page_seo_seo_share_image_idx": {
+          "name": "home_page_seo_seo_share_image_idx",
+          "columns": [
+            "seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "home_page__status_idx": {
+          "name": "home_page__status_idx",
+          "columns": [
+            "_status"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "home_page_hero_image_id_media_id_fk": {
+          "name": "home_page_hero_image_id_media_id_fk",
+          "tableFrom": "home_page",
+          "tableTo": "media",
+          "columnsFrom": [
+            "hero_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "home_page_story_portrait_id_media_id_fk": {
+          "name": "home_page_story_portrait_id_media_id_fk",
+          "tableFrom": "home_page",
+          "tableTo": "media",
+          "columnsFrom": [
+            "story_portrait_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "home_page_seo_share_image_id_media_id_fk": {
+          "name": "home_page_seo_share_image_id_media_id_fk",
+          "tableFrom": "home_page",
+          "tableTo": "media",
+          "columnsFrom": [
+            "seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "_home_page_v_version_stanzas": {
+      "name": "_home_page_v_version_stanzas",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "line": {
+          "name": "line",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "_home_page_v_version_stanzas_order_idx": {
+          "name": "_home_page_v_version_stanzas_order_idx",
+          "columns": [
+            "_order"
+          ],
+          "isUnique": false
+        },
+        "_home_page_v_version_stanzas_parent_id_idx": {
+          "name": "_home_page_v_version_stanzas_parent_id_idx",
+          "columns": [
+            "_parent_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "_home_page_v_version_stanzas_parent_id_fk": {
+          "name": "_home_page_v_version_stanzas_parent_id_fk",
+          "tableFrom": "_home_page_v_version_stanzas",
+          "tableTo": "_home_page_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "_home_page_v": {
+      "name": "_home_page_v",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "version_hero_image_id": {
+          "name": "version_hero_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_eyebrow": {
+          "name": "version_eyebrow",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Becca Berry, Esq.'"
+        },
+        "version_primary_button_text": {
+          "name": "version_primary_button_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Read Becca’s story'"
+        },
+        "version_primary_button_page": {
+          "name": "version_primary_button_page",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'/about-me'"
+        },
+        "version_secondary_button_text": {
+          "name": "version_secondary_button_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'See the collages'"
+        },
+        "version_secondary_button_page": {
+          "name": "version_secondary_button_page",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'/collage-art'"
+        },
+        "version_lead_in": {
+          "name": "version_lead_in",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Nobody is coming to save you.'"
+        },
+        "version_closing_line": {
+          "name": "version_closing_line",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'For the ones who survived what they can’t say out loud—yet'"
+        },
+        "version_story_portrait_id": {
+          "name": "version_story_portrait_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_story_quote": {
+          "name": "version_story_quote",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'I’m Becca Berry, Esq., and I’m done pretending healing is pretty.'"
+        },
+        "version_story_text": {
+          "name": "version_story_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'I’m a survivor. A truth-teller. A California-raised attorney who realized the law could sometimes protect people but couldn’t save them, so I learned about the magic that could. I write, sing, collage, and conjure because my healing demanded it.'"
+        },
+        "version_story_button_text": {
+          "name": "version_story_button_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Read the whole story'"
+        },
+        "version_story_button_page": {
+          "name": "version_story_button_page",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'/about-me'"
+        },
+        "version_doors_heading": {
+          "name": "version_doors_heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Art, in every form'"
+        },
+        "version_collage_door": {
+          "name": "version_collage_door",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Look'"
+        },
+        "version_songs_door": {
+          "name": "version_songs_door",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Listen'"
+        },
+        "version_videos_door": {
+          "name": "version_videos_door",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Watch'"
+        },
+        "version_closing_heading": {
+          "name": "version_closing_heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'If you found this website, it’s not an accident.'"
+        },
+        "version_closing_text": {
+          "name": "version_closing_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'If something in these words made your body say “yes,” trust that. You’re in the right place.'"
+        },
+        "version_closing_words": {
+          "name": "version_closing_words",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Magic. Art. Truth.'"
+        },
+        "version_closing_button_text": {
+          "name": "version_closing_button_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Get in touch'"
+        },
+        "version_closing_button_page": {
+          "name": "version_closing_button_page",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'/contact'"
+        },
+        "version_seo_title": {
+          "name": "version_seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Nothing Wrong With You'"
+        },
+        "version_seo_description": {
+          "name": "version_seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'A spiritual and artistic storytelling platform for survivors, curated by Becca Berry, Esq. Nobody is coming to save you. You can save yourself.'"
+        },
+        "version_seo_share_image_id": {
+          "name": "version_seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version__status": {
+          "name": "version__status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "version_updated_at": {
+          "name": "version_updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_created_at": {
+          "name": "version_created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "latest": {
+          "name": "latest",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "autosave": {
+          "name": "autosave",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "_home_page_v_version_version_hero_image_idx": {
+          "name": "_home_page_v_version_version_hero_image_idx",
+          "columns": [
+            "version_hero_image_id"
+          ],
+          "isUnique": false
+        },
+        "_home_page_v_version_version_story_portrait_idx": {
+          "name": "_home_page_v_version_version_story_portrait_idx",
+          "columns": [
+            "version_story_portrait_id"
+          ],
+          "isUnique": false
+        },
+        "_home_page_v_version_seo_version_seo_share_image_idx": {
+          "name": "_home_page_v_version_seo_version_seo_share_image_idx",
+          "columns": [
+            "version_seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "_home_page_v_version_version__status_idx": {
+          "name": "_home_page_v_version_version__status_idx",
+          "columns": [
+            "version__status"
+          ],
+          "isUnique": false
+        },
+        "_home_page_v_created_at_idx": {
+          "name": "_home_page_v_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "_home_page_v_updated_at_idx": {
+          "name": "_home_page_v_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "_home_page_v_latest_idx": {
+          "name": "_home_page_v_latest_idx",
+          "columns": [
+            "latest"
+          ],
+          "isUnique": false
+        },
+        "_home_page_v_autosave_idx": {
+          "name": "_home_page_v_autosave_idx",
+          "columns": [
+            "autosave"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "_home_page_v_version_hero_image_id_media_id_fk": {
+          "name": "_home_page_v_version_hero_image_id_media_id_fk",
+          "tableFrom": "_home_page_v",
+          "tableTo": "media",
+          "columnsFrom": [
+            "version_hero_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_home_page_v_version_story_portrait_id_media_id_fk": {
+          "name": "_home_page_v_version_story_portrait_id_media_id_fk",
+          "tableFrom": "_home_page_v",
+          "tableTo": "media",
+          "columnsFrom": [
+            "version_story_portrait_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_home_page_v_version_seo_share_image_id_media_id_fk": {
+          "name": "_home_page_v_version_seo_share_image_id_media_id_fk",
+          "tableFrom": "_home_page_v",
+          "tableTo": "media",
+          "columnsFrom": [
+            "version_seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "about_page_affirmations": {
+      "name": "about_page_affirmations",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "line": {
+          "name": "line",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "about_page_affirmations_order_idx": {
+          "name": "about_page_affirmations_order_idx",
+          "columns": [
+            "_order"
+          ],
+          "isUnique": false
+        },
+        "about_page_affirmations_parent_id_idx": {
+          "name": "about_page_affirmations_parent_id_idx",
+          "columns": [
+            "_parent_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "about_page_affirmations_parent_id_fk": {
+          "name": "about_page_affirmations_parent_id_fk",
+          "tableFrom": "about_page_affirmations",
+          "tableTo": "about_page",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "about_page": {
+      "name": "about_page",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "eyebrow": {
+          "name": "eyebrow",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'About Me'"
+        },
+        "heading": {
+          "name": "heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Nobody is coming to save you.'"
+        },
+        "heading_emphasis": {
+          "name": "heading_emphasis",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'You can save yourself!'"
+        },
+        "lede": {
+          "name": "lede",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'For the ones who survived what they can’t say out loud—yet'"
+        },
+        "connect_text": {
+          "name": "connect_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Connect with Becca Berry'"
+        },
+        "connect_label": {
+          "name": "connect_label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'@beccaberry'"
+        },
+        "connect_url": {
+          "name": "connect_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'https://www.instagram.com/beccaberry'"
+        },
+        "portrait_id": {
+          "name": "portrait_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "body": {
+          "name": "body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "seo_title": {
+          "name": "seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'About Me'"
+        },
+        "seo_description": {
+          "name": "seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Becca Berry, Esq. is an attorney, artist and survivor. Read why she built Nothing Wrong With You, a spiritual and artistic platform for survivors who are tired of healing quietly.'"
+        },
+        "seo_share_image_id": {
+          "name": "seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "_status": {
+          "name": "_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "about_page_portrait_idx": {
+          "name": "about_page_portrait_idx",
+          "columns": [
+            "portrait_id"
+          ],
+          "isUnique": false
+        },
+        "about_page_seo_seo_share_image_idx": {
+          "name": "about_page_seo_seo_share_image_idx",
+          "columns": [
+            "seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "about_page__status_idx": {
+          "name": "about_page__status_idx",
+          "columns": [
+            "_status"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "about_page_portrait_id_media_id_fk": {
+          "name": "about_page_portrait_id_media_id_fk",
+          "tableFrom": "about_page",
+          "tableTo": "media",
+          "columnsFrom": [
+            "portrait_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "about_page_seo_share_image_id_media_id_fk": {
+          "name": "about_page_seo_share_image_id_media_id_fk",
+          "tableFrom": "about_page",
+          "tableTo": "media",
+          "columnsFrom": [
+            "seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "_about_page_v_version_affirmations": {
+      "name": "_about_page_v_version_affirmations",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "line": {
+          "name": "line",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "_about_page_v_version_affirmations_order_idx": {
+          "name": "_about_page_v_version_affirmations_order_idx",
+          "columns": [
+            "_order"
+          ],
+          "isUnique": false
+        },
+        "_about_page_v_version_affirmations_parent_id_idx": {
+          "name": "_about_page_v_version_affirmations_parent_id_idx",
+          "columns": [
+            "_parent_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "_about_page_v_version_affirmations_parent_id_fk": {
+          "name": "_about_page_v_version_affirmations_parent_id_fk",
+          "tableFrom": "_about_page_v_version_affirmations",
+          "tableTo": "_about_page_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "_about_page_v": {
+      "name": "_about_page_v",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "version_eyebrow": {
+          "name": "version_eyebrow",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'About Me'"
+        },
+        "version_heading": {
+          "name": "version_heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Nobody is coming to save you.'"
+        },
+        "version_heading_emphasis": {
+          "name": "version_heading_emphasis",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'You can save yourself!'"
+        },
+        "version_lede": {
+          "name": "version_lede",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'For the ones who survived what they can’t say out loud—yet'"
+        },
+        "version_connect_text": {
+          "name": "version_connect_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Connect with Becca Berry'"
+        },
+        "version_connect_label": {
+          "name": "version_connect_label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'@beccaberry'"
+        },
+        "version_connect_url": {
+          "name": "version_connect_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'https://www.instagram.com/beccaberry'"
+        },
+        "version_portrait_id": {
+          "name": "version_portrait_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_body": {
+          "name": "version_body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_seo_title": {
+          "name": "version_seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'About Me'"
+        },
+        "version_seo_description": {
+          "name": "version_seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Becca Berry, Esq. is an attorney, artist and survivor. Read why she built Nothing Wrong With You, a spiritual and artistic platform for survivors who are tired of healing quietly.'"
+        },
+        "version_seo_share_image_id": {
+          "name": "version_seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version__status": {
+          "name": "version__status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "version_updated_at": {
+          "name": "version_updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_created_at": {
+          "name": "version_created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "latest": {
+          "name": "latest",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "autosave": {
+          "name": "autosave",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "_about_page_v_version_version_portrait_idx": {
+          "name": "_about_page_v_version_version_portrait_idx",
+          "columns": [
+            "version_portrait_id"
+          ],
+          "isUnique": false
+        },
+        "_about_page_v_version_seo_version_seo_share_image_idx": {
+          "name": "_about_page_v_version_seo_version_seo_share_image_idx",
+          "columns": [
+            "version_seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "_about_page_v_version_version__status_idx": {
+          "name": "_about_page_v_version_version__status_idx",
+          "columns": [
+            "version__status"
+          ],
+          "isUnique": false
+        },
+        "_about_page_v_created_at_idx": {
+          "name": "_about_page_v_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "_about_page_v_updated_at_idx": {
+          "name": "_about_page_v_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "_about_page_v_latest_idx": {
+          "name": "_about_page_v_latest_idx",
+          "columns": [
+            "latest"
+          ],
+          "isUnique": false
+        },
+        "_about_page_v_autosave_idx": {
+          "name": "_about_page_v_autosave_idx",
+          "columns": [
+            "autosave"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "_about_page_v_version_portrait_id_media_id_fk": {
+          "name": "_about_page_v_version_portrait_id_media_id_fk",
+          "tableFrom": "_about_page_v",
+          "tableTo": "media",
+          "columnsFrom": [
+            "version_portrait_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_about_page_v_version_seo_share_image_id_media_id_fk": {
+          "name": "_about_page_v_version_seo_share_image_id_media_id_fk",
+          "tableFrom": "_about_page_v",
+          "tableTo": "media",
+          "columnsFrom": [
+            "version_seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "art_page": {
+      "name": "art_page",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "art_heading": {
+          "name": "art_heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'I create art because silence was killing me.'"
+        },
+        "art_seo_title": {
+          "name": "art_seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Art'"
+        },
+        "art_seo_description": {
+          "name": "art_seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Collage, writing, songs and mixed-media video art by Becca Berry, made as part of her healing and for other survivors.'"
+        },
+        "art_seo_share_image_id": {
+          "name": "art_seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "collage_heading": {
+          "name": "collage_heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Collage'"
+        },
+        "collage_seo_title": {
+          "name": "collage_seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Collage'"
+        },
+        "collage_seo_description": {
+          "name": "collage_seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Collage art by Becca Berry: cut-up magazines, headlines and faces rearranged into visual testimony, made as part of her healing.'"
+        },
+        "collage_seo_share_image_id": {
+          "name": "collage_seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "songs_heading": {
+          "name": "songs_heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Songs'"
+        },
+        "songs_intro": {
+          "name": "songs_intro",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'I’ll be adding demos that I’ve been working on, just expressing and getting these songs out of me while also finding my sound.'"
+        },
+        "songs_seo_title": {
+          "name": "songs_seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Songs'"
+        },
+        "songs_seo_description": {
+          "name": "songs_seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Songs and demos by Becca Berry, including 30/We Survived, The End, and Lullaby with Galactic Monk. Listen here.'"
+        },
+        "songs_seo_share_image_id": {
+          "name": "songs_seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "videos_heading": {
+          "name": "videos_heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Videos'"
+        },
+        "videos_lede": {
+          "name": "videos_lede",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Mixed Media Video Art'"
+        },
+        "videos_seo_title": {
+          "name": "videos_seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Videos'"
+        },
+        "videos_seo_description": {
+          "name": "videos_seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Mixed media video art by Becca Berry: shadowwork, mkultrasurvivor and judgement.'"
+        },
+        "videos_seo_share_image_id": {
+          "name": "videos_seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "_status": {
+          "name": "_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "art_page_art_seo_art_seo_share_image_idx": {
+          "name": "art_page_art_seo_art_seo_share_image_idx",
+          "columns": [
+            "art_seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "art_page_collage_seo_collage_seo_share_image_idx": {
+          "name": "art_page_collage_seo_collage_seo_share_image_idx",
+          "columns": [
+            "collage_seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "art_page_songs_seo_songs_seo_share_image_idx": {
+          "name": "art_page_songs_seo_songs_seo_share_image_idx",
+          "columns": [
+            "songs_seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "art_page_videos_seo_videos_seo_share_image_idx": {
+          "name": "art_page_videos_seo_videos_seo_share_image_idx",
+          "columns": [
+            "videos_seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "art_page__status_idx": {
+          "name": "art_page__status_idx",
+          "columns": [
+            "_status"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "art_page_art_seo_share_image_id_media_id_fk": {
+          "name": "art_page_art_seo_share_image_id_media_id_fk",
+          "tableFrom": "art_page",
+          "tableTo": "media",
+          "columnsFrom": [
+            "art_seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "art_page_collage_seo_share_image_id_media_id_fk": {
+          "name": "art_page_collage_seo_share_image_id_media_id_fk",
+          "tableFrom": "art_page",
+          "tableTo": "media",
+          "columnsFrom": [
+            "collage_seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "art_page_songs_seo_share_image_id_media_id_fk": {
+          "name": "art_page_songs_seo_share_image_id_media_id_fk",
+          "tableFrom": "art_page",
+          "tableTo": "media",
+          "columnsFrom": [
+            "songs_seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "art_page_videos_seo_share_image_id_media_id_fk": {
+          "name": "art_page_videos_seo_share_image_id_media_id_fk",
+          "tableFrom": "art_page",
+          "tableTo": "media",
+          "columnsFrom": [
+            "videos_seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "_art_page_v": {
+      "name": "_art_page_v",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "version_art_heading": {
+          "name": "version_art_heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'I create art because silence was killing me.'"
+        },
+        "version_art_seo_title": {
+          "name": "version_art_seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Art'"
+        },
+        "version_art_seo_description": {
+          "name": "version_art_seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Collage, writing, songs and mixed-media video art by Becca Berry, made as part of her healing and for other survivors.'"
+        },
+        "version_art_seo_share_image_id": {
+          "name": "version_art_seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_collage_heading": {
+          "name": "version_collage_heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Collage'"
+        },
+        "version_collage_seo_title": {
+          "name": "version_collage_seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Collage'"
+        },
+        "version_collage_seo_description": {
+          "name": "version_collage_seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Collage art by Becca Berry: cut-up magazines, headlines and faces rearranged into visual testimony, made as part of her healing.'"
+        },
+        "version_collage_seo_share_image_id": {
+          "name": "version_collage_seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_songs_heading": {
+          "name": "version_songs_heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Songs'"
+        },
+        "version_songs_intro": {
+          "name": "version_songs_intro",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'I’ll be adding demos that I’ve been working on, just expressing and getting these songs out of me while also finding my sound.'"
+        },
+        "version_songs_seo_title": {
+          "name": "version_songs_seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Songs'"
+        },
+        "version_songs_seo_description": {
+          "name": "version_songs_seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Songs and demos by Becca Berry, including 30/We Survived, The End, and Lullaby with Galactic Monk. Listen here.'"
+        },
+        "version_songs_seo_share_image_id": {
+          "name": "version_songs_seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_videos_heading": {
+          "name": "version_videos_heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Videos'"
+        },
+        "version_videos_lede": {
+          "name": "version_videos_lede",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Mixed Media Video Art'"
+        },
+        "version_videos_seo_title": {
+          "name": "version_videos_seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Videos'"
+        },
+        "version_videos_seo_description": {
+          "name": "version_videos_seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Mixed media video art by Becca Berry: shadowwork, mkultrasurvivor and judgement.'"
+        },
+        "version_videos_seo_share_image_id": {
+          "name": "version_videos_seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version__status": {
+          "name": "version__status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "version_updated_at": {
+          "name": "version_updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_created_at": {
+          "name": "version_created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "latest": {
+          "name": "latest",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "autosave": {
+          "name": "autosave",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "_art_page_v_version_art_seo_version_art_seo_share_image_idx": {
+          "name": "_art_page_v_version_art_seo_version_art_seo_share_image_idx",
+          "columns": [
+            "version_art_seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "_art_page_v_version_collage_seo_version_collage_seo_shar_idx": {
+          "name": "_art_page_v_version_collage_seo_version_collage_seo_shar_idx",
+          "columns": [
+            "version_collage_seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "_art_page_v_version_songs_seo_version_songs_seo_share_im_idx": {
+          "name": "_art_page_v_version_songs_seo_version_songs_seo_share_im_idx",
+          "columns": [
+            "version_songs_seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "_art_page_v_version_videos_seo_version_videos_seo_share__idx": {
+          "name": "_art_page_v_version_videos_seo_version_videos_seo_share__idx",
+          "columns": [
+            "version_videos_seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "_art_page_v_version_version__status_idx": {
+          "name": "_art_page_v_version_version__status_idx",
+          "columns": [
+            "version__status"
+          ],
+          "isUnique": false
+        },
+        "_art_page_v_created_at_idx": {
+          "name": "_art_page_v_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "_art_page_v_updated_at_idx": {
+          "name": "_art_page_v_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "_art_page_v_latest_idx": {
+          "name": "_art_page_v_latest_idx",
+          "columns": [
+            "latest"
+          ],
+          "isUnique": false
+        },
+        "_art_page_v_autosave_idx": {
+          "name": "_art_page_v_autosave_idx",
+          "columns": [
+            "autosave"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "_art_page_v_version_art_seo_share_image_id_media_id_fk": {
+          "name": "_art_page_v_version_art_seo_share_image_id_media_id_fk",
+          "tableFrom": "_art_page_v",
+          "tableTo": "media",
+          "columnsFrom": [
+            "version_art_seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_art_page_v_version_collage_seo_share_image_id_media_id_fk": {
+          "name": "_art_page_v_version_collage_seo_share_image_id_media_id_fk",
+          "tableFrom": "_art_page_v",
+          "tableTo": "media",
+          "columnsFrom": [
+            "version_collage_seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_art_page_v_version_songs_seo_share_image_id_media_id_fk": {
+          "name": "_art_page_v_version_songs_seo_share_image_id_media_id_fk",
+          "tableFrom": "_art_page_v",
+          "tableTo": "media",
+          "columnsFrom": [
+            "version_songs_seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_art_page_v_version_videos_seo_share_image_id_media_id_fk": {
+          "name": "_art_page_v_version_videos_seo_share_image_id_media_id_fk",
+          "tableFrom": "_art_page_v",
+          "tableTo": "media",
+          "columnsFrom": [
+            "version_videos_seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "resources_page": {
+      "name": "resources_page",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "heading": {
+          "name": "heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Resources'"
+        },
+        "body": {
+          "name": "body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "seo_title": {
+          "name": "seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Resources'"
+        },
+        "seo_description": {
+          "name": "seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Definitions, declassified government documents and support websites that Becca Berry has found helpful for understanding trauma-based mind control.'"
+        },
+        "seo_share_image_id": {
+          "name": "seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "_status": {
+          "name": "_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "resources_page_seo_seo_share_image_idx": {
+          "name": "resources_page_seo_seo_share_image_idx",
+          "columns": [
+            "seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "resources_page__status_idx": {
+          "name": "resources_page__status_idx",
+          "columns": [
+            "_status"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "resources_page_seo_share_image_id_media_id_fk": {
+          "name": "resources_page_seo_share_image_id_media_id_fk",
+          "tableFrom": "resources_page",
+          "tableTo": "media",
+          "columnsFrom": [
+            "seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "_resources_page_v": {
+      "name": "_resources_page_v",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "version_heading": {
+          "name": "version_heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Resources'"
+        },
+        "version_body": {
+          "name": "version_body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_seo_title": {
+          "name": "version_seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Resources'"
+        },
+        "version_seo_description": {
+          "name": "version_seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Definitions, declassified government documents and support websites that Becca Berry has found helpful for understanding trauma-based mind control.'"
+        },
+        "version_seo_share_image_id": {
+          "name": "version_seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version__status": {
+          "name": "version__status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "version_updated_at": {
+          "name": "version_updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_created_at": {
+          "name": "version_created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "latest": {
+          "name": "latest",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "autosave": {
+          "name": "autosave",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "_resources_page_v_version_seo_version_seo_share_image_idx": {
+          "name": "_resources_page_v_version_seo_version_seo_share_image_idx",
+          "columns": [
+            "version_seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "_resources_page_v_version_version__status_idx": {
+          "name": "_resources_page_v_version_version__status_idx",
+          "columns": [
+            "version__status"
+          ],
+          "isUnique": false
+        },
+        "_resources_page_v_created_at_idx": {
+          "name": "_resources_page_v_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "_resources_page_v_updated_at_idx": {
+          "name": "_resources_page_v_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "_resources_page_v_latest_idx": {
+          "name": "_resources_page_v_latest_idx",
+          "columns": [
+            "latest"
+          ],
+          "isUnique": false
+        },
+        "_resources_page_v_autosave_idx": {
+          "name": "_resources_page_v_autosave_idx",
+          "columns": [
+            "autosave"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "_resources_page_v_version_seo_share_image_id_media_id_fk": {
+          "name": "_resources_page_v_version_seo_share_image_id_media_id_fk",
+          "tableFrom": "_resources_page_v",
+          "tableTo": "media",
+          "columnsFrom": [
+            "version_seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "contact_page_topics": {
+      "name": "contact_page_topics",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "topic": {
+          "name": "topic",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "contact_page_topics_order_idx": {
+          "name": "contact_page_topics_order_idx",
+          "columns": [
+            "_order"
+          ],
+          "isUnique": false
+        },
+        "contact_page_topics_parent_id_idx": {
+          "name": "contact_page_topics_parent_id_idx",
+          "columns": [
+            "_parent_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "contact_page_topics_parent_id_fk": {
+          "name": "contact_page_topics_parent_id_fk",
+          "tableFrom": "contact_page_topics",
+          "tableTo": "contact_page",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "contact_page": {
+      "name": "contact_page",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "eyebrow": {
+          "name": "eyebrow",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Info + Contact'"
+        },
+        "heading": {
+          "name": "heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'I’d love to hear from you'"
+        },
+        "lede": {
+          "name": "lede",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'About me, social media, and how to get in touch'"
+        },
+        "about": {
+          "name": "about",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "booking_address": {
+          "name": "booking_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Becca Berry\nLos Angeles, CA'"
+        },
+        "booking_hint": {
+          "name": "booking_hint",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Choose “Booking” or “Press” in the form.'"
+        },
+        "seo_title": {
+          "name": "seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Info + Contact'"
+        },
+        "seo_description": {
+          "name": "seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'About Nothing Wrong With You, Becca Berry’s social media, and how to reach her for booking, press and collaboration. Based in Los Angeles, CA.'"
+        },
+        "seo_share_image_id": {
+          "name": "seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "_status": {
+          "name": "_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "contact_page_seo_seo_share_image_idx": {
+          "name": "contact_page_seo_seo_share_image_idx",
+          "columns": [
+            "seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "contact_page__status_idx": {
+          "name": "contact_page__status_idx",
+          "columns": [
+            "_status"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "contact_page_seo_share_image_id_media_id_fk": {
+          "name": "contact_page_seo_share_image_id_media_id_fk",
+          "tableFrom": "contact_page",
+          "tableTo": "media",
+          "columnsFrom": [
+            "seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "_contact_page_v_version_topics": {
+      "name": "_contact_page_v_version_topics",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "topic": {
+          "name": "topic",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "_contact_page_v_version_topics_order_idx": {
+          "name": "_contact_page_v_version_topics_order_idx",
+          "columns": [
+            "_order"
+          ],
+          "isUnique": false
+        },
+        "_contact_page_v_version_topics_parent_id_idx": {
+          "name": "_contact_page_v_version_topics_parent_id_idx",
+          "columns": [
+            "_parent_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "_contact_page_v_version_topics_parent_id_fk": {
+          "name": "_contact_page_v_version_topics_parent_id_fk",
+          "tableFrom": "_contact_page_v_version_topics",
+          "tableTo": "_contact_page_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "_contact_page_v": {
+      "name": "_contact_page_v",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "version_eyebrow": {
+          "name": "version_eyebrow",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Info + Contact'"
+        },
+        "version_heading": {
+          "name": "version_heading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'I’d love to hear from you'"
+        },
+        "version_lede": {
+          "name": "version_lede",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'About me, social media, and how to get in touch'"
+        },
+        "version_about": {
+          "name": "version_about",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_booking_address": {
+          "name": "version_booking_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Becca Berry\nLos Angeles, CA'"
+        },
+        "version_booking_hint": {
+          "name": "version_booking_hint",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Choose “Booking” or “Press” in the form.'"
+        },
+        "version_seo_title": {
+          "name": "version_seo_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Info + Contact'"
+        },
+        "version_seo_description": {
+          "name": "version_seo_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'About Nothing Wrong With You, Becca Berry’s social media, and how to reach her for booking, press and collaboration. Based in Los Angeles, CA.'"
+        },
+        "version_seo_share_image_id": {
+          "name": "version_seo_share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version__status": {
+          "name": "version__status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "version_updated_at": {
+          "name": "version_updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_created_at": {
+          "name": "version_created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        },
+        "latest": {
+          "name": "latest",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "autosave": {
+          "name": "autosave",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "_contact_page_v_version_seo_version_seo_share_image_idx": {
+          "name": "_contact_page_v_version_seo_version_seo_share_image_idx",
+          "columns": [
+            "version_seo_share_image_id"
+          ],
+          "isUnique": false
+        },
+        "_contact_page_v_version_version__status_idx": {
+          "name": "_contact_page_v_version_version__status_idx",
+          "columns": [
+            "version__status"
+          ],
+          "isUnique": false
+        },
+        "_contact_page_v_created_at_idx": {
+          "name": "_contact_page_v_created_at_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "_contact_page_v_updated_at_idx": {
+          "name": "_contact_page_v_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "_contact_page_v_latest_idx": {
+          "name": "_contact_page_v_latest_idx",
+          "columns": [
+            "latest"
+          ],
+          "isUnique": false
+        },
+        "_contact_page_v_autosave_idx": {
+          "name": "_contact_page_v_autosave_idx",
+          "columns": [
+            "autosave"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "_contact_page_v_version_seo_share_image_id_media_id_fk": {
+          "name": "_contact_page_v_version_seo_share_image_id_media_id_fk",
+          "tableFrom": "_contact_page_v",
+          "tableTo": "media",
+          "columnsFrom": [
+            "version_seo_share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "site_settings_social": {
+      "name": "site_settings_social",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "label": {
+          "name": "label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "site_settings_social_order_idx": {
+          "name": "site_settings_social_order_idx",
+          "columns": [
+            "_order"
+          ],
+          "isUnique": false
+        },
+        "site_settings_social_parent_id_idx": {
+          "name": "site_settings_social_parent_id_idx",
+          "columns": [
+            "_parent_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "site_settings_social_parent_id_fk": {
+          "name": "site_settings_social_parent_id_fk",
+          "tableFrom": "site_settings_social",
+          "tableTo": "site_settings",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "site_settings_safety_crisis_lines": {
+      "name": "site_settings_safety_crisis_lines",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "how": {
+          "name": "how",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "site_settings_safety_crisis_lines_order_idx": {
+          "name": "site_settings_safety_crisis_lines_order_idx",
+          "columns": [
+            "_order"
+          ],
+          "isUnique": false
+        },
+        "site_settings_safety_crisis_lines_parent_id_idx": {
+          "name": "site_settings_safety_crisis_lines_parent_id_idx",
+          "columns": [
+            "_parent_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "site_settings_safety_crisis_lines_parent_id_fk": {
+          "name": "site_settings_safety_crisis_lines_parent_id_fk",
+          "tableFrom": "site_settings_safety_crisis_lines",
+          "tableTo": "site_settings",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "site_settings": {
+      "name": "site_settings",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "site_name": {
+          "name": "site_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'Nothing Wrong With You'"
+        },
+        "tagline": {
+          "name": "tagline",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'You Can Save Yourself'"
+        },
+        "owner_name": {
+          "name": "owner_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'Becca Berry'"
+        },
+        "default_description": {
+          "name": "default_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'A spiritual and artistic storytelling platform for survivors, curated by Becca Berry, Esq.'"
+        },
+        "share_image_id": {
+          "name": "share_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "safety_content_note_enabled": {
+          "name": "safety_content_note_enabled",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": true
+        },
+        "safety_content_note_text": {
+          "name": "safety_content_note_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Some of what is shared here discusses abuse and other trauma. Take breaks, and leave whenever you need to.'"
+        },
+        "safety_crisis_enabled": {
+          "name": "safety_crisis_enabled",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": true
+        },
+        "safety_legal_notice_enabled": {
+          "name": "safety_legal_notice_enabled",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": true
+        },
+        "safety_legal_notice_text": {
+          "name": "safety_legal_notice_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'This site is for education and creative expression. Nothing here is legal advice, and visiting it does not create an attorney-client relationship.'"
+        },
+        "safety_quick_exit_enabled": {
+          "name": "safety_quick_exit_enabled",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": false
+        },
+        "safety_quick_exit_url": {
+          "name": "safety_quick_exit_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'https://www.google.com/'"
+        },
+        "contact_form_formspree_id": {
+          "name": "contact_form_formspree_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "site_settings_share_image_idx": {
+          "name": "site_settings_share_image_idx",
+          "columns": [
+            "share_image_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "site_settings_share_image_id_media_id_fk": {
+          "name": "site_settings_share_image_id_media_id_fk",
+          "tableFrom": "site_settings",
+          "tableTo": "media",
+          "columnsFrom": [
+            "share_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  },
+  "id": "1c85ac4a-0e09-4ae3-85a7-54797e26617e",
+  "prevId": "00000000-0000-0000-0000-000000000000"
+}

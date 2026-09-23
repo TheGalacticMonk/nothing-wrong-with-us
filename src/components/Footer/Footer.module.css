@@ -1,0 +1,60 @@
+.footer {
+  margin-top: clamp(2.5rem, 5vw, 5rem);
+  padding-block: clamp(3rem, 6vw, 5rem) 2rem;
+  background: var(--color-night-950);
+}
+.top {
+  display: grid;
+  gap: 2.5rem;
+}
+@media (min-width: 52rem) {
+  .top {
+    grid-template-columns: 1.7fr 1fr 1fr 1.4fr;
+    gap: 3rem;
+  }
+}
+.mark {
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+.tagline {
+  margin-top: 0.5rem;
+  font-style: italic;
+  color: var(--fg-muted);
+}
+.footer h2 {
+  margin-bottom: 0.9rem;
+  font-family: var(--font-label);
+  font-size: var(--text-label);
+  color: #fff;
+}
+.footer ul {
+  display: grid;
+  gap: 0.15rem;
+}
+.footer li a {
+  display: inline-block;
+  padding-block: 0.3rem;
+}
+.sub {
+  padding-left: 1rem;
+  font-size: 0.95em;
+}
+.who {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+.bottom {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  border-top: 1px solid var(--rule);
+}
+.dot {
+  width: 1rem;
+  color: var(--color-orchid-400);
+}

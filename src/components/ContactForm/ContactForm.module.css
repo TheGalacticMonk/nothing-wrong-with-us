@@ -1,0 +1,28 @@
+.form {
+  display: grid;
+  gap: 1.25rem;
+}
+.form > h2 {
+  color: var(--accent);
+}
+.trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.status {
+  min-height: 1.5rem;
+  font-weight: 700;
+}
+.status:focus {
+  outline: none;
+}
+.btn {
+  justify-self: start;
+}
+.btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}

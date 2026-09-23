@@ -1,0 +1,13 @@
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-paper-50);
+  text-shadow: 0 0 28px rgb(224 134 212 / 0.28);
+}
+.wordmark em {
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  color: var(--color-orchid-400);
+}

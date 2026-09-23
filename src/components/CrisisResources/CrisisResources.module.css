@@ -1,0 +1,12 @@
+.crisis {
+  max-width: 40rem;
+  padding: 1.1rem 1.4rem;
+  border: 2px solid var(--rule);
+}
+.crisis h2 {
+  margin-bottom: 0.5rem;
+  color: var(--accent);
+}
+.crisis li {
+  padding-block: 0.15rem;
+}

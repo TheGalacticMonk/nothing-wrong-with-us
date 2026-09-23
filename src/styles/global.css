@@ -1,4 +1,8 @@
+/* Ported verbatim from legacy/astro/src/styles/global.css (plus BaseLayout global styles at the end). */
 @import 'tailwindcss';
+
+/* Don't scan the archived Astro site for class names. */
+@source not '../../legacy';
 
 /* ------------------------------------------------------------------
    Design tokens
@@ -448,4 +452,30 @@
     background: #fff;
     color: #000;
   }
+}
+
+/* ------------------------------------------------------------------
+   Page shell (was <style is:global> in BaseLayout.astro)
+   ------------------------------------------------------------------ */
+.skip {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  color: var(--color-night-950);
+  background: var(--color-star-300);
+  transform: translateY(-200%);
+}
+.skip:focus {
+  transform: none;
+}
+main:focus {
+  outline: none;
+}
+/* Keep page content above the fixed shooting-star layer. */
+main,
+footer {
+  position: relative;
+  z-index: 1;
 }

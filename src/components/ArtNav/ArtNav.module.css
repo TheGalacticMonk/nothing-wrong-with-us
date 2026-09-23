@@ -1,0 +1,22 @@
+.art-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.art-nav a {
+  display: inline-block;
+  padding: 0.55rem 1rem;
+  color: var(--fg);
+  text-decoration: none;
+  border: 2px solid var(--rule);
+}
+.art-nav a:hover {
+  color: var(--color-night-950);
+  background: var(--color-star-300);
+  border-color: var(--color-star-300);
+}
+.art-nav a[aria-current='page'] {
+  color: var(--color-night-950);
+  background: var(--color-orchid-400);
+  border-color: var(--color-orchid-400);
+}

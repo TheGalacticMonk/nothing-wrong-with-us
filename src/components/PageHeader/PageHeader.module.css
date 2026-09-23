@@ -1,0 +1,38 @@
+.page-header {
+  position: relative;
+  padding-block: clamp(3.5rem, 2rem + 6vw, 7rem) clamp(2rem, 4vw, 4rem);
+}
+.eyebrow {
+  margin-bottom: 1rem;
+  color: var(--color-star-300);
+}
+.page-header > h1 {
+  max-width: 20ch;
+  font-size: var(--text-h1);
+  line-height: var(--text-h1--line-height);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+.lede {
+  max-width: 34rem;
+  margin-top: 1.5rem;
+  font-size: var(--text-lede);
+  line-height: var(--text-lede--line-height);
+  font-style: italic;
+  color: var(--fg-muted);
+}
+.star {
+  position: absolute;
+  color: var(--color-orchid-400);
+}
+.star-a {
+  top: clamp(2rem, 4vw, 4rem);
+  right: 18%;
+  width: 1.75rem;
+}
+.star-b {
+  top: 45%;
+  right: 6%;
+  width: 0.9rem;
+  color: var(--color-star-300);
+}

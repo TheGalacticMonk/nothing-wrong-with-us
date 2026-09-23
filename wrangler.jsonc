@@ -1,10 +1,72 @@
 {
-  // Cloudflare Workers static assets deploy. Cloudflare Pages needs no config file:
-  // build command `npm run build`, output directory `dist`.
-  "name": "nothing-wrong-with-you",
-  "compatibility_date": "2026-09-01",
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // IMPORTANT: the live Astro site is the Worker "nothing-wrong-with-you". This app uses a
+  // different name so deploying it can never replace production until DNS is cut over on purpose.
+  "name": "nwwy-cms",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
-    "directory": "./dist",
-    "not_found_handling": "404-page",
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+  },
+  "observability": { "enabled": true },
+  // Production. Same-origin domain lets Cloudflare Image Transformations resize images from the
+  // page's own host (/cdn-cgi/image/...). Launched 2026-09-23; the domains were moved from the
+  // old Astro Worker "nothing-wrong-with-you" to here in the Cloudflare dashboard.
+  "routes": [
+    { "pattern": "www.nothingwrongwithyou.org", "custom_domain": true },
+    { "pattern": "nothingwrongwithyou.org", "custom_domain": true },
+  ],
+  "d1_databases": [
+    {
+      "binding": "D1",
+      // Created with `wrangler d1 create nwwy-cms`; see docs/DEPLOYMENT.md.
+      "database_id": "95011fee-cecd-4475-a2f8-424aefdf7ede",
+      "database_name": "nwwy-cms",
+    },
+    {
+      // OpenNext tag cache: lets "Publish" expire cached pages immediately.
+      "binding": "NEXT_TAG_CACHE_D1",
+      "database_id": "f23fa13f-a697-4e67-b0b8-d0c3f5a196c6",
+      "database_name": "nwwy-next-tag-cache",
+    },
+  ],
+  "r2_buckets": [
+    // Uploaded images, collage pieces and songs.
+    { "binding": "R2", "bucket_name": "nwwy-media" },
+    // OpenNext incremental cache (rendered pages and cached data).
+    { "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "nwwy-next-cache" },
+  ],
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "nwwy-cms" }],
+  // Cloudflare Images: resizes images on delivery (Workers has no sharp).
+  "images": { "binding": "IMAGES" },
+  // IMPORTANT: OpenNext/Cloudflare provides these to server-rendered code via a live
+  // process.env at request time (not only Next.js's usual build-time NEXT_PUBLIC_ inlining) --
+  // proven by NEXT_PUBLIC_NOINDEX="1" here overriding an unset build-time value and putting
+  // noindex on the live production site after the 2026-09-23 launch, until this was corrected.
+  // Keep this block accurate for the environment actually being served; do not assume a
+  // shell-exported build-time value alone is authoritative.
+  "vars": {
+    "NEXT_PUBLIC_SERVER_URL": "https://www.nothingwrongwithyou.org",
+    // Public hostname of the nwwy-media R2 bucket.
+    "MEDIA_PUBLIC_URL": "https://media.nothingwrongwithyou.org",
+  },
+  // ---------------------------------------------------------------------------------------------
+  // SAFETY: nothing above uses remote bindings, so dev, builds and `preview:local` can never touch
+  // Cloudflare. Only payload.config.ts selects this environment, and only when
+  // PAYLOAD_REMOTE_BINDINGS=1 (deploy:database, guarded remote seeding). Keep the IDs in sync.
+  "env": {
+    "remote": {
+      "d1_databases": [
+        {
+          "binding": "D1",
+          "database_id": "95011fee-cecd-4475-a2f8-424aefdf7ede",
+          "database_name": "nwwy-cms",
+          "remote": true,
+        },
+      ],
+      "r2_buckets": [{ "binding": "R2", "bucket_name": "nwwy-media", "remote": true }],
+    },
   },
 }
