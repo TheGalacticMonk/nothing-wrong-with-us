@@ -1,41 +1,38 @@
-import { test, expect, Page } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+
 import { login } from '../helpers/login'
-import { seedTestUser, cleanupTestUser, testUser } from '../helpers/seedUser'
+import { creds } from './support/api'
+import { BASE_URL } from './support/site'
 
-test.describe('Admin Panel', () => {
-  let page: Page
+/** Admin smoke test for the developer (admin role). Editor-specific checks: security + editor-journey. */
+test.describe('Admin panel (admin role)', () => {
+  test.skip(!creds.admin.email, 'SEED_ADMIN_* not set')
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    await seedTestUser()
-
-    const context = await browser.newContext()
-    page = await context.newPage()
-
-    await login({ page, user: testUser })
+  test('login page is branded and noindex', async ({ page }) => {
+    await page.goto(`${BASE_URL}/admin/login`)
+    await expect(page).toHaveTitle(/Nothing Wrong With You/)
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
   })
 
-  test.afterAll(async () => {
-    await cleanupTestUser()
+  test('dashboard shows the task cards; admin also sees Team', async ({ page }) => {
+    await login({ page, user: creds.admin })
+    for (const card of ['Edit the Home page', 'Add a collage piece', 'Add a song', 'Add a video']) {
+      await expect(page.getByRole('link', { name: new RegExp(card) })).toBeVisible()
+    }
+    await page.goto(`${BASE_URL}/admin/collections/users`)
+    await expect(page.getByRole('heading', { name: 'Team', level: 1 })).toBeVisible()
   })
 
-  test('can navigate to dashboard', async () => {
-    await page.goto('http://localhost:3000/admin')
-    await expect(page).toHaveURL('http://localhost:3000/admin')
-    const dashboardArtifact = page.locator('span[title="Dashboard"]').first()
-    await expect(dashboardArtifact).toBeVisible()
-  })
-
-  test('can navigate to list view', async () => {
-    await page.goto('http://localhost:3000/admin/collections/users')
-    await expect(page).toHaveURL('http://localhost:3000/admin/collections/users')
-    const listViewArtifact = page.locator('h1', { hasText: 'Users' }).first()
-    await expect(listViewArtifact).toBeVisible()
-  })
-
-  test('can navigate to edit view', async () => {
-    await page.goto('http://localhost:3000/admin/collections/users/create')
-    await expect(page).toHaveURL(/\/admin\/collections\/users\/[a-zA-Z0-9-_]+/)
-    const editViewArtifact = page.locator('input[name="email"]')
-    await expect(editViewArtifact).toBeVisible()
+  test('every page global and collection opens', async ({ page }) => {
+    await login({ page, user: creds.admin })
+    for (const path of [
+      'globals/home-page', 'globals/about-page', 'globals/art-page', 'globals/resources-page',
+      'globals/contact-page', 'globals/site-settings', 'collections/collage', 'collections/songs',
+      'collections/videos', 'collections/media',
+    ]) {
+      const res = await page.goto(`${BASE_URL}/admin/${path}`)
+      expect(res?.status(), path).toBeLessThan(400)
+      await expect(page.locator('h1').first(), path).toBeVisible()
+    }
   })
 })

@@ -1,41 +1,46 @@
 import { defineConfig, devices } from '@playwright/test'
-
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
 import 'dotenv/config'
 
 /**
- * See https://playwright.dev/docs/test-configuration.
+ * QA suites for nothingwrongwithyou.org. No web server is started: run the app first, then
+ *   BASE_URL=http://localhost:3000 pnpm test:e2e              # env A: next dev
+ *   BASE_URL=http://localhost:8787 pnpm test:e2e              # env B: wrangler dev --local (workerd)
+ * (or pnpm test:e2e:dev / pnpm test:e2e:workers). Credentials come from .env (SEED_ADMIN_*, SEED_EDITOR_*).
+ * LEGACY_URL (default http://localhost:4321) is the Astro build, for parity and visual diffs.
+ * Suites that change CMS content restore it afterwards.
  */
+const MUTATING = /(security|contact-form|editor-journey)\.e2e\.spec\.ts/
+
 export default defineConfig({
   testDir: './tests/e2e',
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
+  testMatch: /.*\.e2e\.spec\.ts/,
+  outputDir: 'test-results/playwright',
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  retries: 0,
+  workers: process.env.CI ? 1 : 4,
+  timeout: 120_000,
+  expect: { timeout: 15_000 },
+  reporter: [['list'], ['html', { outputFolder: 'test-results/playwright-report', open: 'never' }]],
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://localhost:3000',
-
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+    trace: 'retain-on-failure',
+    navigationTimeout: 90_000,
+    actionTimeout: 30_000,
   },
   projects: [
     {
-      name: 'chromium',
+      // Read-only suites, in parallel.
+      name: 'readonly',
+      testIgnore: MUTATING,
+      use: { ...devices['Desktop Chrome'], channel: 'chromium' },
+    },
+    {
+      // Suites that change (and restore) CMS content, one at a time. `pnpm test:e2e` runs this
+      // project after `readonly` (not via `dependencies`, which would skip it if readonly fails).
+      name: 'mutating',
+      testMatch: MUTATING,
+      workers: 1,
       use: { ...devices['Desktop Chrome'], channel: 'chromium' },
     },
   ],
-  webServer: {
-    command: 'pnpm dev',
-    reuseExistingServer: true,
-    url: 'http://localhost:3000',
-  },
 })

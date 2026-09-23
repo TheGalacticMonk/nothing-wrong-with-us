@@ -1,20 +1,28 @@
-import { test, expect, Page } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
-test.describe('Frontend', () => {
-  let page: Page
+import { BASE_URL, ROUTES } from './support/site'
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    const context = await browser.newContext()
-    page = await context.newPage()
-  })
+/** Fast smoke test: every public route renders its heading, header and footer without console errors. */
+test.describe('Frontend smoke', () => {
+  for (const route of ROUTES) {
+    test(`renders ${route}`, async ({ page }) => {
+      const errors: string[] = []
+      page.on('pageerror', (e) => errors.push(e.message))
+      page.on('console', (m) => {
+        if (m.type() === 'error') errors.push(m.text())
+      })
+      const res = await page.goto(BASE_URL + route)
+      expect(res?.status()).toBe(200)
+      await expect(page.locator('h1').first()).toBeVisible()
+      await expect(page.getByRole('banner')).toBeVisible()
+      await expect(page.getByRole('contentinfo')).toBeVisible()
+      expect(errors).toEqual([])
+    })
+  }
 
-  test('can go on homepage', async ({ page }) => {
-    await page.goto('http://localhost:3000')
-
-    await expect(page).toHaveTitle(/Payload Blank Template/)
-
-    const heading = page.locator('h1').first()
-
-    await expect(heading).toHaveText('Welcome to your new project.')
+  test('home page title and hero', async ({ page }) => {
+    await page.goto(`${BASE_URL}/`)
+    await expect(page).toHaveTitle('Nothing Wrong With You: You Can Save Yourself')
+    await expect(page.locator('#hero-title')).toContainText('Nothing')
   })
 })
