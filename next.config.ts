@@ -76,12 +76,22 @@ const nextConfig: NextConfig = {
     // One public host: anything else (the workers.dev URL, and at launch the bare domain) is
     // redirected to CANONICAL_HOST, set at build time on deploys. Unset locally.
     const canonicalHost = process.env.CANONICAL_HOST
+    // Two rules, not one `/:path*`: when `:path*` matches zero segments (a request for `/`
+    // itself), Next.js's redirect destination does not substitute the token, so the Location
+    // header comes back as the literal string "/:path*" instead of "/". Splitting the exact
+    // root from one-or-more path segments (`/:path+`) avoids that zero-match case entirely.
     const hostRedirect = canonicalHost
       ? [
           {
-            source: '/:path*',
+            source: '/',
             missing: [{ type: 'host' as const, value: canonicalHost }],
-            destination: `https://${canonicalHost}/:path*`,
+            destination: `https://${canonicalHost}/`,
+            permanent: true,
+          },
+          {
+            source: '/:path+',
+            missing: [{ type: 'host' as const, value: canonicalHost }],
+            destination: `https://${canonicalHost}/:path+`,
             permanent: true,
           },
         ]
