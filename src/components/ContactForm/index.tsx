@@ -6,6 +6,13 @@ import styles from './ContactForm.module.css'
 
 type Field = HTMLInputElement | HTMLTextAreaElement
 
+interface FormspreeErrorBody {
+  errors?: { field?: string; message: string; code?: string }[]
+}
+
+/** Formspree field names → this form's element ids, for placing Formspree's error messages. */
+const fieldIds: Record<string, string> = { name: 'cf-name', email: 'cf-email', message: 'cf-message' }
+
 interface Props {
   /** Formspree endpoint. When missing, the form is shown but sending is disabled. */
   action?: string | null
@@ -71,7 +78,25 @@ export const ContactForm = ({ action, topics }: Props) => {
         body: new FormData(el),
         headers: { Accept: 'application/json' },
       })
-      if (!response.ok) throw new Error(String(response.status))
+      if (!response.ok) {
+        // Formspree explains rejections as { errors: [{ field?, message }] }: show each one next to
+        // its field, or as the form's status message when it isn't about a single field.
+        const body = (await response.json().catch((): null => null)) as FormspreeErrorBody | null
+        const problems = body?.errors ?? []
+        const byField = Object.fromEntries(
+          problems.flatMap((p) => (p.field && fieldIds[p.field] ? [[fieldIds[p.field], p.message]] : [])),
+        )
+        const general = problems.filter((p) => !p.field || !fieldIds[p.field]).map((p) => p.message)
+        setErrors(byField)
+        setMessage(
+          general.length
+            ? `Your message was not sent: ${general.join(' ')}`
+            : Object.keys(byField).length
+              ? 'Your message was not sent. Please check the highlighted fields.'
+              : 'Something went wrong and your message was not sent. Please try again.',
+        )
+        return
+      }
       el.reset()
       setMessage('Thank you. Your message has been sent.')
     } catch {
@@ -157,6 +182,8 @@ export const ContactForm = ({ action, topics }: Props) => {
         {error('cf-message')}
       </div>
 
+      {/* Subject line of the notification email Formspree sends. */}
+      <input type="hidden" name="_subject" value="New message from nothingwrongwithyou.org" />
       {/* Honeypot: real people never see or fill this. */}
       <div className={styles.trap} aria-hidden="true">
         <label>

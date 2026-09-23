@@ -106,3 +106,33 @@ test('network failure (aborted) shows the error', async ({ page }) => {
   await page.getByRole('button', { name: 'Send message' }).click()
   await expect(page.getByRole('status').filter({ hasText: /went wrong/ })).toBeVisible()
 })
+
+test('Formspree validation errors (intercepted 422) appear next to the field and in the status', async ({ page }) => {
+  const sent: string[] = []
+  await page.context().route(/formspree\.io/, async (route) => {
+    sent.push(route.request().postData() ?? '')
+    await route.fulfill({
+      status: 422,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        errors: [
+          { field: 'email', code: 'TYPE_EMAIL', message: 'should be an email' },
+          { code: 'FORM_DISABLED', message: 'This form is disabled.' },
+        ],
+      }),
+    })
+  })
+  await page.goto(`${BASE_URL}/contact`)
+  await page.locator('#cf-name').fill('QA Tester')
+  await page.locator('#cf-email').fill('qa@example.test')
+  await page.locator('#cf-message').fill('Keep me')
+  await page.getByRole('button', { name: 'Send message' }).click()
+  await expect(page.locator('#cf-email-error')).toHaveText('should be an email')
+  await expect(page.locator('#cf-email')).toHaveAttribute('aria-invalid', 'true')
+  await expect(page.getByRole('status').filter({ hasText: /not sent/ })).toHaveText(
+    'Your message was not sent: This form is disabled.',
+  )
+  await expect(page.locator('#cf-message')).toHaveValue('Keep me')
+  // The notification email gets a recognisable subject.
+  expect(sent[0]).toContain('New message from nothingwrongwithyou.org')
+})
