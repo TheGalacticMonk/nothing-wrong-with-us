@@ -11,6 +11,9 @@
     "binding": "ASSETS",
   },
   "observability": { "enabled": true },
+  // Preview on the real zone (so Cloudflare Image Transformations can run on the site's own host).
+  // At launch this becomes www.nothingwrongwithyou.org (+ the bare domain), with approval.
+  "routes": [{ "pattern": "preview.nothingwrongwithyou.org", "custom_domain": true }],
   "d1_databases": [
     {
       "binding": "D1",
@@ -35,7 +38,7 @@
   // Cloudflare Images: resizes images on delivery (Workers has no sharp).
   "images": { "binding": "IMAGES" },
   "vars": {
-    "NEXT_PUBLIC_SERVER_URL": "https://nwwy-cms.thegalacticmonks.workers.dev",
+    "NEXT_PUBLIC_SERVER_URL": "https://preview.nothingwrongwithyou.org",
     // Public hostname of the nwwy-media R2 bucket: its custom domain, or its r2.dev URL on a preview
     // deploy (docs/DEPLOYMENT.md). Empty = files served by the Worker, shown unoptimised.
     "MEDIA_PUBLIC_URL": "https://media.nothingwrongwithyou.org",

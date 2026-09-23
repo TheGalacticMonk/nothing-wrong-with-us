@@ -510,3 +510,31 @@ Lighthouse mobile on the preview (second pass, edge cache warm; first pass in br
   - An editor account can be created, can log in, and has been deleted again.
   - The bundle contains the patched constants (a stale webpack cache had first shipped the unpatched code; clean builds are now documented).
 - **Contact form:** the Formspree ID `mppwdgky` is set on the preview. `/contact` posts to `https://formspree.io/f/mppwdgky`, and the Send button is enabled.
+
+## D1-4 follow-up: same-origin image transforms (2026-09-23)
+
+**Change:** preview moved from `nwwy-cms.thegalacticmonks.workers.dev` to a real-zone custom domain, `preview.nothingwrongwithyou.org`, and the image loader now requests transformations from the page's own host (`/cdn-cgi/image/...`) instead of `media.nothingwrongwithyou.org`. This removes a second TLS connection the browser had to open for every image on a cold cache.
+
+Lighthouse mobile, two runs, before/after (LCP, then performance score):
+
+| Page | Before (media on separate origin) | After (same-origin transforms) |
+| --- | --- | --- |
+| / | 3.6–3.9 s · 83–90 | 3.3–3.4 s · 90–91 |
+| /collage-art | 3.6–7.0 s · 65–90 | 3.3–3.7 s · 88–90 |
+| /about-me | 2.9–3.4 s · 94–95 | 2.1–3.4 s · 91–98 |
+| /music | 1.5–3.2 s · 92–99 | 2.4–3.2 s · 92–95 |
+| /videos | 3.6–3.7 s · 87–91 | 3.2–3.6 s · 88–91 |
+| /resources | 1.4–3.5 s · 88–99 | 3.2–3.5 s · 88–91 |
+| /contact | 2.9–3.1 s · 92–95 | 2.9–3.1 s · 92–94 |
+| /art | 1.4–3.0 s · 92–100 | 3.0–3.2 s · 91–92 |
+
+Performance scores are now consistently 88–98 (were as low as 65). Accessibility 100 on every page. Best-practices dropped 100 → 96, caused by Cloudflare's own zone-level analytics beacon (`static.cloudflareinsights.com/beacon.min.js`) tripping a report-only CSP violation once the site moved to a real Cloudflare-proxied domain — this is Cloudflare's own script on the zone, not application code, harmless (the CSP is report-only, so nothing is actually blocked), and not present on `workers.dev`.
+
+**Remaining LCP gap (2.1–3.7 s, mostly ~3.0–3.4 s, vs the 2.5 s target and legacy's 1.95–2.78 s):**
+investigated the LCP element on `/` and `/collage-art` specifically: both have correct `fetchPriority="high"` / `loading="eager"`, and the image bytes finish transferring well before LCP is recorded (e.g. a 62 ms image fetch completing 1.8 s before LCP is reported). TTFB is the largest single phase on every page (41–56% of LCP time in Lighthouse's breakdown) and varies 0.3–1.8 s across repeated raw requests — consistent with per-request server rendering plus Worker cold starts, not image delivery. Main-thread work (0.8 s) and TBT (20 ms) are low, ruling out heavy client JS as the cause.
+
+**Root cause:** `src/app/(frontend)/layout.tsx` sets `export const dynamic = 'force-dynamic'`, so every request re-renders the page server-side rather than serving a cached HTML response; only the underlying Payload data reads are cached (`unstable_cache` with tags). Astro's legacy site, by contrast, is fully prebuilt static HTML with no server render step.
+
+**Not implemented (deliberately, given production launch is imminent and the client has signed off on the current preview):** switching the frontend from `force-dynamic` to statically-rendered-with-on-demand-revalidation (ISR), so anonymous visitors get cached HTML from OpenNext's R2 incremental cache instead of a fresh render. This would very likely close most of the remaining TTFB gap, but touches rendering behaviour on every public route, needs careful testing that Live Preview/draft mode still bypass the cache correctly, and was not requested as part of this pass. Flagged as the concrete next step if 2.5 s LCP parity is required before/soon after launch.
+
+**Verified after the change:** parity, interactions and security suites re-run against the new domain — 32 passed, 3 known/accepted failures (home canonical trailing slash ×2, R2 custom domain omits `Accept-Ranges` — seeking still works via 206 responses). `tsc` clean.

@@ -226,6 +226,10 @@ test.describe('audio', () => {
 })
 
 test('contact form without a Formspree ID: shown, cannot be sent', async ({ page }) => {
+  // Only meaningful before a Formspree ID is configured (e.g. a fresh/local seed). On a preview
+  // or production deploy where the client has already connected the form, this is expected to
+  // be false — see the "with a Formspree ID configured" test below for that case instead.
+  test.skip(process.env.EXPECT_FORMSPREE_CONFIGURED === '1', 'Formspree ID already set for this env')
   await page.goto(`${BASE_URL}/contact`)
   const form = page.locator('form[aria-labelledby="form-title"]')
   await expect(form).toBeVisible()
@@ -234,6 +238,15 @@ test('contact form without a Formspree ID: shown, cannot be sent', async ({ page
   for (const label of ['Your name', 'Your email', 'What is this about?', 'Message']) {
     await expect(form.getByLabel(label)).toBeVisible()
   }
+})
+
+test('contact form with a Formspree ID configured: enabled and posts to Formspree', async ({ page }) => {
+  test.skip(process.env.EXPECT_FORMSPREE_CONFIGURED !== '1', 'no Formspree ID confirmed for this env')
+  await page.goto(`${BASE_URL}/contact`)
+  const form = page.locator('form[aria-labelledby="form-title"]')
+  await expect(form).toBeVisible()
+  await expect(form).toHaveAttribute('action', /^https:\/\/formspree\.io\/f\/[a-zA-Z0-9]+$/)
+  await expect(form.getByRole('button', { name: 'Send message' })).toBeEnabled()
 })
 
 test('reduced motion: no shooting stars, no reveal animation', async ({ browser }) => {

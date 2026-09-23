@@ -1,6 +1,12 @@
 # Deployment, backups and rollback
 
-## Current preview (deployed 2026-09-22/23)
+## Current preview (deployed 2026-09-23)
+
+- **URL:** https://preview.nothingwrongwithyou.org (custom domain on the real zone; `noindex`, canonical URLs still point at production)
+- **Why a real-zone hostname:** Cloudflare Image Transformations can resize an image on the page's own host (`/cdn-cgi/image/...`) only when that host is on the zone. On `workers.dev` the browser had to open a second connection to `media.nothingwrongwithyou.org` for every image, which cost real latency on 4G. Same-origin transforms removed that connection.
+- **DNS:** `preview` is a Worker route (`wrangler.jsonc` → `routes`), separate from `www`/`nothingwrongwithyou.org`, which still point at the live Astro Worker untouched. Remove the route (Workers & Pages → nwwy-cms → Domains & Routes) to take the preview down.
+- **workers.dev URL:** disabled by Cloudflare once a custom domain/route was added (its own platform behaviour, not something the app does). Nobody had it bookmarked.
+- Superseded preview (kept for the history below): https://nwwy-cms.thegalacticmonks.workers.dev
 
 - **URL:** https://nwwy-cms.thegalacticmonks.workers.dev (`noindex`; canonical URLs point at production)
 - **Admin:** `/admin`. There is one admin account (the site owner's email). Its generated password was handed over privately and is not in this repo. Add the client's editor account from Team → Add.
@@ -8,7 +14,18 @@
   - D1 `nwwy-cms` (`95011fee-…`) and `nwwy-next-tag-cache` (`f23fa13f-…`)
   - R2 `nwwy-media` (custom domain `https://media.nothingwrongwithyou.org`; the r2.dev URL is also still enabled and can be switched off) and `nwwy-next-cache`
   - Zone: Images → Transformations enabled for nothingwrongwithyou.org ("resize from any origin" off)
-- **Build for this preview:** `MEDIA_PUBLIC_URL=https://media.nothingwrongwithyou.org NEXT_PUBLIC_IMAGE_TRANSFORMS=1 NEXT_PUBLIC_NOINDEX=1 NEXT_PUBLIC_SERVER_URL=<workers.dev url> pnpm exec opennextjs-cloudflare build`, then `opennextjs-cloudflare deploy -- --secrets-file <file with PAYLOAD_SECRET>`.
+- **Build for this preview:**
+  ```sh
+  MEDIA_PUBLIC_URL=https://media.nothingwrongwithyou.org \
+  NEXT_PUBLIC_IMAGE_TRANSFORMS=1 \
+  NEXT_PUBLIC_IMAGE_SAME_ORIGIN=1 \
+  NEXT_PUBLIC_NOINDEX=1 \
+  NEXT_PUBLIC_SERVER_URL=https://preview.nothingwrongwithyou.org \
+  CANONICAL_HOST=preview.nothingwrongwithyou.org \
+  pnpm exec opennextjs-cloudflare build
+  pnpm exec opennextjs-cloudflare deploy -- --secrets-file <file with PAYLOAD_SECRET>
+  ```
+  **Delete `.next/` and `.open-next/` first if only env vars changed** — the webpack cache has shipped a stale build at least once (see the password-hashing note below).
 
 Target: **Cloudflare Workers (Paid) + D1 + R2**, built with OpenNext from Payload's `with-cloudflare-d1` template.
 

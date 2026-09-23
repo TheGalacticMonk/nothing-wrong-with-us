@@ -73,8 +73,22 @@ const nextConfig: NextConfig = {
     ],
   },
   async redirects() {
+    // One public host: anything else (the workers.dev URL, and at launch the bare domain) is
+    // redirected to CANONICAL_HOST, set at build time on deploys. Unset locally.
+    const canonicalHost = process.env.CANONICAL_HOST
+    const hostRedirect = canonicalHost
+      ? [
+          {
+            source: '/:path*',
+            missing: [{ type: 'host' as const, value: canonicalHost }],
+            destination: `https://${canonicalHost}/:path*`,
+            permanent: true,
+          },
+        ]
+      : []
     // Old Squarespace URLs (legacy/astro/public/_redirects).
     return [
+      ...hostRedirect,
       { source: '/new-page', destination: '/resources', statusCode: 301 },
       { source: '/info-contact-carson', destination: '/contact', statusCode: 301 },
       { source: '/cart', destination: '/', statusCode: 301 },
