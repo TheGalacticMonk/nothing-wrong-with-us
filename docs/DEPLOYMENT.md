@@ -130,3 +130,31 @@ Never edit an applied migration. Always keep the D1 adapter version pinned, beca
 - **Framing:** `/admin` and `/api` send `X-Frame-Options: SAMEORIGIN` and `frame-ancestors 'self'`.
 - **Uploads are public:** files are served from a public bucket, so an unpublished collage image is reachable if someone knows its exact URL. Its page entry stays hidden.
 - **Access:** give the client her own editor account, and give the developer a separate admin account. Don't share accounts.
+
+## Launch (completed 2026-09-23)
+
+**www.nothingwrongwithyou.org and nothingwrongwithyou.org now serve the Next.js + Payload site.** The old Astro site's Worker (`nothing-wrong-with-you`) has no domains attached; it is left deployed, unrouted, as the rollback path (see Rollback, above) for 30 days from launch.
+
+- Domains were moved via the Cloudflare dashboard (Workers & Pages → Domains & Routes), not automated — this repo's own safety tooling declined to run the cross-Worker domain move unattended, and that was the right call for an action this consequential. The site owner did it directly.
+- `preview.nothingwrongwithyou.org` was removed as part of this (see the critical bug below) and its DNS record was cleaned up automatically by Cloudflare when the custom domain was detached.
+
+### Critical bug found and fixed during launch: noindex leaked to production
+
+**What happened:** immediately after the domain move, the live production site was sending `<meta name="robots" content="noindex">` on every page — the same directive intentionally used to keep the preview deploy out of search engines.
+
+**Root cause:** `wrangler.jsonc`'s `vars` block had `NEXT_PUBLIC_NOINDEX: "1"` left over from the preview setup. Contrary to the usual assumption that `NEXT_PUBLIC_*` variables are inlined into the JavaScript bundle at `next build` time and fixed from then on, **OpenNext's Cloudflare adapter provides `wrangler.jsonc` `vars` to server-rendered code via a live `process.env` at request time.** Building with the variable unset in the shell was not enough — the value declared in `wrangler.jsonc` overrode it at runtime, on every request, regardless of what the build was told.
+
+**Fix:** `wrangler.jsonc`'s `vars` now hold the correct values for whatever is actually deployed (removed `NEXT_PUBLIC_NOINDEX` entirely for production; corrected `NEXT_PUBLIC_SERVER_URL`). A comment in the file now records this behaviour so it isn't rediscovered the hard way again. No code changes were needed — only the deployed configuration.
+
+**Detected and fixed within minutes** by verifying the live `robots` meta tag directly after the domain move, before declaring launch complete, rather than assuming the earlier preview testing still applied once the same build was serving a different hostname.
+
+**Also fixed just before this, during pre-launch verification on `preview.nothingwrongwithyou.org`:** the host-redirect rule (`/:path*` → the canonical host) produced a broken destination for the bare root path (`/`), leaving the literal, unsubstituted token `/:path*` in the `Location` header instead of `/`. This would have sent every visitor to the bare apex domain (a very common way people type a URL) to a broken link. Fixed by splitting the rule into an exact `/` case and a `/:path+` (one-or-more) case, which avoids the zero-segment match. See commit `b7b10e7`.
+
+### Post-launch verification (2026-09-23)
+
+- All 8 public routes: 200. Unknown paths: 404.
+- Apex domain redirects to `www` (root path and sub-paths both correct).
+- `noindex` absent; canonical URLs correct; `robots.txt` and `sitemap.xml` (8 URLs) correct.
+- Admin reachable; Formspree-connected contact form confirmed; images serving via same-origin Cloudflare Image Transformations.
+- All three legacy redirects (`/new-page`, `/info-contact-carson`, `/cart`) and the `/audio/*` → Songs collection redirect working.
+- Automated suite against production: 53 passed, 1 skipped (admin-login tests, need local-only test credentials), 3 known/accepted differences (home canonical's trailing slash; R2 custom domain's missing `Accept-Ranges` header — seeking still works via 206 responses).
